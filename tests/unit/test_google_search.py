@@ -1,4 +1,4 @@
-from griptape_tools import GoogleSearch
+from griptape.tools import GoogleSearch
 
 
 class TestGoogleSearch:

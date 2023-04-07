@@ -1,4 +1,4 @@
-from griptape_tools import Calculator
+from griptape.tools import Calculator
 
 
 class TestCalculator:

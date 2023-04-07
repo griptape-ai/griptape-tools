@@ -2,7 +2,7 @@ import importlib
 import sys
 from io import StringIO
 from schema import Schema, Literal
-from griptape import BaseTool, action
+from griptape.core import BaseTool, action
 
 
 class Calculator(BaseTool):
