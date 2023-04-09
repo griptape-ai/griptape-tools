@@ -7,13 +7,18 @@ from griptape.core import BaseTool, action
 
 @define
 class GoogleSearch(BaseTool):
-    schemas = {
-        "search": Schema({
-            Literal(
-                "action_input",
-                description="Google search request that returns a list of pages with titles, descriptions, and URLs"
-            ): str
-        })
+    configs = {
+        "search": {
+            "name": "search",
+            "description": "Used for searching Google.",
+            "input_schema": Schema({
+                Literal(
+                    "action_input",
+                    description="Google search request that returns a list of pages with titles, descriptions, and URLs"
+                ): str
+            }),
+            "foo": "bar"
+        }
     }
 
     results_count: int = field(default=5, kw_only=True, metadata={"env": "GOOGLE_RESULTS_COUNT"})
@@ -22,7 +27,7 @@ class GoogleSearch(BaseTool):
     api_search_id: Optional[str] = field(default=None, kw_only=True, metadata={"env": "GOOGLE_API_SEARCH_ID"})
     api_country: str = field(default="us", kw_only=True, metadata={"env": "GOOGLE_API_COUNTRY"})
 
-    @action(name="search", schema=schemas["search"])
+    @action(config=configs["search"])
     def search(self, action_input: bytes) -> dict:
         try:
             return {

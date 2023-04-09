@@ -6,17 +6,22 @@ from griptape.core import BaseTool, action
 
 
 class Calculator(BaseTool):
-    schemas = {
-        "calculate": Schema({
-            Literal(
-                "action_input",
-                description="Arithmetic expression parsable in pure Python. Single line only. Don't use any "
-                            "imports or external libraries."
-            ): str
-        })
+    configs = {
+        "calculate": {
+            "name": "calculate",
+            "description": "Used for making simple calculations in Python.",
+            "input_schema": Schema({
+                Literal(
+                    "action_input",
+                    description="Arithmetic expression parsable in pure Python. Single line only. Don't use any "
+                                "imports or external libraries."
+                ): str
+            }),
+            "foo": "bar"
+        }
     }
 
-    @action(name="calculate", schema=schemas["calculate"])
+    @action(config=configs["calculate"])
     def calculate(self, action_input: bytes) -> str:
         try:
             return self._exec_python(action_input.decode())
