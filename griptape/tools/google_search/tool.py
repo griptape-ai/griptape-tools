@@ -13,7 +13,7 @@ class GoogleSearch(BaseTool):
             "description": "Used for searching Google.",
             "input_schema": Schema({
                 Literal(
-                    "action_input",
+                    "input",
                     description="Google search request that returns a list of pages with titles, descriptions, and URLs"
                 ): str
             }),

@@ -12,7 +12,7 @@ class Calculator(BaseTool):
             "description": "Used for making simple calculations in Python.",
             "input_schema": Schema({
                 Literal(
-                    "action_input",
+                    "input",
                     description="Arithmetic expression parsable in pure Python. Single line only. Don't use any "
                                 "imports or external libraries."
                 ): str
