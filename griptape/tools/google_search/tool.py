@@ -11,13 +11,12 @@ class GoogleSearch(BaseTool):
         "search": {
             "name": "search",
             "description": "Used for searching Google.",
-            "input_schema": Schema({
+            "value_schema": Schema({
                 Literal(
-                    "input",
+                    "value",
                     description="Google search request that returns a list of pages with titles, descriptions, and URLs"
                 ): str
-            }),
-            "foo": "bar"
+            })
         }
     }
 
@@ -28,10 +27,10 @@ class GoogleSearch(BaseTool):
     api_country: str = field(default="us", kw_only=True, metadata={"env": "GOOGLE_API_COUNTRY"})
 
     @action(config=configs["search"])
-    def search(self, action_input: bytes) -> dict:
+    def search(self, value: bytes) -> dict:
         try:
             return {
-                "results": self._search_api(action_input.decode())
+                "results": self._search_api(value.decode())
             }
         except Exception as e:
             return {

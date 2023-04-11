@@ -551,14 +551,14 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape-core"
-version = "0.3.0"
+version = "0.4.0"
 description = "Python framework for LLM middleware tools. Build once, run anywhere."
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "griptape_core-0.3.0-py3-none-any.whl", hash = "sha256:b80eb3194b35250294e4489758031bb66295203544551b2d831b8a034e99f08e"},
-    {file = "griptape_core-0.3.0.tar.gz", hash = "sha256:887112d4ee3078c6d0721722125042c0a15c45166e6d19d07d6acdea5fb6e8e0"},
+    {file = "griptape_core-0.4.0-py3-none-any.whl", hash = "sha256:2ef5420b6c72924bcaf0e1adcf30e4f7ac409a10f6227e88461e8ed0b85db2b0"},
+    {file = "griptape_core-0.4.0.tar.gz", hash = "sha256:1a664c211fab68830182c9c26bc88e0210765f9902c7f130bc91a055ea101584"},
 ]
 
 [package.dependencies]
@@ -629,14 +629,14 @@ i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "langchain"
-version = "0.0.135"
+version = "0.0.137"
 description = "Building applications with LLMs through composability"
 category = "main"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchain-0.0.135-py3-none-any.whl", hash = "sha256:fc589d5d915336e591035d5e3086cb68dae27906f3abbbbd786e29c6dd4014bb"},
-    {file = "langchain-0.0.135.tar.gz", hash = "sha256:baad0a0e7423843a7ba30fe28ceba1b04d161e072c83c1d090d210b7b2d905f9"},
+    {file = "langchain-0.0.137-py3-none-any.whl", hash = "sha256:4d359712fb2c7068df98d4ffcde86887e2ea0f21d7628614209f778b08b3f91d"},
+    {file = "langchain-0.0.137.tar.gz", hash = "sha256:d8b7f45490c869d597a37e943fd8437f5414b063253e7e18a4228c51fb075bc5"},
 ]
 
 [package.dependencies]
@@ -1496,4 +1496,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "172226985a9b4863752575ef1b221d657da16f7df03a12e1006e4698029e99f1"
+content-hash = "38bedacea35efdceb26c2bb88920c7f2415f28d7c9e813cdad778c3ae7639ade"

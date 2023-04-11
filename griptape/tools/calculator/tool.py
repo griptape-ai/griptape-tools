@@ -10,21 +10,20 @@ class Calculator(BaseTool):
         "calculate": {
             "name": "calculate",
             "description": "Used for making simple calculations in Python.",
-            "input_schema": Schema({
+            "value_schema": Schema({
                 Literal(
-                    "input",
+                    "value",
                     description="Arithmetic expression parsable in pure Python. Single line only. Don't use any "
                                 "imports or external libraries."
                 ): str
-            }),
-            "foo": "bar"
+            })
         }
     }
 
     @action(config=configs["calculate"])
-    def calculate(self, action_input: bytes) -> str:
+    def calculate(self, value: bytes) -> str:
         try:
-            return self._exec_python(action_input.decode())
+            return self._exec_python(value.decode())
         except Exception as e:
             return f"error calculating: {e}"
 
