@@ -6,8 +6,6 @@ from griptape.core import BaseTool, action
 
 @define
 class WebSearch(BaseTool):
-    import requests
-    
     results_count: int = field(default=5, kw_only=True, metadata={"env": "SEARCH_RESULTS_COUNT"})
     google_api_lang: str = field(default="lang_en", kw_only=True, metadata={"env": "GOOGLE_API_LANG"})
     google_api_key: Optional[str] = field(default=None, kw_only=True, metadata={"env": "GOOGLE_API_KEY"})
@@ -35,6 +33,8 @@ class WebSearch(BaseTool):
             }
 
     def _search_google(self, query: str) -> list[dict]:
+        import requests
+
         url = f"https://www.googleapis.com/customsearch/v1?" \
               f"key={self.env_value('GOOGLE_API_KEY')}&" \
               f"cx={self.env_value('GOOGLE_API_SEARCH_ID')}&" \

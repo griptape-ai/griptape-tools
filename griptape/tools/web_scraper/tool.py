@@ -1,16 +1,17 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 import json
 from typing import Union
 from attr import define, field
 from schema import Schema, Literal
 from griptape.core import BaseTool, action
 
+if TYPE_CHECKING:
+    import GPTSimpleVectorIndex
+
 
 @define
 class WebScraper(BaseTool):
-    import trafilatura
-    from llama_index import GPTSimpleVectorIndex, Document
-    from trafilatura.settings import use_config
-
     include_links: bool = field(default=True, kw_only=True, metadata={"env": "INCLUDE_LINKS"})
 
     @action(config={
@@ -108,11 +109,16 @@ class WebScraper(BaseTool):
         return str(index.query("Generate a summary")).strip()
 
     def _to_vector_index(self, text: str) -> GPTSimpleVectorIndex:
+        from llama_index import GPTSimpleVectorIndex, Document
+
         return GPTSimpleVectorIndex([
             Document(text)
         ])
 
     def _load_page(self, url: str) -> Union[dict, str]:
+        import trafilatura
+        from trafilatura.settings import use_config
+
         config = use_config()
         page = trafilatura.fetch_url(url)
 
