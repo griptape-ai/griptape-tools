@@ -551,14 +551,14 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape-core"
-version = "0.4.0"
+version = "0.5.0"
 description = "Python framework for LLM middleware tools. Build once, run anywhere."
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "griptape_core-0.4.0-py3-none-any.whl", hash = "sha256:2ef5420b6c72924bcaf0e1adcf30e4f7ac409a10f6227e88461e8ed0b85db2b0"},
-    {file = "griptape_core-0.4.0.tar.gz", hash = "sha256:1a664c211fab68830182c9c26bc88e0210765f9902c7f130bc91a055ea101584"},
+    {file = "griptape_core-0.5.0-py3-none-any.whl", hash = "sha256:272831b4e4bea3896860558d4b8df07441f90d5bc1b4e881546325807b52a05b"},
+    {file = "griptape_core-0.5.0.tar.gz", hash = "sha256:a44f0c1a2cca2bfaf815352b912cd12233fa268c21ba54480f4ae90bacf8b3d4"},
 ]
 
 [package.dependencies]
@@ -1496,4 +1496,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "38bedacea35efdceb26c2bb88920c7f2415f28d7c9e813cdad778c3ae7639ade"
+content-hash = "de20439200e8b753911365e9366d2ca506414e2530f8c5db75b2da7fccba8e10"
