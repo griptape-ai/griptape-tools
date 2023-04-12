@@ -21,7 +21,7 @@ class SqlClient(BaseTool):
     def query(self, value: bytes) -> str:
         from sqlalchemy import create_engine, text
 
-        engine = create_engine(self.engine_url)
+        engine = create_engine(self.env_value("ENGINE_URL"))
 
         try:
             with engine.connect() as con:
