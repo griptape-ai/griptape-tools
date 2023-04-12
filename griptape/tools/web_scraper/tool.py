@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 import json
 from typing import Union
 from attr import define, field
@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 @define
 class WebScraper(BaseTool):
+    openai_api_key: Optional[str] = field(default=None, kw_only=True, metadata={"env": "OPENAI_API_KEY"})
     include_links: bool = field(default=True, kw_only=True, metadata={"env": "INCLUDE_LINKS"})
 
     @action(config={
