@@ -1,6 +1,6 @@
 import pytest
 from tests.utils import install_requirements
-from tools.sql_client.tool import SqlClient
+from griptape.tools import SqlClient
 import sqlite3
 
 
@@ -18,4 +18,3 @@ class TestSqlClient:
             )
 
             assert isinstance(client.query(b"PRAGMA compile_options;"), str)
-        
