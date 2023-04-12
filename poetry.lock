@@ -629,14 +629,14 @@ i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "langchain"
-version = "0.0.137"
+version = "0.0.138"
 description = "Building applications with LLMs through composability"
 category = "main"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchain-0.0.137-py3-none-any.whl", hash = "sha256:4d359712fb2c7068df98d4ffcde86887e2ea0f21d7628614209f778b08b3f91d"},
-    {file = "langchain-0.0.137.tar.gz", hash = "sha256:d8b7f45490c869d597a37e943fd8437f5414b063253e7e18a4228c51fb075bc5"},
+    {file = "langchain-0.0.138-py3-none-any.whl", hash = "sha256:e9ad24c665c328df48a6a3c4c1335d6117d52fcada4f3a4b71ab2161eb2e8c85"},
+    {file = "langchain-0.0.138.tar.gz", hash = "sha256:44f3f3d0819fce055fd859640cafd8af81cc6497daebc2721d1fcf33026fbdf6"},
 ]
 
 [package.dependencies]
@@ -652,7 +652,7 @@ SQLAlchemy = ">=1,<2"
 tenacity = ">=8.1.0,<9.0.0"
 
 [package.extras]
-all = ["aleph-alpha-client (>=2.15.0,<3.0.0)", "anthropic (>=0.2.4,<0.3.0)", "beautifulsoup4 (>=4,<5)", "cohere (>=3,<4)", "deeplake (>=3.2.21,<4.0.0)", "elasticsearch (>=8,<9)", "faiss-cpu (>=1,<2)", "google-api-python-client (==2.70.0)", "google-search-results (>=2,<3)", "huggingface_hub (>=0,<1)", "jina (>=3.14,<4.0)", "jinja2 (>=3,<4)", "manifest-ml (>=0.0.1,<0.0.2)", "networkx (>=2.6.3,<3.0.0)", "nlpcloud (>=1,<2)", "nltk (>=3,<4)", "nomic (>=1.0.43,<2.0.0)", "openai (>=0,<1)", "opensearch-py (>=2.0.0,<3.0.0)", "pgvector (>=0.1.6,<0.2.0)", "pinecone-client (>=2,<3)", "psycopg2-binary (>=2.9.5,<3.0.0)", "pyowm (>=3.3.0,<4.0.0)", "pypdf (>=3.4.0,<4.0.0)", "qdrant-client (>=1.1.2,<2.0.0)", "redis (>=4,<5)", "sentence-transformers (>=2,<3)", "spacy (>=3,<4)", "tensorflow-text (>=2.11.0,<3.0.0)", "tiktoken (>=0.3.2,<0.4.0)", "torch (>=1,<2)", "transformers (>=4,<5)", "weaviate-client (>=3,<4)", "wikipedia (>=1,<2)", "wolframalpha (==5.0.0)"]
+all = ["aleph-alpha-client (>=2.15.0,<3.0.0)", "anthropic (>=0.2.4,<0.3.0)", "beautifulsoup4 (>=4,<5)", "cohere (>=3,<4)", "deeplake (>=3.2.21,<4.0.0)", "elasticsearch (>=8,<9)", "faiss-cpu (>=1,<2)", "google-api-python-client (==2.70.0)", "google-search-results (>=2,<3)", "huggingface_hub (>=0,<1)", "jina (>=3.14,<4.0)", "jinja2 (>=3,<4)", "manifest-ml (>=0.0.1,<0.0.2)", "networkx (>=2.6.3,<3.0.0)", "nlpcloud (>=1,<2)", "nltk (>=3,<4)", "nomic (>=1.0.43,<2.0.0)", "openai (>=0,<1)", "opensearch-py (>=2.0.0,<3.0.0)", "pgvector (>=0.1.6,<0.2.0)", "pinecone-client (>=2,<3)", "pinecone-text (>=0.4.2,<0.5.0)", "psycopg2-binary (>=2.9.5,<3.0.0)", "pyowm (>=3.3.0,<4.0.0)", "pypdf (>=3.4.0,<4.0.0)", "qdrant-client (>=1.1.2,<2.0.0)", "redis (>=4,<5)", "sentence-transformers (>=2,<3)", "spacy (>=3,<4)", "tensorflow-text (>=2.11.0,<3.0.0)", "tiktoken (>=0.3.2,<0.4.0)", "torch (>=1,<2)", "transformers (>=4,<5)", "weaviate-client (>=3,<4)", "wikipedia (>=1,<2)", "wolframalpha (==5.0.0)"]
 cohere = ["cohere (>=3,<4)"]
 llms = ["anthropic (>=0.2.4,<0.3.0)", "cohere (>=3,<4)", "huggingface_hub (>=0,<1)", "manifest-ml (>=0.0.1,<0.0.2)", "nlpcloud (>=1,<2)", "openai (>=0,<1)", "torch (>=1,<2)", "transformers (>=4,<5)"]
 openai = ["openai (>=0,<1)"]
@@ -928,14 +928,14 @@ pydantic = ">=1.8.2"
 
 [[package]]
 name = "packaging"
-version = "23.0"
+version = "23.1"
 description = "Core utilities for Python packages"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "packaging-23.0-py3-none-any.whl", hash = "sha256:714ac14496c3e68c99c29b00845f7a2b85f3bb6f1078fd9f72fd20f0570002b2"},
-    {file = "packaging-23.0.tar.gz", hash = "sha256:b6ad297f8907de0fa2fe1ccbd26fdaf387f5f47c7275fedf8cce89f99446cf97"},
+    {file = "packaging-23.1-py3-none-any.whl", hash = "sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61"},
+    {file = "packaging-23.1.tar.gz", hash = "sha256:a392980d2b6cffa644431898be54b0045151319d1e7ec34f0cfed48767dd334f"},
 ]
 
 [[package]]
