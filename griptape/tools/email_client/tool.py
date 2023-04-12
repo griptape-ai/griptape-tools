@@ -3,7 +3,6 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 from typing import Optional
-
 from attr import define, field
 from griptape.core import BaseTool, action
 from schema import Schema, Literal

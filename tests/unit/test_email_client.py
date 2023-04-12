@@ -1,6 +1,5 @@
 import json
-
-from tools import EmailClient
+from griptape.tools import EmailClient
 
 
 class TestEmailClient:
