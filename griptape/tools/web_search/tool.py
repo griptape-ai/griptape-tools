@@ -1,5 +1,4 @@
 from typing import Optional
-import requests
 from attr import define, field
 from schema import Schema, Literal
 from griptape.core import BaseTool, action
@@ -7,6 +6,8 @@ from griptape.core import BaseTool, action
 
 @define
 class WebSearch(BaseTool):
+    import requests
+    
     results_count: int = field(default=5, kw_only=True, metadata={"env": "SEARCH_RESULTS_COUNT"})
     google_api_lang: str = field(default="lang_en", kw_only=True, metadata={"env": "GOOGLE_API_LANG"})
     google_api_key: Optional[str] = field(default=None, kw_only=True, metadata={"env": "GOOGLE_API_KEY"})

@@ -1,9 +1,5 @@
 import json
 from typing import Union
-import trafilatura
-from attr import define, field
-from llama_index import GPTSimpleVectorIndex, Document
-from trafilatura.settings import use_config
 from attr import define, field
 from schema import Schema, Literal
 from griptape.core import BaseTool, action
@@ -11,6 +7,10 @@ from griptape.core import BaseTool, action
 
 @define
 class WebScraper(BaseTool):
+    import trafilatura
+    from llama_index import GPTSimpleVectorIndex, Document
+    from trafilatura.settings import use_config
+
     include_links: bool = field(default=True, kw_only=True, metadata={"env": "INCLUDE_LINKS"})
 
     @action(config={

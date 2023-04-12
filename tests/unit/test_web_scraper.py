@@ -1,5 +1,4 @@
 import json
-
 import pytest
 from tests.utils import install_requirements
 
