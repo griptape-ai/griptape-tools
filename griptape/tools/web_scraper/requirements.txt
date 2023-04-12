@@ -1,0 +1,3 @@
+griptape-core>=0.4.0
+trafilatura
+llama_index==0.4.23
