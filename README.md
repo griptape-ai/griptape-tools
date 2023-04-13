@@ -5,7 +5,11 @@
 [![PyPI Version](https://img.shields.io/pypi/v/griptape-tools.svg)](https://pypi.python.org/pypi/griptape-tools)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/gitbucket/gitbucket/blob/master/LICENSE)
 
-Griptape Tools is a collection of Python tools for the [Griptape Framework](https://github.com/griptape-ai/griptape-core).
+This repo is a collection of official Griptape tools for the [Griptape Framework](https://github.com/griptape-ai/griptape-core). You can run Griptape tools in [Skatepark](https://github.com/griptape-ai/skatepark), [LangChain](https://github.com/hwchase17/langchain), or as [ChatGPT Plugins](https://openai.com/blog/chatgpt-plugins).
+
+- [Learn more](https://github.com/griptape-ai/griptape-core) about Griptape.
+- [Full list](https://github.com/griptape-ai/griptape-tools/tree/main/griptape/tools) of official Griptape tools.
+- [Tool details and docs](https://griptape.readthedocs.io).
 
 ## Contributing
 
