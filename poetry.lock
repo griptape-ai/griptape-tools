@@ -177,6 +177,18 @@ tests = ["attrs[tests-no-zope]", "zope.interface"]
 tests-no-zope = ["cloudpickle", "cloudpickle", "hypothesis", "hypothesis", "mypy (>=0.971,<0.990)", "mypy (>=0.971,<0.990)", "pympler", "pympler", "pytest (>=4.3.0)", "pytest (>=4.3.0)", "pytest-mypy-plugins", "pytest-mypy-plugins", "pytest-xdist[psutil]", "pytest-xdist[psutil]"]
 
 [[package]]
+name = "cachetools"
+version = "5.3.0"
+description = "Extensible memoizing collections and decorators"
+category = "main"
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "cachetools-5.3.0-py3-none-any.whl", hash = "sha256:429e1a1e845c008ea6c85aa35d4b98b65d6a9763eeef3e37e92728a12d1de9d4"},
+    {file = "cachetools-5.3.0.tar.gz", hash = "sha256:13dfddc7b8df938c21a940dfa6557ce6e94a2f1cdfa58eb90c805721d58f2c14"},
+]
+
+[[package]]
 name = "certifi"
 version = "2022.12.7"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -476,6 +488,23 @@ files = [
 ]
 
 [[package]]
+name = "gptcache"
+version = "0.1.10"
+description = "GPTCache, a powerful caching library that can be used to speed up and lower the cost of chat applications that rely on the LLM service. GPTCache works as a memcache for AIGC applications, similar to how Redis works for traditional applications."
+category = "main"
+optional = false
+python-versions = ">=3.8.1"
+files = [
+    {file = "gptcache-0.1.10-py3-none-any.whl", hash = "sha256:6d5baaed83784164d1cad29423c4e3433a7ae3a8794f7f4785d44ee27691dc19"},
+    {file = "gptcache-0.1.10.tar.gz", hash = "sha256:75f63b181e5ce40aff1859711fe9496bd7569e3b2afcac3ec46cd98a8a0ce974"},
+]
+
+[package.dependencies]
+cachetools = "*"
+numpy = "*"
+openai = "*"
+
+[[package]]
 name = "greenlet"
 version = "2.0.2"
 description = "Lightweight in-process concurrent programming"
@@ -551,14 +580,14 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape-core"
-version = "0.5.0"
+version = "0.6.0"
 description = "Python framework for LLM middleware tools. Build once, run anywhere."
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "griptape_core-0.5.0-py3-none-any.whl", hash = "sha256:272831b4e4bea3896860558d4b8df07441f90d5bc1b4e881546325807b52a05b"},
-    {file = "griptape_core-0.5.0.tar.gz", hash = "sha256:a44f0c1a2cca2bfaf815352b912cd12233fa268c21ba54480f4ae90bacf8b3d4"},
+    {file = "griptape_core-0.6.0-py3-none-any.whl", hash = "sha256:beb7ec2756a937d3dd25495a391f68fee2716f4c417f2a6753f310258c96df59"},
+    {file = "griptape_core-0.6.0.tar.gz", hash = "sha256:a06fb4ef597fe8a8cfdba70c1f2ec563c28f1b7595a08474e3d782299a12f343"},
 ]
 
 [package.dependencies]
@@ -629,20 +658,21 @@ i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "langchain"
-version = "0.0.138"
+version = "0.0.139"
 description = "Building applications with LLMs through composability"
 category = "main"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchain-0.0.138-py3-none-any.whl", hash = "sha256:e9ad24c665c328df48a6a3c4c1335d6117d52fcada4f3a4b71ab2161eb2e8c85"},
-    {file = "langchain-0.0.138.tar.gz", hash = "sha256:44f3f3d0819fce055fd859640cafd8af81cc6497daebc2721d1fcf33026fbdf6"},
+    {file = "langchain-0.0.139-py3-none-any.whl", hash = "sha256:2ea43780e1f788333f2b741b119d9870640a92c6f5f2d177d1ca0c98463bd097"},
+    {file = "langchain-0.0.139.tar.gz", hash = "sha256:4ea86ad6192f45c65cbbdc24ff1a56aaac4bee8c038be982981369ca553590df"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.8.3,<4.0.0"
 async-timeout = {version = ">=4.0.0,<5.0.0", markers = "python_version < \"3.11\""}
 dataclasses-json = ">=0.5.7,<0.6.0"
+gptcache = ">=0.1.7"
 numpy = ">=1,<2"
 openapi-schema-pydantic = ">=1.2,<2.0"
 pydantic = ">=1,<2"
@@ -1496,4 +1526,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "de20439200e8b753911365e9366d2ca506414e2530f8c5db75b2da7fccba8e10"
+content-hash = "62b8b72a83b8c477d32f0abea2e048475bfde7aba3841a1981ff0d4610e3e143"
