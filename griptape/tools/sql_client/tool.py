@@ -1,3 +1,4 @@
+from typing import Optional
 from schema import Schema, Literal
 from griptape.core import BaseTool, action
 from attr import define, field
@@ -5,7 +6,7 @@ from attr import define, field
 
 @define
 class SqlClient(BaseTool):
-    engine_url: str = field(kw_only=True, metadata={"env": "ENGINE_URL"})
+    engine_url: Optional[str] = field(default=None, kw_only=True, metadata={"env": "ENGINE_URL"})
     engine_name: str = field(kw_only=True)
 
     @property

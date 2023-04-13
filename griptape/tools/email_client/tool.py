@@ -10,10 +10,10 @@ from schema import Schema, Literal
 
 @define
 class EmailClient(BaseTool):
-    host: str = field(kw_only=True, metadata={"env": "SMTP_HOST"})
-    port: int = field(kw_only=True, metadata={"env": "SMTP_PORT"})
-    password: str = field(default="", kw_only=True, metadata={"env": "SMTP_PASSWORD"})
-    from_email: str = field(kw_only=True, metadata={"env": "FROM_EMAIL"})
+    host: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_HOST"})
+    port: Optional[int] = field(default=None, kw_only=True, metadata={"env": "SMTP_PORT"})
+    password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_PASSWORD"})
+    from_email: Optional[str] = field(default=None, kw_only=True, metadata={"env": "FROM_EMAIL"})
     use_ssl: bool = field(default=True, kw_only=True, metadata={"env": "SMTP_USE_SSL"})
 
     @action(config={
