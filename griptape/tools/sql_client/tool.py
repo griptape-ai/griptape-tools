@@ -8,6 +8,12 @@ class SqlClient(BaseTool):
     engine_url: str = field(kw_only=True, metadata={"env": "ENGINE_URL"})
     engine_name: str = field(kw_only=True)
 
+    @property
+    def schema_template_args(self) -> dict:
+        return {
+            "engine": self.engine_name
+        }
+
     @action(config={
         "name": "query",
         "description": "Can be used to execute SQL queries in {{ engine }}",
@@ -34,9 +40,3 @@ class SqlClient(BaseTool):
 
         except Exception as e:
             return f"error executing SQL: {e}"
-
-    @property
-    def schema_template_args(self) -> dict:
-        return {
-            "engine": self.engine_name
-        }
