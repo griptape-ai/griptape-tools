@@ -1,2 +1,2 @@
-griptape-core>=0.6.0
+griptape-core>=0.7.2
 requests

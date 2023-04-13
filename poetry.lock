@@ -383,14 +383,14 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "fastapi"
-version = "0.95.0"
+version = "0.95.1"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "fastapi-0.95.0-py3-none-any.whl", hash = "sha256:daf73bbe844180200be7966f68e8ec9fd8be57079dff1bacb366db32729e6eb5"},
-    {file = "fastapi-0.95.0.tar.gz", hash = "sha256:99d4fdb10e9dd9a24027ac1d0bd4b56702652056ca17a6c8721eec4ad2f14e18"},
+    {file = "fastapi-0.95.1-py3-none-any.whl", hash = "sha256:a870d443e5405982e1667dfe372663abf10754f246866056336d7f01c21dab07"},
+    {file = "fastapi-0.95.1.tar.gz", hash = "sha256:9569f0a381f8a457ec479d90fa01005cfddaae07546eb1f3fa035bc4797ae7d5"},
 ]
 
 [package.dependencies]
@@ -580,14 +580,14 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape-core"
-version = "0.6.0"
+version = "0.7.2"
 description = "Python framework for LLM middleware tools. Build once, run anywhere."
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "griptape_core-0.6.0-py3-none-any.whl", hash = "sha256:beb7ec2756a937d3dd25495a391f68fee2716f4c417f2a6753f310258c96df59"},
-    {file = "griptape_core-0.6.0.tar.gz", hash = "sha256:a06fb4ef597fe8a8cfdba70c1f2ec563c28f1b7595a08474e3d782299a12f343"},
+    {file = "griptape_core-0.7.2-py3-none-any.whl", hash = "sha256:500dfabe20179018e1de312be2a981cc3fbbc17a41a1e80144a6aa3bd815233a"},
+    {file = "griptape_core-0.7.2.tar.gz", hash = "sha256:0970c753e602bd032e8e9db90e75b152f41a1d9f7c9b77b069eb81801fb8537b"},
 ]
 
 [package.dependencies]
@@ -1526,4 +1526,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "62b8b72a83b8c477d32f0abea2e048475bfde7aba3841a1981ff0d4610e3e143"
+content-hash = "3abf7de395c671aa4c68f79643b7dcb07d56b2c1f29b0e2b94c4cfa1194ad6eb"
