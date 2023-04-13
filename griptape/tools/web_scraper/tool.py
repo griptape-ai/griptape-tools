@@ -42,8 +42,8 @@ class WebScraper(BaseTool):
         return self._load_page(value.decode()).get("text")
 
     @action(config={
-        "name": "get_full_page",
-        "description": "Can be used to get all text content of a web page",
+        "name": "search_page",
+        "description": "Can be used to search a specific web page",
         "value_schema": Schema({
             "value": {
                 Literal(
