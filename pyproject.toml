@@ -13,7 +13,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-griptape-core = ">=0.7.2"
+griptape-core = ">=0.8.0"
 
 
 [tool.poetry.group.test.dependencies]

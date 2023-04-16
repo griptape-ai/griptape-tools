@@ -15,12 +15,10 @@ class WebSearch(BaseTool):
     @action(config={
         "name": "search",
         "description": "Can be used for searching the web",
-        "value_schema": Schema({
-            Literal(
-                "value",
-                description="Search engine request that returns a list of pages with titles, descriptions, and URLs"
-            ): str
-        })
+        "schema": Schema(
+            str,
+            description="Search engine request that returns a list of pages with titles, descriptions, and URLs"
+        )
     })
     def search(self, value: bytes) -> dict:
         try:

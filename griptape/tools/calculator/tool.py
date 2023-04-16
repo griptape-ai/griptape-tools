@@ -1,18 +1,16 @@
-from schema import Schema, Literal
 from griptape.core import BaseTool, action, utils
+from schema import Schema
 
 
 class Calculator(BaseTool):
     @action(config={
         "name": "calculate",
         "description": "Can be used for making simple calculations in Python",
-        "value_schema": Schema({
-            Literal(
-                "value",
-                description="Arithmetic expression parsable in pure Python. Single line only. Don't use any "
-                            "imports or external libraries"
-            ): str
-        })
+        "schema": Schema(
+            str,
+            description="Arithmetic expression parsable in pure Python. Single line only. Don't use any "
+                        "imports or external libraries"
+        )
     })
     def calculate(self, value: bytes) -> str:
         try:
