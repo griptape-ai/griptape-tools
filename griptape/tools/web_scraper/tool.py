@@ -20,12 +20,10 @@ class WebScraper(BaseTool):
     @action(config={
         "name": "get_title",
         "description": "Can be used to get the title of a web page",
-        "value_schema": Schema({
-            Literal(
-                "value",
-                description="Valid HTTP URL"
-            ): str
-        })
+        "schema": Schema(
+            str,
+            description="Valid HTTP URL"
+        )
     })
     def get_title(self, value: bytes) -> str:
         return self._load_page(value.decode()).get("title")
@@ -33,12 +31,10 @@ class WebScraper(BaseTool):
     @action(config={
         "name": "get_full_page",
         "description": "Can be used to get all text content of a web page",
-        "value_schema": Schema({
-            Literal(
-                "value",
-                description="Valid HTTP URL"
-            ): str
-        })
+        "schema": Schema(
+            str,
+            description="Valid HTTP URL"
+        )
     })
     def get_full_page(self, value: bytes) -> str:
         return self._load_page(value.decode()).get("text")
@@ -46,34 +42,30 @@ class WebScraper(BaseTool):
     @action(config={
         "name": "search_page",
         "description": "Can be used to search a specific web page",
-        "value_schema": Schema({
-            "value": {
-                Literal(
-                    "url",
-                    description="Valid HTTP URL"
-                ): str,
-                Literal(
-                    "query",
-                    description="Search query"
-                ): str
-            }
+        "schema": Schema({
+            Literal(
+                "url",
+                description="Valid HTTP URL"
+            ): str,
+            Literal(
+                "query",
+                description="Search query"
+            ): str
         })
     })
     def search_page(self, value: bytes) -> str:
         params = ast.literal_eval(value.decode())
         index = self._to_vector_index(self._load_page(params["url"]).get("text"))
 
-        return str(index.query(params["query"])).strip()
+        return str(index.query(f"search the following text for '{params['query']}'")).strip()
 
     @action(config={
         "name": "get_authors",
         "description": "Can be used to get a list of web page authors",
-        "value_schema": Schema({
-            Literal(
-                "value",
-                description="Valid HTTP URL"
-            ): str
-        })
+        "schema": Schema(
+            str,
+            description="Valid HTTP URL"
+        )
     })
     def get_authors(self, value: bytes) -> list[str]:
         return [
@@ -83,12 +75,10 @@ class WebScraper(BaseTool):
     @action(config={
         "name": "get_keywords",
         "description": "Can be used to generate a list of keywords for a web page",
-        "value_schema": Schema({
-            Literal(
-                "value",
-                description="Valid HTTP URL"
-            ): str
-        })
+        "schema": Schema(
+            str,
+            description="Valid HTTP URL"
+        )
     })
     def get_keywords(self, value: bytes) -> list[str]:
         index = self._to_vector_index(self._load_page(value.decode()).get("text"))
@@ -99,12 +89,10 @@ class WebScraper(BaseTool):
     @action(config={
         "name": "summarize_page",
         "description": "Can be used to generate a web page summary",
-        "value_schema": Schema({
-            Literal(
-                "value",
-                description="Valid HTTP URL"
-            ): str
-        })
+        "schema": Schema(
+            str,
+            description="Valid HTTP URL"
+        )
     })
     def summarize_page(self, value: bytes) -> str:
         index = self._to_vector_index(self._load_page(value.decode()).get("text"))

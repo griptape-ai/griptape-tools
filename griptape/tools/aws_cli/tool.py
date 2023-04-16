@@ -1,6 +1,6 @@
 import json
 from typing import Optional
-from schema import Schema, Literal
+from schema import Schema
 from griptape.core import BaseTool, action, utils
 from attr import define, field
 
@@ -21,12 +21,10 @@ class AwsCli(BaseTool):
     @action(config={
         "name": "execute",
         "description": "Can be used to execute AWS CLI v2 commands limited by this policy: {{ policy }}",
-        "value_schema": Schema({
-            Literal(
-                "value",
-                description="AWS CLI v2 command"
-            ): str
-        })
+        "schema": Schema(
+            str,
+            description="AWS CLI v2 command"
+        )
     })
     def execute(self, value: bytes) -> str:
         result = utils.CommandRunner().run(f"AWS_PAGER='' {value.decode()} --output json")

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "griptape-tools"
-version = "0.5.3"
+version = "0.6.0"
 description = "Tools for the griptape-core package."
 authors = ["Griptape <hello@griptape.ai>"]
 license = "Apache 2.0"
@@ -13,7 +13,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-griptape-core = ">=0.7.2"
+griptape-core = ">=0.8.0"
 
 
 [tool.poetry.group.test.dependencies]

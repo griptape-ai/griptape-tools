@@ -73,21 +73,19 @@ class EmailClient(BaseTool):
     @action(config={
         "name": "send",
         "description": "Can be used to send emails",
-        "value_schema": Schema({
-            "value": {
-                Literal(
-                    "to",
-                    description="Recipient's email address"
-                ): str,
-                Literal(
-                    "subject",
-                    description="Email subject"
-                ): str,
-                Literal(
-                    "body",
-                    description="Email body"
-                ): str
-            }
+        "schema": Schema({
+            Literal(
+                "to",
+                description="Recipient's email address"
+            ): str,
+            Literal(
+                "subject",
+                description="Email subject"
+            ): str,
+            Literal(
+                "body",
+                description="Email body"
+            ): str
         })
     })
     def send(self, value: bytes) -> str:
