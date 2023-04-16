@@ -1,4 +1,6 @@
 from __future__ import annotations
+import ast
+import logging
 from typing import TYPE_CHECKING, Optional
 import json
 from typing import Union
@@ -58,7 +60,7 @@ class WebScraper(BaseTool):
         })
     })
     def search_page(self, value: bytes) -> str:
-        params = json.loads(value.decode())
+        params = ast.literal_eval(value.decode())
         index = self._to_vector_index(self._load_page(params["url"]).get("text"))
 
         return str(index.query(params["query"])).strip()
@@ -126,6 +128,10 @@ class WebScraper(BaseTool):
         # This disables signal, so that trafilatura can work on any thread:
         # More info: https://trafilatura.readthedocs.io/en/latest/usage-python.html#disabling-signal
         config.set("DEFAULT", "EXTRACTION_TIMEOUT", "0")
+
+        # Disable error logging in trafilatura as it sometimes logs errors from lxml, even though
+        # the end result of page parsing is successful.
+        logging.getLogger("trafilatura").setLevel(logging.FATAL)
 
         if page is None:
             return "error: can't access URL"
