@@ -11,15 +11,22 @@ from schema import Schema, Literal
 
 @define
 class EmailClient(BaseTool):
+    # if you set imap|smtp creds explicitly these fields will be overridden
+    username: Optional[str] = field(default=None, kw_only=True, metadata={"env": "EMAIL_USERNAME"})
+    password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "EMAIL_PASSWORD"})
+
     smtp_host: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_HOST"})
     smtp_port: Optional[int] = field(default=None, kw_only=True, metadata={"env": "SMTP_PORT"})
-    smtp_password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_PASSWORD"})
-    smtp_user: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_USER"})
     smtp_from_email: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_FROM_EMAIL"})
     smtp_use_ssl: bool = field(default=True, kw_only=True, metadata={"env": "SMTP_USE_SSL"})
 
+    # if you set the smtp user/password fields they will override
+    smtp_user: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_USER"})
+    smtp_password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_PASSWORD"})
+
     imap_url: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_URL"})
-    # imap username could be different from email
+
+    # if you set imap user/password fields they will override
     imap_user: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_USER"})
     imap_password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_PASSWORD"})
 
@@ -53,8 +60,17 @@ class EmailClient(BaseTool):
         params = ast.literal_eval(value.decode())
 
         imap_url = self.env_value("IMAP_URL")
+
+        # email username can be overridden by setting the imap user explicitly
         imap_user = self.env_value("IMAP_USER")
+        if imap_user is None:
+            imap_user = self.env_value("EMAIL_USERNAME")
+
+        # email password can be overridden by setting the imap password explicitly
         imap_password = self.env_value("IMAP_PASSWORD")
+        if imap_password is None:
+            imap_password = self.env_value("EMAIL_PASSWORD")
+
         max_retrieve_count = self.env_value("EMAIL_MAX_RETRIEVE_COUNT")
 
         label = params["label"]
@@ -102,10 +118,19 @@ class EmailClient(BaseTool):
     def send(self, value: bytes) -> str:
         server: Optional[smtplib.SMTP] = None
         params = ast.literal_eval(value.decode())
+
+        # email username can be overridden by setting the smtp user explicitly
+        smtp_user = self.env_value("SMTP_USER")
+        if smtp_user is None:
+            smtp_user = self.env_value("EMAIL_USERNAME")
+
+        # email password can be overridden by setting the smtp password explicitly
+        smtp_password = self.env_value("SMTP_PASSWORD")
+        if smtp_password is None:
+            smtp_password = self.env_value("EMAIL_PASSWORD")
+
         smtp_host = self.env_value("SMTP_HOST")
         smtp_port = int(self.env_value("SMTP_PORT"))
-        smtp_user = self.env_value("SMTP_USER")
-        smtp_password = self.env_value("SMTP_PASSWORD")
         smtp_from_email = self.env_value("SMTP_FROM_EMAIL")
 
         to_email = params["to"]
