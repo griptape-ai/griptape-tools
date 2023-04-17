@@ -70,7 +70,7 @@ class EmailClient(BaseTool):
             result, data = con.search(None, key, search_criteria)
             retrieve_list = data[0].split()
             messages = []
-            for num in retrieve_list[0:min(int(max_retrieve_count), int(retrieve_count))]:  #data[0].split()[0:min(int(max_retrieve_count), int(retrieve_count))]:
+            for num in retrieve_list[0:min(int(max_retrieve_count), int(retrieve_count))]:
                 typ, data = con.fetch(num, '(RFC822)')
                 messages.append(data)
             con.close()
