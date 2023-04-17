@@ -14,42 +14,52 @@ class EmailClient(BaseTool):
     smtp_host: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_HOST"})
     smtp_port: Optional[int] = field(default=None, kw_only=True, metadata={"env": "SMTP_PORT"})
     smtp_password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_PASSWORD"})
-    from_email: Optional[str] = field(default=None, kw_only=True, metadata={"env": "FROM_EMAIL"})
+    smtp_user: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_USER"})
+    smtp_from_email: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_FROM_EMAIL"})
     smtp_use_ssl: bool = field(default=True, kw_only=True, metadata={"env": "SMTP_USE_SSL"})
 
     imap_url: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_URL"})
+    # imap username could be different from email
     imap_user: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_USER"})
     imap_password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_PASSWORD"})
+
+    # be careful of allowing too many records to be returned as it could impact token usage
+    email_max_retrieve_count: int = field(default=10, kw_only=True, metadata={"env": "EMAIL_MAX_RETRIEVE_COUNT"})
 
     @action(config={
         "name": "retrieve",
         "description": "Can be used to retrieve emails",
-        "value_schema": Schema({
-            "value": {
-                Literal(
-                    "label",
-                    description="Label to retrieve emails from such as 'INBOX' or 'SENT'"
-                ): str,
-                Literal(
-                    "key",
-                    description="Key for filtering such as 'FROM' or 'SUBJECT'"
-                ): str,
-                Literal(
-                    "search_criteria",
-                    description="Search criteria to filter emails"
-                ): str
-            }
+        "schema": Schema({
+            Literal(
+                "label",
+                description="Label to retrieve emails from such as 'INBOX' or 'SENT'"
+            ): str,
+            Literal(
+                "key",
+                description="Key for filtering such as 'FROM' or 'SUBJECT'"
+            ): str,
+            Literal(
+                "search_criteria",
+                description="Search criteria to filter emails"
+            ): str,
+            Literal(
+                "retrieve_count",
+                description="Optional param to override the default max retrieve count"
+            ): int
         })
     })
 
-    def retrieve(self, value: bytes) -> str:
-        con: Optional[imaplib.IMAP4_SSL] = None
+    def retrieve(self, value: bytes) -> list[str]:
         params = ast.literal_eval(value.decode())
+
         imap_url = self.env_value("IMAP_URL")
         imap_user = self.env_value("IMAP_USER")
         imap_password = self.env_value("IMAP_PASSWORD")
+        max_retrieve_count = self.env_value("EMAIL_MAX_RETRIEVE_COUNT")
+
         label = params["label"]
         key = params["key"]
+        retrieve_count = int(params["retrieve_count"]) if "retrieve_count" in params else max_retrieve_count
         search_criteria = params["search_criteria"]
 
         try:
@@ -58,8 +68,9 @@ class EmailClient(BaseTool):
             con.select(label)
 
             result, data = con.search(None, key, search_criteria)
+            retrieve_list = data[0].split()
             messages = []
-            for num in data[0].split():
+            for num in retrieve_list[0:min(int(max_retrieve_count), int(retrieve_count))]:  #data[0].split()[0:min(int(max_retrieve_count), int(retrieve_count))]:
                 typ, data = con.fetch(num, '(RFC822)')
                 messages.append(data)
             con.close()
@@ -93,10 +104,12 @@ class EmailClient(BaseTool):
         params = ast.literal_eval(value.decode())
         smtp_host = self.env_value("SMTP_HOST")
         smtp_port = int(self.env_value("SMTP_PORT"))
-        to_email = params["to"]
-        from_email = self.env_value("FROM_EMAIL")
-        subject = params["subject"]
+        smtp_user = self.env_value("SMTP_USER")
         smtp_password = self.env_value("SMTP_PASSWORD")
+        smtp_from_email = self.env_value("SMTP_FROM_EMAIL")
+
+        to_email = params["to"]
+        subject = params["subject"]
         msg = MIMEText(params["body"])
 
         try:
@@ -106,11 +119,11 @@ class EmailClient(BaseTool):
                 server = smtplib.SMTP(smtp_host, smtp_port)
 
             msg["Subject"] = subject
-            msg["From"] = from_email
+            msg["From"] = smtp_from_email
             msg["To"] = to_email
 
-            server.login(from_email, smtp_password)
-            server.sendmail(from_email, [to_email], msg.as_string())
+            server.login(smtp_user, smtp_password)
+            server.sendmail(smtp_from_email, [to_email], msg.as_string())
 
             return "email was successfully sent"
         except Exception as e:

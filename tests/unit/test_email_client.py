@@ -26,5 +26,5 @@ class TestEmailClient:
         assert "error sending email" in EmailClient(
             smtp_host="",
             smtp_port=0,
-            from_email=""
+            smtp_from_email=""
         ).send(json.dumps(value).encode())
