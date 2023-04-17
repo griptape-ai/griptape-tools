@@ -9,7 +9,7 @@ from schema import Schema, Literal
 from griptape.core import BaseTool, action
 
 if TYPE_CHECKING:
-    import GPTSimpleVectorIndex
+    from llama_index import GPTSimpleVectorIndex
 
 
 @define
