@@ -138,7 +138,7 @@ class EmailClient(BaseTool):
         msg = MIMEText(params["body"])
 
         try:
-            if self.env_value("SMTP_USE_SSL") == "True":
+            if self.env_value("SMTP_USE_SSL"):
                 server = smtplib.SMTP_SSL(smtp_host, smtp_port)
             else:
                 server = smtplib.SMTP(smtp_host, smtp_port)
