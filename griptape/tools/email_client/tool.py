@@ -17,7 +17,6 @@ class EmailClient(BaseTool):
 
     smtp_host: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_HOST"})
     smtp_port: Optional[int] = field(default=None, kw_only=True, metadata={"env": "SMTP_PORT"})
-    smtp_from_email: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_FROM_EMAIL"})
     smtp_use_ssl: bool = field(default=True, kw_only=True, metadata={"env": "SMTP_USE_SSL"})
 
     # if you set the smtp user/password fields they will override
@@ -131,7 +130,6 @@ class EmailClient(BaseTool):
 
         smtp_host = self.env_value("SMTP_HOST")
         smtp_port = int(self.env_value("SMTP_PORT"))
-        smtp_from_email = self.env_value("SMTP_FROM_EMAIL")
 
         to_email = params["to"]
         subject = params["subject"]
@@ -144,11 +142,11 @@ class EmailClient(BaseTool):
                 server = smtplib.SMTP(smtp_host, smtp_port)
 
             msg["Subject"] = subject
-            msg["From"] = smtp_from_email
+            msg["From"] = smtp_user
             msg["To"] = to_email
 
             server.login(smtp_user, smtp_password)
-            server.sendmail(smtp_from_email, [to_email], msg.as_string())
+            server.sendmail(smtp_user, [to_email], msg.as_string())
 
             return "email was successfully sent"
         except Exception as e:
