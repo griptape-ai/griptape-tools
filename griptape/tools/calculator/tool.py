@@ -1,4 +1,5 @@
-from griptape.core import BaseTool, action, utils
+from griptape.core import BaseTool, action
+import griptape.utils as utils
 from schema import Schema
 
 

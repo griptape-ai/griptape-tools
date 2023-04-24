@@ -1,2 +1,2 @@
-griptape-core>=0.9.2
+griptape>=0.6
 git+https://github.com/aws/aws-cli.git@2.11.12#egg=awscli

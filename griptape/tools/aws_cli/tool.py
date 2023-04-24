@@ -1,7 +1,8 @@
 import json
 from typing import Optional
 from schema import Schema
-from griptape.core import BaseTool, action, utils
+from griptape.core import action, BaseTool
+from griptape import utils
 from attr import define, field
 
 

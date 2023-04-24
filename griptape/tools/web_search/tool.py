@@ -1,6 +1,6 @@
 from typing import Optional
 from attr import define, field
-from schema import Schema, Literal
+from schema import Schema
 from griptape.core import BaseTool, action
 
 
