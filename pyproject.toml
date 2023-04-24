@@ -14,7 +14,6 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.9"
 griptape = ">=0.6"
-llama_index = ">= 0.5"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
