@@ -1,10 +1,11 @@
-from griptape.core import BaseTool, action
+from griptape.core import BaseTool
+from griptape.core.decorators import activity
 import griptape.utils as utils
 from schema import Schema
 
 
 class Calculator(BaseTool):
-    @action(config={
+    @activity(config={
         "name": "calculate",
         "description": "Can be used for making simple calculations in Python",
         "schema": Schema(
@@ -13,8 +14,8 @@ class Calculator(BaseTool):
                         "imports or external libraries"
         )
     })
-    def calculate(self, value: bytes) -> str:
+    def calculate(self, value: any) -> str:
         try:
-            return utils.PythonRunner().run(value.decode())
+            return utils.PythonRunner().run(value)
         except Exception as e:
             return f"error calculating: {e}"

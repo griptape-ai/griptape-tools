@@ -5,7 +5,8 @@ import imaplib
 from email.mime.text import MIMEText
 from typing import Optional
 from attr import define, field
-from griptape.core import BaseTool, action
+from griptape.core import BaseTool
+from griptape.core.decorators import activity
 from schema import Schema, Literal
 
 
@@ -32,7 +33,7 @@ class EmailClient(BaseTool):
     # be careful of allowing too many records to be returned as it could impact token usage
     email_max_retrieve_count: int = field(default=10, kw_only=True, metadata={"env": "EMAIL_MAX_RETRIEVE_COUNT"})
 
-    @action(config={
+    @activity(config={
         "name": "retrieve",
         "description": "Can be used to retrieve emails",
         "schema": Schema({
@@ -55,8 +56,8 @@ class EmailClient(BaseTool):
         })
     })
 
-    def retrieve(self, value: bytes) -> list[str]:
-        params = ast.literal_eval(value.decode())
+    def retrieve(self, value: any) -> list[str]:
+        params = ast.literal_eval(value)
 
         imap_url = self.env_value("IMAP_URL")
 
@@ -96,7 +97,7 @@ class EmailClient(BaseTool):
             return "error retrieving email {e}"
 
 
-    @action(config={
+    @activity(config={
         "name": "send",
         "description": "Can be used to send emails",
         "schema": Schema({
@@ -114,9 +115,9 @@ class EmailClient(BaseTool):
             ): str
         })
     })
-    def send(self, value: bytes) -> str:
+    def send(self, value: any) -> str:
         server: Optional[smtplib.SMTP] = None
-        params = ast.literal_eval(value.decode())
+        params = ast.literal_eval(value)
 
         # email username can be overridden by setting the smtp user explicitly
         smtp_user = self.env_value("SMTP_USER")

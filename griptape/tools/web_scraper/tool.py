@@ -6,7 +6,8 @@ import json
 from typing import Union
 from attr import define, field
 from schema import Schema, Literal
-from griptape.core import BaseTool, action
+from griptape.core import BaseTool
+from griptape.core.decorators import activity
 
 if TYPE_CHECKING:
     from llama_index import GPTSimpleVectorIndex
@@ -17,7 +18,7 @@ class WebScraper(BaseTool):
     openai_api_key: Optional[str] = field(default=None, kw_only=True, metadata={"env": "OPENAI_API_KEY"})
     include_links: bool = field(default=True, kw_only=True, metadata={"env": "INCLUDE_LINKS"})
 
-    @action(config={
+    @activity(config={
         "name": "get_title",
         "description": "Can be used to get the title of a web page",
         "schema": Schema(
@@ -25,10 +26,10 @@ class WebScraper(BaseTool):
             description="Valid HTTP URL"
         )
     })
-    def get_title(self, value: bytes) -> str:
-        return self._load_page(value.decode()).get("title")
+    def get_title(self, value: any) -> str:
+        return self._load_page(value).get("title")
 
-    @action(config={
+    @activity(config={
         "name": "get_full_page",
         "description": "Can be used to get all text content of a web page",
         "schema": Schema(
@@ -36,10 +37,10 @@ class WebScraper(BaseTool):
             description="Valid HTTP URL"
         )
     })
-    def get_full_page(self, value: bytes) -> str:
-        return self._load_page(value.decode()).get("text")
+    def get_full_page(self, value: any) -> str:
+        return self._load_page(value).get("text")
 
-    @action(config={
+    @activity(config={
         "name": "search_page",
         "description": "Can be used to search a specific web page",
         "schema": Schema({
@@ -53,13 +54,13 @@ class WebScraper(BaseTool):
             ): str
         })
     })
-    def search_page(self, value: bytes) -> str:
-        params = ast.literal_eval(value.decode())
+    def search_page(self, value: any) -> str:
+        params = ast.literal_eval(value)
         index = self._to_vector_index(self._load_page(params["url"]).get("text"))
 
         return str(index.query(f"search the following text for '{params['query']}'")).strip()
 
-    @action(config={
+    @activity(config={
         "name": "get_authors",
         "description": "Can be used to get a list of web page authors",
         "schema": Schema(
@@ -67,12 +68,12 @@ class WebScraper(BaseTool):
             description="Valid HTTP URL"
         )
     })
-    def get_authors(self, value: bytes) -> list[str]:
+    def get_authors(self, value: any) -> list[str]:
         return [
-            self._load_page(value.decode()).get("author")
+            self._load_page(value).get("author")
         ]
 
-    @action(config={
+    @activity(config={
         "name": "get_keywords",
         "description": "Can be used to generate a list of keywords for a web page",
         "schema": Schema(
@@ -80,13 +81,13 @@ class WebScraper(BaseTool):
             description="Valid HTTP URL"
         )
     })
-    def get_keywords(self, value: bytes) -> list[str]:
-        index = self._to_vector_index(self._load_page(value.decode()).get("text"))
+    def get_keywords(self, value: any) -> list[str]:
+        index = self._to_vector_index(self._load_page(value).get("text"))
         keywords = str(index.query("Generate a comma-separated list of keywords for the following text"))
 
         return [w.strip() for w in keywords.split(",")]
 
-    @action(config={
+    @activity(config={
         "name": "summarize_page",
         "description": "Can be used to generate a web page summary",
         "schema": Schema(
@@ -94,8 +95,8 @@ class WebScraper(BaseTool):
             description="Valid HTTP URL"
         )
     })
-    def summarize_page(self, value: bytes) -> str:
-        index = self._to_vector_index(self._load_page(value.decode()).get("text"))
+    def summarize_page(self, value: any) -> str:
+        index = self._to_vector_index(self._load_page(value).get("text"))
 
         return str(index.query("Generate a summary")).strip()
 
