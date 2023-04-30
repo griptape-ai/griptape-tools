@@ -1,4 +1,3 @@
-import json
 from griptape.tools import EmailClient
 
 
@@ -14,7 +13,7 @@ class TestEmailClient:
             imap_url="",
             imap_user="",
             imap_password=""
-        ).retrieve(json.dumps(value).encode())
+        ).retrieve(value).value
 
     def test_send(self):
         value = {
@@ -26,4 +25,4 @@ class TestEmailClient:
         assert "error sending email" in EmailClient(
             smtp_host="",
             smtp_port=0
-        ).send(json.dumps(value).encode())
+        ).send(value).value

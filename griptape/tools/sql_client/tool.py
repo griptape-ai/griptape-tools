@@ -1,6 +1,8 @@
 from typing import Optional
 from attr import define, field
-from griptape.core import BaseTool, action
+from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
+from griptape.core import BaseTool
+from griptape.core.decorators import activity
 from schema import Schema
 
 
@@ -15,7 +17,7 @@ class SqlClient(BaseTool):
             "engine": self.engine_name
         }
 
-    @action(config={
+    @activity(config={
         "name": "query",
         "description": "Can be used to execute SQL queries in {{ engine }}",
         "schema": Schema(
@@ -23,19 +25,19 @@ class SqlClient(BaseTool):
             description="SQL query to execute. For example, SELECT, CREATE, INSERT, DROP, DELETE, etc."
         )
     })
-    def query(self, value: bytes) -> str:
+    def query(self, value: str) -> BaseArtifact:
         from sqlalchemy import create_engine, text
 
         engine = create_engine(self.env_value("ENGINE_URL"))
 
         try:
             with engine.connect() as con:
-                results = con.execute(text(value.decode()))
+                results = con.execute(text(value))
 
                 if results.returns_rows:
-                    return str([row for row in results]).strip('[]')
+                    return TextArtifact(str([row for row in results]).strip('[]'))
                 else:
-                    return "query successfully executed"
+                    return TextArtifact("query successfully executed")
 
         except Exception as e:
-            return f"error executing SQL: {e}"
+            return ErrorArtifact(f"error executing SQL: {e}")

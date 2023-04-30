@@ -1,11 +1,13 @@
-import ast
+import imaplib
 import logging
 import smtplib
-import imaplib
 from email.mime.text import MIMEText
 from typing import Optional
+import schema
 from attr import define, field
-from griptape.core import BaseTool, action
+from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
+from griptape.core import BaseTool
+from griptape.core.decorators import activity
 from schema import Schema, Literal
 
 
@@ -32,7 +34,7 @@ class EmailClient(BaseTool):
     # be careful of allowing too many records to be returned as it could impact token usage
     email_max_retrieve_count: int = field(default=10, kw_only=True, metadata={"env": "EMAIL_MAX_RETRIEVE_COUNT"})
 
-    @action(config={
+    @activity(config={
         "name": "retrieve",
         "description": "Can be used to retrieve emails",
         "schema": Schema({
@@ -48,16 +50,15 @@ class EmailClient(BaseTool):
                 "search_criteria",
                 description="Search criteria to filter emails"
             ): str,
-            Literal(
-                "retrieve_count",
-                description="Optional param to override the default max retrieve count"
+            schema.Optional(
+                Literal(
+                    "retrieve_count",
+                    description="Optional param to override the default max retrieve count"
+                )
             ): int
         })
     })
-
-    def retrieve(self, value: bytes) -> list[str]:
-        params = ast.literal_eval(value.decode())
-
+    def retrieve(self, value: dict) -> BaseArtifact:
         imap_url = self.env_value("IMAP_URL")
 
         # email username can be overridden by setting the imap user explicitly
@@ -72,31 +73,31 @@ class EmailClient(BaseTool):
 
         max_retrieve_count = self.env_value("EMAIL_MAX_RETRIEVE_COUNT")
 
-        label = params["label"]
-        key = params["key"]
-        retrieve_count = int(params["retrieve_count"]) if "retrieve_count" in params else max_retrieve_count
-        search_criteria = params["search_criteria"]
+        label = value["label"]
+        key = value["key"]
+        retrieve_count = int(value["retrieve_count"]) if "retrieve_count" in value else max_retrieve_count
+        search_criteria = value["search_criteria"]
 
         try:
             con = imaplib.IMAP4_SSL(imap_url)
             con.login(imap_user, imap_password)
             con.select(label)
 
-            result, data = con.search(None, key, search_criteria)
+            result, data = con.search(None, key, f'"{search_criteria}"')
             retrieve_list = data[0].split()
             messages = []
             for num in retrieve_list[0:min(int(max_retrieve_count), int(retrieve_count))]:
-                typ, data = con.fetch(num, '(RFC822)')
+                typ, data = con.fetch(num, "(RFC822)")
                 messages.append(data)
             con.close()
 
-            return messages
+            return TextArtifact(str(messages))
         except Exception as e:
             logging.error(e)
-            return "error retrieving email {e}"
 
+            return ErrorArtifact(f"error retrieving email {e}")
 
-    @action(config={
+    @activity(config={
         "name": "send",
         "description": "Can be used to send emails",
         "schema": Schema({
@@ -114,9 +115,8 @@ class EmailClient(BaseTool):
             ): str
         })
     })
-    def send(self, value: bytes) -> str:
+    def send(self, value: dict) -> BaseArtifact:
         server: Optional[smtplib.SMTP] = None
-        params = ast.literal_eval(value.decode())
 
         # email username can be overridden by setting the smtp user explicitly
         smtp_user = self.env_value("SMTP_USER")
@@ -131,9 +131,9 @@ class EmailClient(BaseTool):
         smtp_host = self.env_value("SMTP_HOST")
         smtp_port = int(self.env_value("SMTP_PORT"))
 
-        to_email = params["to"]
-        subject = params["subject"]
-        msg = MIMEText(params["body"])
+        to_email = value["to"]
+        subject = value["subject"]
+        msg = MIMEText(value["body"])
 
         try:
             if self.env_value("SMTP_USE_SSL"):
@@ -148,11 +148,11 @@ class EmailClient(BaseTool):
             server.login(smtp_user, smtp_password)
             server.sendmail(smtp_user, [to_email], msg.as_string())
 
-            return "email was successfully sent"
+            return TextArtifact("email was successfully sent")
         except Exception as e:
             logging.error(e)
 
-            return f"error sending email: {e}"
+            return ErrorArtifact(f"error sending email: {e}")
         finally:
             try:
                 server.quit()

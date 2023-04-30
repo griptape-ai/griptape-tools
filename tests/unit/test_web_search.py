@@ -1,4 +1,5 @@
 import pytest
+from griptape.artifacts import BaseArtifact
 from griptape.tools import WebSearch
 from tests.utils import install_requirements
 
@@ -10,5 +11,5 @@ class TestWebSearch:
         install_requirements("web_search")
 
     def test_search(self):
-        assert isinstance(WebSearch().search(b"foo bar"), dict)
+        assert isinstance(WebSearch().search("foo bar"), BaseArtifact)
         

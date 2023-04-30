@@ -1,7 +1,9 @@
 from typing import Optional
 from attr import define, field
+from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 from schema import Schema
-from griptape.core import BaseTool, action
+from griptape.core import BaseTool
+from griptape.core.decorators import activity
 
 
 @define
@@ -12,7 +14,7 @@ class WebSearch(BaseTool):
     google_api_search_id: Optional[str] = field(default=None, kw_only=True, metadata={"env": "GOOGLE_API_SEARCH_ID"})
     google_api_country: str = field(default="us", kw_only=True, metadata={"env": "GOOGLE_API_COUNTRY"})
 
-    @action(config={
+    @activity(config={
         "name": "search",
         "description": "Can be used for searching the web",
         "schema": Schema(
@@ -20,15 +22,11 @@ class WebSearch(BaseTool):
             description="Search engine request that returns a list of pages with titles, descriptions, and URLs"
         )
     })
-    def search(self, value: bytes) -> dict:
+    def search(self, value: str) -> BaseArtifact:
         try:
-            return {
-                "results": self._search_google(value.decode())
-            }
+            return TextArtifact(str(self._search_google(value)))
         except Exception as e:
-            return {
-                "error": f"error searching Google: {e}"
-            }
+            return ErrorArtifact(f"error searching Google: {e}")
 
     def _search_google(self, query: str) -> list[dict]:
         import requests

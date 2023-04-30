@@ -1,4 +1,5 @@
 import pytest
+from griptape.artifacts import BaseArtifact
 from tests.utils import install_requirements
 from griptape.tools import SqlClient
 import sqlite3
@@ -17,4 +18,4 @@ class TestSqlClient:
                 engine_name="sqlite"
             )
 
-            assert isinstance(client.query(b"PRAGMA compile_options;"), str)
+            assert isinstance(client.query("PRAGMA compile_options;"), BaseArtifact)
