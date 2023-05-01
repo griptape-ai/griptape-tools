@@ -1,4 +1,3 @@
-import json
 from typing import Optional
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 from schema import Schema
@@ -13,12 +12,15 @@ class AwsCli(BaseTool):
     aws_access_key_id: Optional[str] = field(default=None, kw_only=True, metadata={"env": "AWS_ACCESS_KEY_ID"})
     aws_secret_access_key: Optional[str] = field(default=None, kw_only=True, metadata={"env": "AWS_SECRET_ACCESS_KEY"})
     aws_default_region: str = field(default="us-east-1", kw_only=True, metadata={"env": "AWS_DEFAULT_REGION"})
-    aws_cli_policy: Optional[str] = field(default=None, kw_only=True, metadata={"env": "AWS_CLI_POLICY"})
+    aws_cli_policy: str = field(
+        default="""{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"*","Resource":"*"}]}""",
+        kw_only=True
+    )
 
     @property
     def schema_template_args(self) -> dict:
         return {
-            "policy": json.dumps(utils.minify_json(self.env_value("AWS_CLI_POLICY"))).strip('"')
+            "policy": utils.minify_json(self.aws_cli_policy)
         }
 
     @activity(config={
