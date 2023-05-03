@@ -28,7 +28,7 @@ class AwsCli(BaseTool):
         "description": "Can be used to execute AWS CLI v2 commands limited by this policy: {{ policy }}",
         "schema": Schema(
             str,
-            description="AWS CLI v2 command"
+            description="AWS CLI v2 command starting with 'aws'"
         )
     })
     def execute(self, value: str) -> BaseArtifact:
