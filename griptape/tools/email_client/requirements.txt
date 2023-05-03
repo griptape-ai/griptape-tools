@@ -1,1 +1,1 @@
-griptape==0.7.1
+griptape==0.7.2
