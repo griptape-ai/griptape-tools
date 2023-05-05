@@ -11,22 +11,22 @@ from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 
 @define
 class RestApi(BaseTool):
-    base_url: str = field(default=None, kw_only=True, metadata={"env": "BASE_URL"})
-    path: str = field(default=None, kw_only=True, metadata={"env": "URL_PATH"})
+    base_url: str = field(default="", kw_only=True, metadata={"env": "BASE_URL"})
+    path: str = field(default="", kw_only=True, metadata={"env": "URL_PATH"})
     description: str = field(
-        default=None, kw_only=True, metadata={"env": "DESCRIPTION"}
+        default="", kw_only=True, metadata={"env": "DESCRIPTION"}
     )
     request_path_params_schema: str = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_PATH_PARAMS_SCHEMA"}
+        default="", kw_only=True, metadata={"env": "REQUEST_PATH_PARAMS_SCHEMA"}
     )
     request_query_params_schema: str = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_QUERY_PARAMS_SCHEMA"}
+        default="", kw_only=True, metadata={"env": "REQUEST_QUERY_PARAMS_SCHEMA"}
     )
     request_body_schema: str = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_BODY_SCHEMA"}
+        default="", kw_only=True, metadata={"env": "REQUEST_BODY_SCHEMA"}
     )
     response_body_schema: str = field(
-        default=None, kw_only=True, metadata={"env": "RESPONSE_BODY_SCHEMA"}
+        default="", kw_only=True, metadata={"env": "RESPONSE_BODY_SCHEMA"}
     )
 
     @property
