@@ -5,6 +5,7 @@ from .sql_client.tool import SqlClient
 from .email_client.tool import EmailClient
 from .aws_cli.tool import AwsCli
 from .rest_api.tool import RestApi
+from .pdf_reader.tool import PdfReader
 
 __all__ = [
     "Calculator",
@@ -14,4 +15,5 @@ __all__ = [
     "EmailClient",
     "AwsCli",
     "RestApi",
+    "PdfReader"
 ]
