@@ -4,6 +4,7 @@ from .web_scraper.tool import WebScraper
 from .sql_client.tool import SqlClient
 from .email_client.tool import EmailClient
 from .aws_cli.tool import AwsCli
+from .pdf_reader.tool import PdfReader
 
 __all__ = [
     "Calculator",
@@ -11,5 +12,6 @@ __all__ = [
     "WebScraper",
     "SqlClient",
     "EmailClient",
-    "AwsCli"
+    "AwsCli",
+    "PdfReader"
 ]
