@@ -11,7 +11,6 @@ from griptape.core.decorators import activity
 
 @define
 class PdfReader(BaseTool):
-    include_links: bool = field(default=True, kw_only=True, metadata={"env": "INCLUDE_LINKS"})
 
     @activity(config={
         "name": "get_content",
