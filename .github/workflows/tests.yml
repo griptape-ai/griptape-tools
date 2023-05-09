@@ -44,8 +44,6 @@ jobs:
         run: poetry install --no-interaction
 
       - name: Run tests
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           source .venv/bin/activate
           pytest tests/unit
