@@ -1,3 +1,4 @@
+import os
 import random
 
 import pytest
@@ -18,7 +19,8 @@ class TestPdfReader:
         return PdfReader()
 
     def test_read_pdf(self, pdf_reader):
-        artifact = pdf_reader.get_content("./bitcoin.pdf")
+        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources/bitcoin.pdf")
+        artifact = pdf_reader.get_content(path)
         assert isinstance(artifact, TextArtifact)
 
         response = artifact.value

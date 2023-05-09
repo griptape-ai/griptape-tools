@@ -1,18 +1,13 @@
 from __future__ import annotations
-import logging
-import json
-from typing import Union
-from attr import define, field
+from attr import define
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
-from schema import Schema
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
+from schema import Schema
 
 
 @define
 class PdfReader(BaseTool):
-    include_links: bool = field(default=True, kw_only=True, metadata={"env": "INCLUDE_LINKS"})
-
     @activity(config={
         "name": "get_content",
         "description": "Can be used to get all text content from a PDF",
@@ -22,11 +17,11 @@ class PdfReader(BaseTool):
         )
     })
     def get_content(self, value: str) -> BaseArtifact:
-        from PyPDF2 import PdfReader as PDFR
+        from PyPDF2 import PdfReader
 
         # noinspection PyBroadException
         try:
-            reader = PDFR(value)
+            reader = PdfReader(value)
             text = " ".join([p.extract_text().strip("\n") for p in reader.pages])
             return TextArtifact(text)
         except Exception as e:
