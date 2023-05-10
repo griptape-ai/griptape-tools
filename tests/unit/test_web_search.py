@@ -11,5 +11,5 @@ class TestWebSearch:
         install_requirements("web_search")
 
     def test_search(self):
-        assert isinstance(WebSearch().search("foo bar"), BaseArtifact)
+        assert isinstance(WebSearch().search({"values": {"query": "foo bar"}}), BaseArtifact)
         

@@ -17,48 +17,48 @@ class TestRestApi:
 
     def test_put(self, client):
         assert isinstance(
-            client.post({"body": {}}),
+            client.post({"values": {"body": {}}}),
             BaseArtifact,
         )
 
     def test_post(self, client):
         assert isinstance(
-            client.post({"body": {}}),
+            client.post({"values": {"body": {}}}),
             BaseArtifact,
         )
 
     def test_get_one(self, client):
         assert isinstance(
-            client.get({"pathParams": ["1"]}),
+            client.get({"values": {"pathParams": ["1"]}}),
             BaseArtifact,
         )
 
     def test_get_all(self, client):
         assert isinstance(
-            client.get(),
+            client.get({"values":{}}),
             BaseArtifact,
         )
 
     def test_get_filtered(self, client):
         assert isinstance(
-            client.get({"queryParams": {"limit": 10}}),
+            client.get({"values": {"queryParams": {"limit": 10}}}),
             BaseArtifact,
         )
 
     def test_delete_one(self, client):
         assert isinstance(
-            client.delete({"pathParams": ["1"]}),
+            client.delete({"values": {"pathParams": ["1"]}}),
             BaseArtifact,
         )
 
     def test_delete_multiple(self, client):
         assert isinstance(
-            client.delete({"queryParams": {"ids": [1, 2]}}),
+            client.delete({"values": {"queryParams": {"ids": [1, 2]}}}),
             BaseArtifact,
         )
 
     def test_patch(self, client):
         assert isinstance(
-            client.patch({"pathParams": ["1"], "body": {}}),
+            client.patch({"values": {"pathParams": ["1"], "body": {}}}),
             BaseArtifact,
         )

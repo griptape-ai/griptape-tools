@@ -13,7 +13,7 @@ class TestEmailClient:
             imap_url="",
             imap_user="",
             imap_password=""
-        ).retrieve(value).value
+        ).retrieve({"values": value}).value
 
     def test_send(self):
         value = {
@@ -25,4 +25,4 @@ class TestEmailClient:
         assert "error sending email" in EmailClient(
             smtp_host="",
             smtp_port=0
-        ).send(value).value
+        ).send({"values": value}).value

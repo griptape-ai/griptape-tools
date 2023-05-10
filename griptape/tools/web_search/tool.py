@@ -1,7 +1,7 @@
 from typing import Optional
 from attr import define, field
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
-from schema import Schema
+from schema import Schema, Literal
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 
@@ -17,14 +17,18 @@ class WebSearch(BaseTool):
     @activity(config={
         "name": "search",
         "description": "Can be used for searching the web",
-        "schema": Schema(
-            str,
-            description="Search engine request that returns a list of pages with titles, descriptions, and URLs"
-        )
+        "schema": Schema({
+            Literal(
+                "query",
+                description="Search engine request that returns a list of pages with titles, descriptions, and URLs"
+            ): str
+        })
     })
-    def search(self, value: str) -> BaseArtifact:
+    def search(self, props: dict) -> BaseArtifact:
+        query = props["values"]["query"]
+
         try:
-            return TextArtifact(str(self._search_google(value)))
+            return TextArtifact(str(self._search_google(query)))
         except Exception as e:
             return ErrorArtifact(f"error searching Google: {e}")
 

@@ -1,6 +1,6 @@
 from typing import Optional
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
-from schema import Schema
+from schema import Schema, Literal
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape import utils
@@ -26,13 +26,16 @@ class AwsCli(BaseTool):
     @activity(config={
         "name": "execute",
         "description": "Can be used to execute AWS CLI v2 commands limited by this policy: {{ policy }}",
-        "schema": Schema(
-            str,
-            description="AWS CLI v2 command starting with 'aws'"
-        )
+        "schema": Schema({
+            Literal(
+                "command",
+                description="AWS CLI v2 command starting with 'aws'"
+            ): str
+        })
     })
-    def execute(self, value: str) -> BaseArtifact:
-        result = utils.CommandRunner().run(f"AWS_PAGER='' {value} --output json")
+    def execute(self, params: dict) -> BaseArtifact:
+        command = params["values"]["command"]
+        result = utils.CommandRunner().run(f"AWS_PAGER='' {command} --output json")
 
         if isinstance(result, ErrorArtifact):
             return result

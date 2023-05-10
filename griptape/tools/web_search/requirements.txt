@@ -1,2 +1,2 @@
-griptape==0.7.3
+griptape==0.8.0
 requests

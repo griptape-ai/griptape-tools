@@ -18,4 +18,4 @@ class TestSqlClient:
                 engine_name="sqlite"
             )
 
-            assert isinstance(client.query("PRAGMA compile_options;"), BaseArtifact)
+            assert isinstance(client.query({"values": {"query": "PRAGMA compile_options;"}}), BaseArtifact)

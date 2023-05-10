@@ -4,7 +4,7 @@ import json
 from typing import Union
 from attr import define, field
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
-from schema import Schema
+from schema import Schema, Literal
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 
@@ -16,50 +16,59 @@ class WebScraper(BaseTool):
     @activity(config={
         "name": "get_title",
         "description": "Can be used to get the title of a web page",
-        "schema": Schema(
-            str,
-            description="Valid HTTP URL"
-        )
+        "schema": Schema({
+            Literal(
+                "url",
+                description="Valid HTTP URL"
+            ): str
+        })
     })
-    def get_title(self, value: str) -> BaseArtifact:
-        page = self._load_page(value)
+    def get_title(self, params: dict) -> BaseArtifact:
+        url = params["values"]["url"]
+        page = self._load_page(url)
 
         if isinstance(page, ErrorArtifact):
             return page
         else:
-            return TextArtifact(self._load_page(value).get("title"))
+            return TextArtifact(page.get("title"))
 
     @activity(config={
         "name": "get_content",
         "description": "Can be used to get all text content of a web page",
-        "schema": Schema(
-            str,
-            description="Valid HTTP URL"
-        )
+        "schema": Schema({
+            Literal(
+                "url",
+                description="Valid HTTP URL"
+            ): str
+        })
     })
-    def get_content(self, value: str) -> BaseArtifact:
-        page = self._load_page(value)
+    def get_content(self, params: dict) -> BaseArtifact:
+        url = params["values"]["url"]
+        page = self._load_page(url)
 
         if isinstance(page, ErrorArtifact):
             return page
         else:
-            return TextArtifact(self._load_page(value).get("text"))
+            return TextArtifact(page.get("text"))
 
     @activity(config={
-        "name": "get_authors",
-        "description": "Can be used to get a list of web page authors",
-        "schema": Schema(
-            str,
-            description="Valid HTTP URL"
-        )
+        "name": "get_author",
+        "description": "Can be used to get web page author",
+        "schema": Schema({
+            Literal(
+                "url",
+                description="Valid HTTP URL"
+            ): str
+        })
     })
-    def get_authors(self, value: str) -> BaseArtifact:
-        page = self._load_page(value)
+    def get_author(self, params: dict) -> BaseArtifact:
+        url = params["values"]["url"]
+        page = self._load_page(url)
 
         if isinstance(page, ErrorArtifact):
             return page
         else:
-            return TextArtifact(self._load_page(value).get("author"))
+            return TextArtifact(page.get("author"))
 
     def _load_page(self, url: str) -> Union[dict, ErrorArtifact]:
         import trafilatura

@@ -58,7 +58,8 @@ class EmailClient(BaseTool):
             ): int
         })
     })
-    def retrieve(self, value: dict) -> BaseArtifact:
+    def retrieve(self, params: dict) -> BaseArtifact:
+        values = params["values"]
         imap_url = self.env_value("IMAP_URL")
 
         # email username can be overridden by setting the imap user explicitly
@@ -73,10 +74,14 @@ class EmailClient(BaseTool):
 
         max_retrieve_count = self.env_value("EMAIL_MAX_RETRIEVE_COUNT")
 
-        label = value["label"]
-        key = value["key"]
-        retrieve_count = int(value["retrieve_count"]) if "retrieve_count" in value else max_retrieve_count
-        search_criteria = value["search_criteria"]
+        label = values["label"]
+        key = values["key"]
+        search_criteria = values["search_criteria"]
+
+        if "retrieve_count" in values:
+            retrieve_count = int(values["retrieve_count"])
+        else:
+            retrieve_count = max_retrieve_count
 
         try:
             con = imaplib.IMAP4_SSL(imap_url)
@@ -86,9 +91,12 @@ class EmailClient(BaseTool):
             result, data = con.search(None, key, f'"{search_criteria}"')
             retrieve_list = data[0].split()
             messages = []
+
             for num in retrieve_list[0:min(int(max_retrieve_count), int(retrieve_count))]:
                 typ, data = con.fetch(num, "(RFC822)")
+
                 messages.append(data)
+
             con.close()
 
             return TextArtifact(str(messages))
@@ -115,7 +123,8 @@ class EmailClient(BaseTool):
             ): str
         })
     })
-    def send(self, value: dict) -> BaseArtifact:
+    def send(self, params: dict) -> BaseArtifact:
+        input_values = params["values"]
         server: Optional[smtplib.SMTP] = None
 
         # email username can be overridden by setting the smtp user explicitly
@@ -131,9 +140,9 @@ class EmailClient(BaseTool):
         smtp_host = self.env_value("SMTP_HOST")
         smtp_port = int(self.env_value("SMTP_PORT"))
 
-        to_email = value["to"]
-        subject = value["subject"]
-        msg = MIMEText(value["body"])
+        to_email = input_values["to"]
+        subject = input_values["subject"]
+        msg = MIMEText(input_values["body"])
 
         try:
             if self.env_value("SMTP_USE_SSL"):

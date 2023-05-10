@@ -1,9 +1,8 @@
-from __future__ import annotations
 from attr import define
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
-from schema import Schema
+from schema import Schema, Literal
 
 
 @define
@@ -11,18 +10,22 @@ class PdfReader(BaseTool):
     @activity(config={
         "name": "get_content",
         "description": "Can be used to get all text content from a PDF",
-        "schema": Schema(
-            str,
-            description="Valid path to a PDF file"
-        )
+        "schema": Schema({
+            Literal(
+                "path",
+                description="Valid POSIX path to a PDF file"
+            ): str
+        })
     })
-    def get_content(self, value: str) -> BaseArtifact:
-        from PyPDF2 import PdfReader
+    def get_content(self, params: dict) -> BaseArtifact:
+        from PyPDF2 import PdfReader as PyPDF2PdfReader
 
-        # noinspection PyBroadException
+        path = params["values"]["path"]
+
         try:
-            reader = PdfReader(value)
+            reader = PyPDF2PdfReader(path)
             text = " ".join([p.extract_text().strip("\n") for p in reader.pages])
+
             return TextArtifact(text)
         except Exception as e:
-            return ErrorArtifact(f"Failed to read PDF", exception=e)
+            return ErrorArtifact(f"failed to read PDF: {e}")

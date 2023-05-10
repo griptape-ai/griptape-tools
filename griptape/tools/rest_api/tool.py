@@ -1,9 +1,6 @@
 from textwrap import dedent
-import logging
 from schema import Schema, Literal, Optional
 from attr import define, field
-from requests import post, get, delete, put, patch
-from requests import exceptions
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
@@ -52,24 +49,29 @@ class RestApi(BaseTool):
                 The response body must follow this JSON schema: {{response_body_schema}}.
                 """
             ),
-            "schema": Schema(
-                {
-                    Literal("body", description="The request body."): dict,
-                }
-            ),
+            "schema": Schema({
+                Literal(
+                    "body",
+                    description="The request body."
+                ): dict,
+            }),
         }
     )
-    def put(self, value: dict) -> BaseArtifact:
+    def put(self, params: dict) -> BaseArtifact:
+        from requests import put, exceptions
+        
+        values = params["values"]
         base_url = self.env_value("BASE_URL")
         path = self.env_value("URL_PATH")
-        body = value.get("body")
+        body = values.get("body")
         url = f"{base_url}/{path}"
 
         try:
             response = put(url, data=body, timeout=30)
+
             return TextArtifact(response.text)
         except exceptions.RequestException as err:
-            return ErrorArtifact(err)
+            return ErrorArtifact(str(err))
 
     @activity(
         config={
@@ -83,28 +85,33 @@ class RestApi(BaseTool):
                 The response body must follow this JSON schema: {{response_body_schema}}.
                 """
             ),
-            "schema": Schema(
-                {
-                    Literal(
-                        "pathParams", description="The request path parameters."
-                    ): list,
-                    Literal("body", description="The request body."): dict,
-                }
-            ),
+            "schema": Schema({
+                Literal(
+                    "pathParams",
+                    description="The request path parameters."
+                ): list,
+                Literal(
+                    "body",
+                    description="The request body."
+                ): dict,
+            }),
         }
     )
-    def patch(self, value: dict) -> BaseArtifact:
+    def patch(self, params: dict) -> BaseArtifact:
+        from requests import patch, exceptions
+        
+        input_values = params["values"]
         base_url = self.env_value("BASE_URL")
         path = self.env_value("URL_PATH")
-        body = value.get("body")
-        path_params = value.get("pathParams")
+        body = input_values.get("body")
+        path_params = input_values.get("pathParams")
         url = f"{base_url}/{path}/{'/'.join(path_params)}"
 
         try:
             response = patch(url, data=body, timeout=30)
             return TextArtifact(response.text)
         except exceptions.RequestException as err:
-            return ErrorArtifact(err)
+            return ErrorArtifact(str(err))
 
     @activity(
         config={
@@ -117,18 +124,19 @@ class RestApi(BaseTool):
                 The response body must follow this JSON schema: {{response_body_schema}}.
                 """
             ),
-            "schema": Schema(
-                {
-                    Literal("body", description="The request body."): dict,
-                }
-            ),
+            "schema": Schema({
+                Literal("body", description="The request body."): dict,
+            }),
         }
     )
-    def post(self, value: dict) -> BaseArtifact:
+    def post(self, params: dict) -> BaseArtifact:
+        from requests import post, exceptions
+        
+        input_values = params["values"]
         base_url = self.env_value("BASE_URL")
         path = self.env_value("URL_PATH")
         url = f"{base_url}/{path}"
-        body = value["body"]
+        body = input_values["body"]
 
         try:
             response = post(url, data=body, timeout=30)
@@ -149,40 +157,42 @@ class RestApi(BaseTool):
                 """
             ),
             "schema": Optional(
-                Schema(
-                    {
-                        Optional(
-                            Literal(
-                                "queryParams",
-                                description="The request query parameters.",
-                            )
-                        ): dict,
-                        Optional(
-                            Literal(
-                                "pathParams", description="The request path parameters."
-                            )
-                        ): list,
-                    }
-                )
+                Schema({
+                    Optional(
+                        Literal(
+                            "queryParams",
+                            description="The request query parameters.",
+                        )
+                    ): dict,
+                    Optional(
+                        Literal(
+                            "pathParams",
+                            description="The request path parameters."
+                        )
+                    ): list,
+                })
             ),
         }
     )
-    def get(self, value: dict = None) -> BaseArtifact:
+    def get(self, params: dict) -> BaseArtifact:
+        from requests import get, exceptions
+        
+        input_values = params["values"]
         base_url = self.env_value("BASE_URL")
         path = self.env_value("URL_PATH")
 
         query_params = {}
         path_params = []
-        if value:
-            query_params = value.get("queryParams", {})
-            path_params = value.get("pathParams", [])
+        if input_values:
+            query_params = input_values.get("queryParams", {})
+            path_params = input_values.get("pathParams", [])
         url = f"{base_url}/{path}/{'/'.join(path_params)}"
 
         try:
             response = get(url, params=query_params, timeout=30)
             return TextArtifact(response.text)
         except exceptions.RequestException as err:
-            return ErrorArtifact(err)
+            return ErrorArtifact(str(err))
 
     @activity(
         config={
@@ -195,33 +205,34 @@ class RestApi(BaseTool):
                 The request query parameters must follow this JSON schema: {{request_path_params_schema}}.
                 """
             ),
-            "schema": Schema(
-                {
-                    Optional(
-                        Literal(
-                            "queryParams",
-                            description="The request query parameters.",
-                        )
-                    ): dict,
-                    Optional(
-                        Literal(
-                            "pathParams", description="The request path parameters."
-                        )
-                    ): list,
-                }
-            ),
+            "schema": Schema({
+                Optional(
+                    Literal(
+                        "queryParams",
+                        description="The request query parameters.",
+                    )
+                ): dict,
+                Optional(
+                    Literal(
+                        "pathParams", description="The request path parameters."
+                    )
+                ): list,
+            }),
         }
     )
-    def delete(self, value: dict = None) -> BaseArtifact:
+    def delete(self, params: dict = None) -> BaseArtifact:
+        from requests import delete, exceptions
+        
+        input_values = params["values"]
         base_url = self.env_value("BASE_URL")
         path = self.env_value("URL_PATH")
 
-        query_params = value.get("queryParams", {})
-        path_params = value.get("pathParams", [])
+        query_params = input_values.get("queryParams", {})
+        path_params = input_values.get("pathParams", [])
         url = f"{base_url}/{path}/{'/'.join(path_params)}"
 
         try:
             response = delete(url, params=query_params, timeout=30)
             return TextArtifact(response.text)
         except exceptions.RequestException as err:
-            return ErrorArtifact(err)
+            return ErrorArtifact(str(err))
