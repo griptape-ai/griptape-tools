@@ -13,7 +13,9 @@ class TestFileManager:
         install_requirements("file_manager")
 
     def test_load(self):
-        result = FileManager().load({"values": {"paths": ["unit/resources/bitcoin.pdf"]}})
+        result = FileManager(
+            dir=os.path.abspath(os.path.dirname(__file__))
+        ).load({"values": {"paths": ["resources/bitcoin.pdf"]}})
 
         assert isinstance(result, ListArtifact)
         assert len(result.value) == 1
