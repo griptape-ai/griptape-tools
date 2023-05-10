@@ -7,6 +7,7 @@ from .aws_cli.tool import AwsCli
 from .rest_api.tool import RestApi
 from .pdf_reader.tool import PdfReader
 from .file_manager.tool import FileManager
+from .text_processor.tool import TextProcessor
 
 __all__ = [
     "Calculator",
@@ -18,4 +19,5 @@ __all__ = [
     "RestApi",
     "PdfReader",
     "FileManager",
+    "TextProcessor"
 ]
