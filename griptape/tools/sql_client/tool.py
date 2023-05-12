@@ -9,13 +9,14 @@ from schema import Schema, Literal
 @define
 class SqlClient(BaseTool):
     engine_url: Optional[str] = field(default=None, kw_only=True, metadata={"env": "ENGINE_URL"})
-    engine_name: str = field(kw_only=True)
+    engine_name: Optional[str] = field(default=None, kw_only=True, metadata={"env": "ENGINE_NAME"})
+    #engine_name: str = field(kw_only=True)
 
-    @property
-    def schema_template_args(self) -> dict:
-        return {
-            "engine": self.engine_name
-        }
+    # @property
+    # def schema_template_args(self) -> dict:
+    #     return {
+    #         "engine": self.engine_name
+    #     }
 
     @activity(config={
         "name": "query",
