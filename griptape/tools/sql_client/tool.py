@@ -9,17 +9,19 @@ from schema import Schema, Literal
 @define
 class SqlClient(BaseTool):
     engine_url: Optional[str] = field(default=None, kw_only=True, metadata={"env": "ENGINE_URL"})
-    engine_name: str = field(kw_only=True)
+    engine_name: Optional[str] = field(default=None, kw_only=True, metadata={"env": "ENGINE_NAME"})
 
     @property
     def schema_template_args(self) -> dict:
+        engine_url_env = self.env_value("ENGINE_URL")
+
         return {
-            "engine": self.engine_name
+            "engine": engine_url_env if engine_url_env else self.engine_name
         }
 
     @activity(config={
         "name": "query",
-        "description": "Can be used to execute SQL queries in {{ engine }}",
+        "description": "Can be used to execute SQL queries{% if engine %} in {{ engine }}{% endif %}",
         "schema": Schema({
             Literal(
                 "query",
@@ -38,7 +40,7 @@ class SqlClient(BaseTool):
                 results = con.execute(text(query))
 
                 if results.returns_rows:
-                    return TextArtifact(str([row for row in results]).strip('[]'))
+                    return TextArtifact(str([row for row in results]))
                 else:
                     return TextArtifact("query successfully executed")
 
