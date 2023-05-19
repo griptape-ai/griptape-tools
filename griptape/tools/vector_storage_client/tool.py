@@ -43,15 +43,15 @@ class VectorStorageClient(BaseTool):
             schema.Optional(
                 Literal(
                     "count",
-                    description=f"Optional results count. Default is {DEFAULT_QUERY_COUNT}"
+                    description=f"Optional results count. Default is {DEFAULT_QUERY_RESULT_COUNT}"
                 ),
-                default=DEFAULT_QUERY_COUNT
+                default=DEFAULT_QUERY_RESULT_COUNT
             ): int
         })
     })
     def query(self, params: dict) -> BaseArtifact:
         query = params["values"]["query"]
-        count = params["values"].get("count", self.DEFAULT_QUERY_COUNT)
+        count = params["values"].get("count", self.DEFAULT_QUERY_RESULT_COUNT)
 
         try:
             results = self.driver.query(query, count=count, namespace=self.value("namespace"))
