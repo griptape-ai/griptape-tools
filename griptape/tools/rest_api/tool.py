@@ -1,5 +1,7 @@
 from textwrap import dedent
-from schema import Schema, Literal, Optional
+from typing import Optional
+import schema
+from schema import Schema, Literal
 from attr import define, field
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
@@ -8,39 +10,42 @@ from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 
 @define
 class RestApi(BaseTool):
-    base_url: str = field(default="", kw_only=True, metadata={"env": "BASE_URL"})
-    path: str = field(default="", kw_only=True, metadata={"env": "URL_PATH"})
-    description: str = field(
-        default="", kw_only=True, metadata={"env": "DESCRIPTION"}
+    base_url: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "BASE_URL"}
     )
-    request_path_params_schema: str = field(
-        default="", kw_only=True, metadata={"env": "REQUEST_PATH_PARAMS_SCHEMA"}
+    path: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "URL_PATH"}
     )
-    request_query_params_schema: str = field(
-        default="", kw_only=True, metadata={"env": "REQUEST_QUERY_PARAMS_SCHEMA"}
+    description: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "DESCRIPTION"}
     )
-    request_body_schema: str = field(
-        default="", kw_only=True, metadata={"env": "REQUEST_BODY_SCHEMA"}
+    request_path_params_schema: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "REQUEST_PATH_PARAMS_SCHEMA"}
     )
-    response_body_schema: str = field(
-        default="", kw_only=True, metadata={"env": "RESPONSE_BODY_SCHEMA"}
+    request_query_params_schema: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "REQUEST_QUERY_PARAMS_SCHEMA"}
+    )
+    request_body_schema: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "REQUEST_BODY_SCHEMA"}
+    )
+    response_body_schema: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "RESPONSE_BODY_SCHEMA"}
     )
 
     @property
     def schema_template_args(self) -> dict:
         return {
-            "base_url": self.base_url,
-            "path": self.path,
-            "description": self.description,
-            "request_body_schema": self.request_body_schema,
-            "request_query_params_schema": self.request_query_params_schema,
-            "request_path_params_schema": self.request_path_params_schema,
-            "response_body_schema": self.response_body_schema,
+            "base_url": self.value("base_url"),
+            "path": self.value("path"),
+            "description": self.value("description"),
+            "request_body_schema": self.value("request_body_schema"),
+            "request_query_params_schema": self.value("request_query_params_schema"),
+            "request_path_params_schema": self.value("request_path_params_schema"),
+            "response_body_schema": self.value("response_body_schema"),
         }
 
     @activity(
         config={
-            "name": "put",
             "description": dedent(
                 """
                 This tool can be used to make a put request to the rest api url: "{{base_url}}{{path}}".
@@ -75,7 +80,6 @@ class RestApi(BaseTool):
 
     @activity(
         config={
-            "name": "patch",
             "description": dedent(
                 """
                 This tool can be used to make a post request to the rest api url: "{{base_url}}{{path}}".
@@ -115,7 +119,6 @@ class RestApi(BaseTool):
 
     @activity(
         config={
-            "name": "post",
             "description": dedent(
                 """
                 This tool can be used to make a patch request to the rest api url: "{{base_url}}{{path}}".
@@ -146,7 +149,6 @@ class RestApi(BaseTool):
 
     @activity(
         config={
-            "name": "get",
             "description": dedent(
                 """
                 This tool can be used to make a get request to the rest api url: "{{base_url}}{{path}}".
@@ -156,15 +158,15 @@ class RestApi(BaseTool):
                 The response body must follow this JSON schema: {{response_body_schema}}.
                 """
             ),
-            "schema": Optional(
+            "schema": schema.Optional(
                 Schema({
-                    Optional(
+                    schema.Optional(
                         Literal(
                             "queryParams",
                             description="The request query parameters.",
                         )
                     ): dict,
-                    Optional(
+                    schema.Optional(
                         Literal(
                             "pathParams",
                             description="The request path parameters."
@@ -196,7 +198,6 @@ class RestApi(BaseTool):
 
     @activity(
         config={
-            "name": "delete",
             "description": dedent(
                 """
                 This tool can be used to make a get request to the rest api url: "{{base_url}}{{path}}".
@@ -206,13 +207,13 @@ class RestApi(BaseTool):
                 """
             ),
             "schema": Schema({
-                Optional(
+                schema.Optional(
                     Literal(
                         "queryParams",
                         description="The request query parameters.",
                     )
                 ): dict,
-                Optional(
+                schema.Optional(
                     Literal(
                         "pathParams", description="The request path parameters."
                     )

@@ -12,7 +12,6 @@ class FileManager(BaseTool):
     dir: str = field(default=os.getcwd(), kw_only=True, metadata={"env": "FILE_MANAGER_DIR"})
 
     @activity(config={
-        "name": "load",
         "description": "Can be used to load files",
         "schema": Schema({
             Literal(
@@ -47,7 +46,6 @@ class FileManager(BaseTool):
         return list_artifact
 
     @activity(config={
-        "name": "save",
         "description": "Can be used to save files",
         "schema": Schema({
             Literal(

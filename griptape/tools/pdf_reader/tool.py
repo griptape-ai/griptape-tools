@@ -8,7 +8,6 @@ from schema import Schema, Literal
 @define
 class PdfReader(BaseTool):
     @activity(config={
-        "name": "get_content",
         "description": "Can be used to get all text content from a PDF",
         "schema": Schema({
             Literal(

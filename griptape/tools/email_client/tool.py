@@ -35,7 +35,6 @@ class EmailClient(BaseTool):
     email_max_retrieve_count: int = field(default=10, kw_only=True, metadata={"env": "EMAIL_MAX_RETRIEVE_COUNT"})
 
     @activity(config={
-        "name": "retrieve",
         "description": "Can be used to retrieve emails",
         "schema": Schema({
             Literal(
@@ -106,7 +105,6 @@ class EmailClient(BaseTool):
             return ErrorArtifact(f"error retrieving email {e}")
 
     @activity(config={
-        "name": "send",
         "description": "Can be used to send emails",
         "schema": Schema({
             Literal(

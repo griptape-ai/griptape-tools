@@ -14,7 +14,6 @@ class WebScraper(BaseTool):
     include_links: bool = field(default=True, kw_only=True, metadata={"env": "INCLUDE_LINKS"})
 
     @activity(config={
-        "name": "get_title",
         "description": "Can be used to get the title of a web page",
         "schema": Schema({
             Literal(
@@ -33,7 +32,6 @@ class WebScraper(BaseTool):
             return TextArtifact(page.get("title"))
 
     @activity(config={
-        "name": "get_content",
         "description": "Can be used to get all text content of a web page",
         "schema": Schema({
             Literal(
@@ -52,7 +50,6 @@ class WebScraper(BaseTool):
             return TextArtifact(page.get("text"))
 
     @activity(config={
-        "name": "get_author",
         "description": "Can be used to get web page author",
         "schema": Schema({
             Literal(

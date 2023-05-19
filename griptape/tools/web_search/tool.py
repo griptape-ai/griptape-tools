@@ -15,7 +15,6 @@ class WebSearch(BaseTool):
     google_api_country: str = field(default="us", kw_only=True, metadata={"env": "GOOGLE_API_COUNTRY"})
 
     @activity(config={
-        "name": "search",
         "description": "Can be used for searching the web",
         "schema": Schema({
             Literal(

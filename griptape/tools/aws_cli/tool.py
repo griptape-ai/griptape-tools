@@ -14,17 +14,17 @@ class AwsCli(BaseTool):
     aws_default_region: str = field(default="us-east-1", kw_only=True, metadata={"env": "AWS_DEFAULT_REGION"})
     aws_cli_policy: str = field(
         default="""{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"*","Resource":"*"}]}""",
-        kw_only=True
+        kw_only=True,
+        metadata={"env": "AWS_CLI_POLICY"}
     )
 
     @property
     def schema_template_args(self) -> dict:
         return {
-            "policy": utils.minify_json(self.aws_cli_policy)
+            "policy": utils.minify_json(self.value("aws_cli_policy"))
         }
 
     @activity(config={
-        "name": "execute",
         "description": "Can be used to execute AWS CLI v2 commands limited by this policy: {{ policy }}",
         "schema": Schema({
             Literal(

@@ -13,7 +13,6 @@ class TextProcessor(BaseTool):
     openai_api_key: Optional[str] = field(default=None, kw_only=True, metadata={"env": "OPENAI_API_KEY"})
 
     @activity(config={
-        "name": "summarize",
         "description": "Can be used to generate a summaries of ramp artifacts",
         "pass_artifacts": True
     })
@@ -38,7 +37,6 @@ class TextProcessor(BaseTool):
             return list_artifact
 
     @activity(config={
-        "name": "query",
         "description": "Can be used to query text ramp artifacts for any content",
         "schema": Schema({
             Literal(

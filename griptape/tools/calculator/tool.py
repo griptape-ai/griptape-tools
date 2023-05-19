@@ -7,7 +7,6 @@ from schema import Schema, Literal
 
 class Calculator(BaseTool):
     @activity(config={
-        "name": "calculate",
         "description": "Can be used for making simple calculations in Python",
         "schema": Schema({
             Literal(

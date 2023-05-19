@@ -13,14 +13,11 @@ class SqlClient(BaseTool):
 
     @property
     def schema_template_args(self) -> dict:
-        engine_url_env = self.env_value("ENGINE_URL")
-
         return {
-            "engine": engine_url_env if engine_url_env else self.engine_name
+            "engine": self.value("engine_name")
         }
 
     @activity(config={
-        "name": "query",
         "description": "Can be used to execute SQL queries{% if engine %} in {{ engine }}{% endif %}",
         "schema": Schema({
             Literal(

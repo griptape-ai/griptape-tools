@@ -1,2 +1,2 @@
-griptape==0.8.1
+griptape==0.9.0
 sqlalchemy~=2.0
