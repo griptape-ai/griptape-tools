@@ -8,6 +8,7 @@ from .rest_api.tool import RestApi
 from .pdf_reader.tool import PdfReader
 from .file_manager.tool import FileManager
 from .text_processor.tool import TextProcessor
+from .vector_storage_client.tool import VectorStorageClient
 
 __all__ = [
     "Calculator",
@@ -19,5 +20,6 @@ __all__ = [
     "RestApi",
     "PdfReader",
     "FileManager",
-    "TextProcessor"
+    "TextProcessor",
+    "VectorStorageClient"
 ]
