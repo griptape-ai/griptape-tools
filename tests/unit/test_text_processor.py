@@ -13,7 +13,7 @@ class TestTextProcessor:
         )
 
     @pytest.fixture(scope="class")
-    def install_requirements(request):
+    def install_requirements(self):
         install_requirements("text_processor")
 
     @pytest.fixture

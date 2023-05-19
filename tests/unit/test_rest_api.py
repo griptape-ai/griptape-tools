@@ -6,7 +6,7 @@ from tests.utils import install_requirements
 @pytest.mark.usefixtures("install_requirements")
 class TestRestApi:
     @pytest.fixture(scope="class")
-    def install_requirements(request):
+    def install_requirements(self):
         install_requirements("rest_api")
 
     @pytest.fixture

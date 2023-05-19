@@ -9,7 +9,7 @@ from griptape.tools import FileManager
 @pytest.mark.usefixtures("install_requirements")
 class TestFileManager:
     @pytest.fixture(scope="class")
-    def install_requirements(request):
+    def install_requirements(self):
         install_requirements("file_manager")
 
     def test_load(self):

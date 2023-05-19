@@ -6,7 +6,7 @@ from tests.utils import install_requirements
 @pytest.mark.usefixtures("install_requirements")
 class TestWebScraper:
     @pytest.fixture(scope="class")
-    def install_requirements(request):
+    def install_requirements(self):
         install_requirements("web_scraper")
 
     @pytest.fixture
