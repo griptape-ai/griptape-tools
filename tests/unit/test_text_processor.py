@@ -1,7 +1,6 @@
 import pytest
 from griptape.artifacts import TextArtifact
 from tests.utils import install_requirements
-from tools import TextProcessor
 
 
 @pytest.mark.usefixtures("install_requirements")
@@ -17,16 +16,22 @@ class TestTextProcessor:
     def install_requirements(request):
         install_requirements("text_processor")
 
-    def test_summarize(self):
+    @pytest.fixture
+    def processor(self):
+        from griptape.tools import TextProcessor
+
+        return TextProcessor()
+
+    def test_summarize(self, processor):
         artifact = TextArtifact("foobar")
 
-        assert TextProcessor().summarize(
+        assert processor.summarize(
             {"artifacts": {"values": [artifact.to_dict()]}}
         ).value[0].value == "foobar summary"
 
-    def test_query(self):
+    def test_query(self, processor):
         artifact = TextArtifact("foobar")
 
-        assert TextProcessor().query(
+        assert processor.query(
             {"values": {"query": "foobar"}}
         ).value == "text artifacts not found"
