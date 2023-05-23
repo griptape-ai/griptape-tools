@@ -9,14 +9,28 @@ from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 
 
 @define
-class RestApiClient(BaseTool):
-    base_url: str = field(kw_only=True)
-    path: str = field(default="", kw_only=True)
-    description: Optional[str] = field(default=None, kw_only=True)
-    request_path_params_schema: Optional[str] = field(default=None, kw_only=True)
-    request_query_params_schema: Optional[str] = field(default=None, kw_only=True)
-    request_body_schema: Optional[str] = field(default=None, kw_only=True)
-    response_body_schema: Optional[str] = field(default=None, kw_only=True)
+class RestApi(BaseTool):
+    base_url: str = field(
+        kw_only=True, metadata={"env": "BASE_URL"}
+    )
+    path: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "URL_PATH"}
+    )
+    description: str = field(
+        kw_only=True, metadata={"env": "DESCRIPTION"}
+    )
+    request_path_params_schema: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "REQUEST_PATH_PARAMS_SCHEMA"}
+    )
+    request_query_params_schema: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "REQUEST_QUERY_PARAMS_SCHEMA"}
+    )
+    request_body_schema: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "REQUEST_BODY_SCHEMA"}
+    )
+    response_body_schema: Optional[str] = field(
+        default=None, kw_only=True, metadata={"env": "RESPONSE_BODY_SCHEMA"}
+    )
 
     @property
     def schema_template_args(self) -> dict:
