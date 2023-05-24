@@ -11,13 +11,13 @@ from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 @define
 class RestApi(BaseTool):
     base_url: str = field(
-        kw_only=True, metadata={"env": "BASE_URL"}
+        factory=str, metadata={"env": "BASE_URL"}
     )
     path: Optional[str] = field(
         default=None, kw_only=True, metadata={"env": "URL_PATH"}
     )
     description: str = field(
-        kw_only=True, metadata={"env": "DESCRIPTION"}
+        factory=str, metadata={"env": "DESCRIPTION"}
     )
     request_path_params_schema: Optional[str] = field(
         default=None, kw_only=True, metadata={"env": "REQUEST_PATH_PARAMS_SCHEMA"}
