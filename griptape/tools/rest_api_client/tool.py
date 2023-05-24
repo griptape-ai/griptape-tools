@@ -66,10 +66,10 @@ class RestApi(BaseTool):
         from requests import put, exceptions
         
         values = params["values"]
-        base_url = self.base_url
-        path = self.path
+        base_url = self.value("base_url")
+        path = self.value("path")
         body = values.get("body")
-        url = f"{base_url}/{path}"
+        url = self._build_url(base_url, path=path)
 
         try:
             response = put(url, data=body, timeout=30)
@@ -105,11 +105,11 @@ class RestApi(BaseTool):
         from requests import patch, exceptions
         
         input_values = params["values"]
-        base_url = self.base_url
-        path = self.path
+        base_url = self.value("base_url")
+        path = self.value("path")
         body = input_values.get("body")
         path_params = input_values.get("pathParams")
-        url = f"{base_url}/{path}/{'/'.join(path_params)}"
+        url = self._build_url(base_url, path=path, path_params=path_params)
 
         try:
             response = patch(url, data=body, timeout=30)
@@ -136,9 +136,9 @@ class RestApi(BaseTool):
         from requests import post, exceptions
         
         input_values = params["values"]
-        base_url = self.base_url
-        path = self.path
-        url = f"{base_url}/{path}"
+        base_url = self.value("base_url")
+        path = self.value("path")
+        url = self._build_url(base_url, path=path)
         body = input_values["body"]
 
         try:
@@ -180,15 +180,15 @@ class RestApi(BaseTool):
         from requests import get, exceptions
         
         input_values = params["values"]
-        base_url = self.base_url
-        path = self.path
+        base_url = self.value("base_url")
+        path = self.value("path")
 
         query_params = {}
         path_params = []
         if input_values:
             query_params = input_values.get("queryParams", {})
             path_params = input_values.get("pathParams", [])
-        url = f"{base_url}/{path}/{'/'.join(path_params)}"
+        url = self._build_url(base_url, path=path, path_params=path_params)
 
         try:
             response = get(url, params=query_params, timeout=30)
@@ -225,15 +225,25 @@ class RestApi(BaseTool):
         from requests import delete, exceptions
         
         input_values = params["values"]
-        base_url = self.base_url
-        path = self.path
+        base_url = self.value("base_url")
+        path = self.value("path")
 
         query_params = input_values.get("queryParams", {})
         path_params = input_values.get("pathParams", [])
-        url = f"{base_url}/{path}/{'/'.join(path_params)}"
+        url = self._build_url(base_url, path=path, path_params=path_params)
 
         try:
             response = delete(url, params=query_params, timeout=30)
             return TextArtifact(response.text)
         except exceptions.RequestException as err:
             return ErrorArtifact(str(err))
+
+    def _build_url(self, base_url, path=None, path_params=None, query_params=None):
+        url = base_url.strip('/')
+
+        if path:
+            url = f"{url}/{path.strip('/')}"
+        if path_params:
+            url = f"{url}/{str.join('/', path_params)}"
+
+        return url
