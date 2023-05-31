@@ -2,15 +2,9 @@ import os
 import random
 import pytest
 from griptape.artifacts import TextArtifact, ErrorArtifact
-from tests.utils import install_requirements
 
 
-@pytest.mark.usefixtures("install_requirements")
 class TestPdfReader:
-    @pytest.fixture(scope="class")
-    def install_requirements(self):
-        install_requirements("pdf_reader")
-
     @pytest.fixture
     def pdf_reader(self):
         from griptape.tools import PdfReader

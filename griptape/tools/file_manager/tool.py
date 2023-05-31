@@ -9,7 +9,7 @@ from schema import Schema, Literal
 
 @define
 class FileManager(BaseTool):
-    dir: str = field(default=os.getcwd(), kw_only=True, metadata={"env": "FILE_MANAGER_DIR"})
+    dir: str = field(default=os.getcwd(), kw_only=True)
 
     @activity(config={
         "description": "Can be used to load files",
@@ -27,7 +27,7 @@ class FileManager(BaseTool):
         for path in params["values"]["paths"]:
             file_name = os.path.basename(path)
             dir_name = os.path.dirname(path)
-            full_path = os.path.join(self.env_value("FILE_MANAGER_DIR"), path)
+            full_path = os.path.join(self.dir, path)
 
             try:
                 with open(full_path, "rb") as file:
@@ -68,7 +68,7 @@ class FileManager(BaseTool):
             for i, new_path in enumerate(new_paths):
                 try:
                     artifact = artifacts[0] if len(artifacts) == 1 else artifacts[i]
-                    full_path = os.path.join(self.env_value("FILE_MANAGER_DIR"), new_path)
+                    full_path = os.path.join(self.dir, new_path)
 
                     os.makedirs(os.path.dirname(full_path), exist_ok=True)
 

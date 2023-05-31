@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Union
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
 from griptape.drivers import OpenAiPromptDriver
 from griptape.summarizers import PromptDriverSummarizer
@@ -10,10 +10,10 @@ from attr import define, field
 
 @define
 class TextProcessor(BaseTool):
-    openai_api_key: Optional[str] = field(default=None, kw_only=True, metadata={"env": "OPENAI_API_KEY"})
+    openai_api_key: str = field(kw_only=True)
 
     @activity(config={
-        "description": "Can be used to generate a summaries of ramp artifacts",
+        "description": "Can be used to generate a summaries of memory artifacts",
         "pass_artifacts": True
     })
     def summarize(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
@@ -27,7 +27,7 @@ class TextProcessor(BaseTool):
             for artifact in artifacts:
                 try:
                     summary = PromptDriverSummarizer(
-                        driver=OpenAiPromptDriver(api_key=self.env_value("OPENAI_API_KEY"))
+                        driver=OpenAiPromptDriver(api_key=self.openai_api_key)
                     ).summarize_text(artifact.value)
 
                     list_artifact.value.append(TextArtifact(summary))
@@ -37,7 +37,7 @@ class TextProcessor(BaseTool):
             return list_artifact
 
     @activity(config={
-        "description": "Can be used to query text ramp artifacts for any content",
+        "description": "Can be used to query memory artifacts for any content",
         "schema": Schema({
             Literal(
                 "query",

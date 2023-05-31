@@ -1,9 +1,7 @@
 import pytest
 from griptape.artifacts import TextArtifact
-from tests.utils import install_requirements
 
 
-@pytest.mark.usefixtures("install_requirements")
 class TestTextProcessor:
     @pytest.fixture(autouse=True)
     def mock_openai_embedding_create(self, mocker):
@@ -12,15 +10,11 @@ class TestTextProcessor:
             return_value="foobar summary"
         )
 
-    @pytest.fixture(scope="class")
-    def install_requirements(self):
-        install_requirements("text_processor")
-
     @pytest.fixture
     def processor(self):
         from griptape.tools import TextProcessor
 
-        return TextProcessor()
+        return TextProcessor(openai_api_key="foobar")
 
     def test_summarize(self, processor):
         artifact = TextArtifact("foobar")

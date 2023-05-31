@@ -14,25 +14,25 @@ from schema import Schema, Literal
 @define
 class EmailClient(BaseTool):
     # if you set imap|smtp creds explicitly these fields will be overridden
-    username: Optional[str] = field(default=None, kw_only=True, metadata={"env": "EMAIL_USERNAME"})
-    password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "EMAIL_PASSWORD"})
+    username: Optional[str] = field(default=None, kw_only=True)
+    password: Optional[str] = field(default=None, kw_only=True)
 
-    smtp_host: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_HOST"})
-    smtp_port: Optional[int] = field(default=None, kw_only=True, metadata={"env": "SMTP_PORT"})
-    smtp_use_ssl: bool = field(default=True, kw_only=True, metadata={"env": "SMTP_USE_SSL"})
+    smtp_host: Optional[str] = field(default=None, kw_only=True)
+    smtp_port: Optional[int] = field(default=None, kw_only=True)
+    smtp_use_ssl: bool = field(default=True, kw_only=True)
 
     # if you set the smtp user/password fields they will override
-    smtp_user: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_USER"})
-    smtp_password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "SMTP_PASSWORD"})
+    smtp_user: Optional[str] = field(default=None, kw_only=True)
+    smtp_password: Optional[str] = field(default=None, kw_only=True)
 
-    imap_url: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_URL"})
+    imap_url: Optional[str] = field(default=None, kw_only=True)
 
     # if you set imap user/password fields they will override
-    imap_user: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_USER"})
-    imap_password: Optional[str] = field(default=None, kw_only=True, metadata={"env": "IMAP_PASSWORD"})
+    imap_user: Optional[str] = field(default=None, kw_only=True)
+    imap_password: Optional[str] = field(default=None, kw_only=True)
 
     # be careful of allowing too many records to be returned as it could impact token usage
-    email_max_retrieve_count: int = field(default=10, kw_only=True, metadata={"env": "EMAIL_MAX_RETRIEVE_COUNT"})
+    email_max_retrieve_count: int = field(default=10, kw_only=True)
 
     @activity(config={
         "description": "Can be used to retrieve emails",
@@ -59,19 +59,19 @@ class EmailClient(BaseTool):
     })
     def retrieve(self, params: dict) -> BaseArtifact:
         values = params["values"]
-        imap_url = self.env_value("IMAP_URL")
+        imap_url = self.imap_url
 
         # email username can be overridden by setting the imap user explicitly
-        imap_user = self.env_value("IMAP_USER")
+        imap_user = self.imap_user
         if imap_user is None:
-            imap_user = self.env_value("EMAIL_USERNAME")
+            imap_user = self.username
 
         # email password can be overridden by setting the imap password explicitly
-        imap_password = self.env_value("IMAP_PASSWORD")
+        imap_password = self.imap_password
         if imap_password is None:
-            imap_password = self.env_value("EMAIL_PASSWORD")
+            imap_password = self.password
 
-        max_retrieve_count = self.env_value("EMAIL_MAX_RETRIEVE_COUNT")
+        max_retrieve_count = self.email_max_retrieve_count
 
         label = values["label"]
         key = values["key"]
@@ -126,24 +126,24 @@ class EmailClient(BaseTool):
         server: Optional[smtplib.SMTP] = None
 
         # email username can be overridden by setting the smtp user explicitly
-        smtp_user = self.env_value("SMTP_USER")
+        smtp_user = self.smtp_user
         if smtp_user is None:
-            smtp_user = self.env_value("EMAIL_USERNAME")
+            smtp_user = self.username
 
         # email password can be overridden by setting the smtp password explicitly
-        smtp_password = self.env_value("SMTP_PASSWORD")
+        smtp_password = self.smtp_password
         if smtp_password is None:
-            smtp_password = self.env_value("EMAIL_PASSWORD")
+            smtp_password = self.password
 
-        smtp_host = self.env_value("SMTP_HOST")
-        smtp_port = int(self.env_value("SMTP_PORT"))
+        smtp_host = self.smtp_host
+        smtp_port = int(self.smtp_port)
 
         to_email = input_values["to"]
         subject = input_values["subject"]
         msg = MIMEText(input_values["body"])
 
         try:
-            if self.env_value("SMTP_USE_SSL"):
+            if self.smtp_use_ssl:
                 server = smtplib.SMTP_SSL(smtp_host, smtp_port)
             else:
                 server = smtplib.SMTP(smtp_host, smtp_port)

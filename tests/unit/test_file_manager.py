@@ -1,17 +1,10 @@
 import os.path
 import tempfile
-import pytest
 from griptape.artifacts import BlobArtifact, ListArtifact
-from tests.utils import install_requirements
 from griptape.tools import FileManager
 
 
-@pytest.mark.usefixtures("install_requirements")
 class TestFileManager:
-    @pytest.fixture(scope="class")
-    def install_requirements(self):
-        install_requirements("file_manager")
-
     def test_load(self):
         result = FileManager(
             dir=os.path.abspath(os.path.dirname(__file__))

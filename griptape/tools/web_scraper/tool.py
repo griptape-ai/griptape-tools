@@ -11,7 +11,7 @@ from griptape.core.decorators import activity
 
 @define
 class WebScraper(BaseTool):
-    include_links: bool = field(default=True, kw_only=True, metadata={"env": "INCLUDE_LINKS"})
+    include_links: bool = field(default=True, kw_only=True)
 
     @activity(config={
         "description": "Can be used to get the title of a web page",
@@ -88,7 +88,7 @@ class WebScraper(BaseTool):
             return json.loads(
                 trafilatura.extract(
                     page,
-                    include_links=self.env_value("INCLUDE_LINKS"),
+                    include_links=self.include_links,
                     output_format="json",
                     config=config
                 )

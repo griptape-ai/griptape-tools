@@ -10,45 +10,31 @@ from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 
 @define
 class RestApi(BaseTool):
-    base_url: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "BASE_URL"}
-    )
-    path: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "URL_PATH"}
-    )
-    description: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "DESCRIPTION"}
-    )
-    request_path_params_schema: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_PATH_PARAMS_SCHEMA"}
-    )
-    request_query_params_schema: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_QUERY_PARAMS_SCHEMA"}
-    )
-    request_body_schema: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_BODY_SCHEMA"}
-    )
-    response_body_schema: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "RESPONSE_BODY_SCHEMA"}
-    )
+    base_url: str = field(kw_only=True)
+    path: str = field(default="", kw_only=True)
+    description: Optional[str] = field(default=None, kw_only=True)
+    request_path_params_schema: Optional[str] = field(default=None, kw_only=True)
+    request_query_params_schema: Optional[str] = field(default=None, kw_only=True)
+    request_body_schema: Optional[str] = field(default=None, kw_only=True)
+    response_body_schema: Optional[str] = field(default=None, kw_only=True)
 
     @property
     def schema_template_args(self) -> dict:
         return {
-            "base_url": self.value("base_url"),
-            "path": self.value("path"),
-            "description": self.value("description"),
-            "request_body_schema": self.value("request_body_schema"),
-            "request_query_params_schema": self.value("request_query_params_schema"),
-            "request_path_params_schema": self.value("request_path_params_schema"),
-            "response_body_schema": self.value("response_body_schema"),
+            "base_url": self.base_url,
+            "path": self.path,
+            "description": self.description,
+            "request_body_schema": self.request_body_schema,
+            "request_query_params_schema": self.request_query_params_schema,
+            "request_path_params_schema": self.request_path_params_schema,
+            "response_body_schema": self.response_body_schema,
         }
 
     @activity(
         config={
             "description": dedent(
                 """
-                This tool can be used to make a put request to the rest api url: "{{base_url}}{{path}}".
+                This tool can be used to make a put request to the rest api url: "{{base_url}}/{{path}}".
                 This rest api does the following: "{{description}}".
                 The request body must follow this JSON schema: {{request_body_schema}}.
                 The response body must follow this JSON schema: {{response_body_schema}}.
@@ -66,8 +52,8 @@ class RestApi(BaseTool):
         from requests import put, exceptions
         
         values = params["values"]
-        base_url = self.env_value("BASE_URL")
-        path = self.env_value("URL_PATH")
+        base_url = self.base_url
+        path = self.path
         body = values.get("body")
         url = f"{base_url}/{path}"
 
@@ -82,7 +68,7 @@ class RestApi(BaseTool):
         config={
             "description": dedent(
                 """
-                This tool can be used to make a post request to the rest api url: "{{base_url}}{{path}}".
+                This tool can be used to make a post request to the rest api url: "{{base_url}}/{{path}}".
                 This rest api does the following: "{{description}}".
                 The request path parameters must follow this JSON schema: {{request_path_params_schema}}.
                 The request body must follow this JSON schema: {{request_body_schema}}.
@@ -105,8 +91,8 @@ class RestApi(BaseTool):
         from requests import patch, exceptions
         
         input_values = params["values"]
-        base_url = self.env_value("BASE_URL")
-        path = self.env_value("URL_PATH")
+        base_url = self.base_url
+        path = self.path
         body = input_values.get("body")
         path_params = input_values.get("pathParams")
         url = f"{base_url}/{path}/{'/'.join(path_params)}"
@@ -121,7 +107,7 @@ class RestApi(BaseTool):
         config={
             "description": dedent(
                 """
-                This tool can be used to make a patch request to the rest api url: "{{base_url}}{{path}}".
+                This tool can be used to make a patch request to the rest api url: "{{base_url}}/{{path}}".
                 This rest api does the following: "{{description}}".
                 The request body must follow this JSON schema: {{request_body_schema}}.
                 The response body must follow this JSON schema: {{response_body_schema}}.
@@ -136,8 +122,8 @@ class RestApi(BaseTool):
         from requests import post, exceptions
         
         input_values = params["values"]
-        base_url = self.env_value("BASE_URL")
-        path = self.env_value("URL_PATH")
+        base_url = self.base_url
+        path = self.path
         url = f"{base_url}/{path}"
         body = input_values["body"]
 
@@ -151,7 +137,7 @@ class RestApi(BaseTool):
         config={
             "description": dedent(
                 """
-                This tool can be used to make a get request to the rest api url: "{{base_url}}{{path}}".
+                This tool can be used to make a get request to the rest api url: "{{base_url}}/{{path}}".
                 This rest api does the following: "{{description}}".
                 The request path parameters must follow this JSON schema: {{request_path_params_schema}}.
                 The request query parameters must follow this JSON schema: {{request_path_params_schema}}.
@@ -180,8 +166,8 @@ class RestApi(BaseTool):
         from requests import get, exceptions
         
         input_values = params["values"]
-        base_url = self.env_value("BASE_URL")
-        path = self.env_value("URL_PATH")
+        base_url = self.base_url
+        path = self.path
 
         query_params = {}
         path_params = []
@@ -200,7 +186,7 @@ class RestApi(BaseTool):
         config={
             "description": dedent(
                 """
-                This tool can be used to make a get request to the rest api url: "{{base_url}}{{path}}".
+                This tool can be used to make a get request to the rest api url: "{{base_url}}/{{path}}".
                 This rest api does the following: "{{description}}".
                 The request path parameters must follow this JSON schema: {{request_path_params_schema}}.
                 The request query parameters must follow this JSON schema: {{request_path_params_schema}}.
@@ -225,8 +211,8 @@ class RestApi(BaseTool):
         from requests import delete, exceptions
         
         input_values = params["values"]
-        base_url = self.env_value("BASE_URL")
-        path = self.env_value("URL_PATH")
+        base_url = self.base_url
+        path = self.path
 
         query_params = input_values.get("queryParams", {})
         path_params = input_values.get("pathParams", [])

@@ -1,2 +1,1 @@
-griptape==0.9.0
 git+https://github.com/griptape-ai/trafilatura.git#egg=trafilatura

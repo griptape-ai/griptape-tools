@@ -8,13 +8,13 @@ from schema import Schema, Literal
 
 @define
 class SqlClient(BaseTool):
-    engine_url: Optional[str] = field(default=None, kw_only=True, metadata={"env": "ENGINE_URL"})
-    engine_name: Optional[str] = field(default=None, kw_only=True, metadata={"env": "ENGINE_NAME"})
+    engine_url: str = field(default=None, kw_only=True)
+    engine_name: Optional[str] = field(default=None, kw_only=True)
 
     @property
     def schema_template_args(self) -> dict:
         return {
-            "engine": self.value("engine_name")
+            "engine": self.engine_name
         }
 
     @activity(config={
@@ -30,7 +30,7 @@ class SqlClient(BaseTool):
         from sqlalchemy import create_engine, text
 
         query = params["values"]["query"]
-        engine = create_engine(self.env_value("ENGINE_URL"))
+        engine = create_engine(self.engine_url)
 
         try:
             with engine.connect() as con:

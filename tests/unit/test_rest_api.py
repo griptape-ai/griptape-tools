@@ -1,19 +1,13 @@
 import pytest
 from griptape.artifacts import BaseArtifact
-from tests.utils import install_requirements
 
 
-@pytest.mark.usefixtures("install_requirements")
 class TestRestApi:
-    @pytest.fixture(scope="class")
-    def install_requirements(self):
-        install_requirements("rest_api")
-
     @pytest.fixture
     def client(self):
         from griptape.tools import RestApi
 
-        return RestApi()
+        return RestApi(base_url="http://www.griptape.ai")
 
     def test_put(self, client):
         assert isinstance(

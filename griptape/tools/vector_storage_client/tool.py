@@ -13,22 +13,22 @@ from griptape.drivers import BaseVectorStorageDriver
 class VectorStorageClient(BaseTool):
     DEFAULT_QUERY_RESULT_COUNT = 5
 
-    description: Optional[str] = field(default=None, kw_only=True, metadata={"env": "VS_DESCRIPTION"})
-    namespace: Optional[str] = field(default=None, kw_only=True, metadata={"env": "VS_NAMESPACE"})
-    driver_class: Optional[str] = field(default=None, kw_only=True, metadata={"env": "VS_DRIVER_CLASS"})
-    driver_fields: dict = field(factory=dict, kw_only=True, metadata={"env": "VS_DRIVER_FIELDS"})
+    description: str = field(kw_only=True)
+    namespace: Optional[str] = field(default=None, kw_only=True)
+    driver_class: str = field(kw_only=True)
+    driver_fields: dict = field(factory=dict, kw_only=True)
 
     driver: BaseVectorStorageDriver = field(init=False)
 
     def __attrs_post_init__(self):
         module = importlib.import_module("griptape.drivers")
-        driver_class = getattr(module, self.value("driver_class"))
-        self.driver = driver_class(**self.value("driver_fields"))
+        driver_class = getattr(module, self.driver_class)
+        self.driver = driver_class(**self.driver_fields)
 
     @property
     def schema_template_args(self) -> dict:
         return {
-            "description": self.value("description")
+            "description": self.description
         }
 
     @activity(config={
@@ -54,7 +54,7 @@ class VectorStorageClient(BaseTool):
         count = params["values"].get("count", self.DEFAULT_QUERY_RESULT_COUNT)
 
         try:
-            results = self.driver.query(query, count=count, namespace=self.value("namespace"))
+            results = self.driver.query(query, count=count, namespace=self.namespace)
 
             return ListArtifact([
                 TextArtifact(str(result.meta)) for result in results
