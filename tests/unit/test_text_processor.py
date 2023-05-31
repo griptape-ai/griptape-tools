@@ -1,5 +1,6 @@
 import pytest
 from griptape.artifacts import TextArtifact
+from griptape.engines import QueryEngine
 
 
 class TestTextProcessor:
@@ -14,7 +15,7 @@ class TestTextProcessor:
     def processor(self):
         from griptape.tools import TextProcessor
 
-        return TextProcessor(openai_api_key="foobar")
+        return TextProcessor(openai_api_key="foobar", query_engine=QueryEngine())
 
     def test_summarize(self, processor):
         artifact = TextArtifact("foobar")

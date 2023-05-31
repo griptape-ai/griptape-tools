@@ -1,12 +1,10 @@
-import importlib
 from typing import Optional
-import schema
+from griptape.engines import QueryEngine
 from schema import Schema, Literal
 from attr import define, field
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
+from griptape.artifacts import BaseArtifact, ErrorArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
-from griptape.drivers import BaseVectorStorageDriver
 
 
 @define
@@ -14,16 +12,9 @@ class VectorStorageClient(BaseTool):
     DEFAULT_QUERY_RESULT_COUNT = 5
 
     description: str = field(kw_only=True)
+    query_engine: QueryEngine = field(kw_only=True)
+    top_n: int = field(default=5, kw_only=True)
     namespace: Optional[str] = field(default=None, kw_only=True)
-    driver_class: str = field(kw_only=True)
-    driver_fields: dict = field(factory=dict, kw_only=True)
-
-    driver: BaseVectorStorageDriver = field(init=False)
-
-    def __attrs_post_init__(self):
-        module = importlib.import_module("griptape.drivers")
-        driver_class = getattr(module, self.driver_class)
-        self.driver = driver_class(**self.driver_fields)
 
     @property
     def schema_template_args(self) -> dict:
@@ -33,31 +24,23 @@ class VectorStorageClient(BaseTool):
 
     @activity(config={
         "description":
-            "Can be used to query a vector database for textual information."
-            "{% if description %} Database description: {{ description }}{% endif %}",
+            "Can be used to search a vector database. "
+            "Database description: {{ description }}",
         "schema": Schema({
             Literal(
                 "query",
                 description="Vector database natural language query"
-            ): str,
-            schema.Optional(
-                Literal(
-                    "count",
-                    description=f"Optional results count. Default is {DEFAULT_QUERY_RESULT_COUNT}"
-                ),
-                default=DEFAULT_QUERY_RESULT_COUNT
-            ): int
+            ): str
         })
     })
-    def query(self, params: dict) -> BaseArtifact:
+    def search(self, params: dict) -> BaseArtifact:
         query = params["values"]["query"]
-        count = params["values"].get("count", self.DEFAULT_QUERY_RESULT_COUNT)
 
         try:
-            results = self.driver.query(query, count=count, namespace=self.namespace)
-
-            return ListArtifact([
-                TextArtifact(str(result.meta)) for result in results
-            ])
+            return self.query_engine.query(
+                query,
+                top_n=self.top_n,
+                namespace=self.namespace
+            )
         except Exception as e:
             return ErrorArtifact(f"error querying database: {e}")

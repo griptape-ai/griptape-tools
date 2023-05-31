@@ -1,6 +1,7 @@
 from typing import Union
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
 from griptape.drivers import OpenAiPromptDriver
+from griptape.engines import QueryEngine
 from griptape.summarizers import PromptDriverSummarizer
 from schema import Schema, Literal
 from griptape.core import BaseTool
@@ -11,6 +12,7 @@ from attr import define, field
 @define
 class TextProcessor(BaseTool):
     openai_api_key: str = field(kw_only=True)
+    query_engine: QueryEngine = field(kw_only=True)
 
     @activity(config={
         "description": "Can be used to generate a summaries of memory artifacts",
@@ -47,8 +49,6 @@ class TextProcessor(BaseTool):
         "pass_artifacts": True
     })
     def query(self, params: dict) -> BaseArtifact:
-        from llama_index import GPTVectorStoreIndex, Document
-
         query = params["values"]["query"]
         artifacts = [a for a in self.artifacts if isinstance(a, TextArtifact)]
 
@@ -59,11 +59,9 @@ class TextProcessor(BaseTool):
 
             for artifact in artifacts:
                 try:
-                    index = GPTVectorStoreIndex.from_documents([Document(artifact.value)])
-                    query_engine = index.as_query_engine()
-                    result = str(query_engine.query(query)).strip()
+                    result = self.query_engine.query(query)
 
-                    list_artifact.value.append(TextArtifact(result))
+                    list_artifact.value.append(result)
                 except Exception as e:
                     return ErrorArtifact(f"error querying text in {artifact}: {e}")
 
