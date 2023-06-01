@@ -15,7 +15,7 @@ class TestTextProcessor:
     def processor(self):
         from griptape.tools import TextProcessor
 
-        return TextProcessor(openai_api_key="foobar", query_engine=QueryEngine())
+        return TextProcessor(query_engine=QueryEngine())
 
     def test_summarize(self, processor):
         artifact = TextArtifact("foobar")
@@ -25,8 +25,6 @@ class TestTextProcessor:
         ).value[0].value == "foobar summary"
 
     def test_query(self, processor):
-        artifact = TextArtifact("foobar")
-
-        assert processor.query(
+        assert processor.search(
             {"values": {"query": "foobar"}}
-        ).value == "text artifacts not found"
+        ).value == "no text supplied"

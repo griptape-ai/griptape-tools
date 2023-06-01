@@ -1,4 +1,5 @@
-from typing import Union
+from typing import Union, Optional
+import schema
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
 from griptape.drivers import OpenAiPromptDriver
 from griptape.engines import QueryEngine
@@ -11,25 +12,36 @@ from attr import define, field
 
 @define
 class TextProcessor(BaseTool):
-    openai_api_key: str = field(kw_only=True)
-    query_engine: QueryEngine = field(kw_only=True)
+    query_engine: Optional[QueryEngine] = field(default=None, kw_only=True)
 
     @activity(config={
-        "description": "Can be used to generate a summaries of memory artifacts",
+        "description": "Can be used to generate summaries of text content from memory and/or optional text_input",
+        "schema": Schema({
+            schema.Optional(
+                Literal(
+                    "text_input",
+                    description="Optional text input in addition to memory artifacts"
+                )
+            ): str
+        }),
         "pass_artifacts": True
     })
     def summarize(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
-        artifacts = [a for a in self.artifacts]
+        text = params.get("values", {}).get("text_input", None)
+        artifacts = [a for a in self.artifacts if isinstance(a, TextArtifact)]
 
+        if text:
+            artifacts.append(TextArtifact(text))
+            
         if len(artifacts) == 0:
-            return ErrorArtifact("text artifacts not found")
+            return ErrorArtifact("no text supplied")
         else:
             list_artifact = ListArtifact()
 
-            for artifact in artifacts:
+            for artifact in self.artifacts:
                 try:
                     summary = PromptDriverSummarizer(
-                        driver=OpenAiPromptDriver(api_key=self.openai_api_key)
+                        driver=OpenAiPromptDriver()
                     ).summarize_text(artifact.value)
 
                     list_artifact.value.append(TextArtifact(summary))
@@ -39,30 +51,34 @@ class TextProcessor(BaseTool):
             return list_artifact
 
     @activity(config={
-        "description": "Can be used to query memory artifacts for any content",
+        "description": "Can be used to search text content from memory and/or optional text_input",
         "schema": Schema({
             Literal(
                 "query",
-                description="A search query to run against text artifacts"
+                description="A search query to run on text"
+            ): str,
+            schema.Optional(
+                Literal(
+                    "text_input",
+                    description="Optional text input in addition to memory artifacts"
+                )
             ): str
         }),
         "pass_artifacts": True
     })
-    def query(self, params: dict) -> BaseArtifact:
+    def search(self, params: dict) -> BaseArtifact:
+        text = params["values"].get("text_input", None)
         query = params["values"]["query"]
         artifacts = [a for a in self.artifacts if isinstance(a, TextArtifact)]
 
+        if text:
+            artifacts.append(TextArtifact(text))
+
         if len(artifacts) == 0:
-            return ErrorArtifact("text artifacts not found")
+            return ErrorArtifact("no text supplied")
         else:
-            list_artifact = ListArtifact()
+            query_engine = self.query_engine if self.query_engine else QueryEngine()
 
-            for artifact in artifacts:
-                try:
-                    result = self.query_engine.query(query)
+            query_engine.insert(artifacts)
 
-                    list_artifact.value.append(result)
-                except Exception as e:
-                    return ErrorArtifact(f"error querying text in {artifact}: {e}")
-
-            return list_artifact
+            return query_engine.query(query)

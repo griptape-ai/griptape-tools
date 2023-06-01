@@ -14,24 +14,6 @@ class WebScraper(BaseTool):
     include_links: bool = field(default=True, kw_only=True)
 
     @activity(config={
-        "description": "Can be used to get the title of a web page",
-        "schema": Schema({
-            Literal(
-                "url",
-                description="Valid HTTP URL"
-            ): str
-        })
-    })
-    def get_title(self, params: dict) -> BaseArtifact:
-        url = params["values"]["url"]
-        page = self._load_page(url)
-
-        if isinstance(page, ErrorArtifact):
-            return page
-        else:
-            return TextArtifact(page.get("title"))
-
-    @activity(config={
         "description": "Can be used to get all text content of a web page",
         "schema": Schema({
             Literal(

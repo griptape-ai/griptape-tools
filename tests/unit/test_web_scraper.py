@@ -9,11 +9,6 @@ class TestWebScraper:
 
         return WebScraper()
 
-    def test_get_title(self, scraper):
-        assert isinstance(scraper.get_title({
-            "values": {"url": "https://github.com/griptape-ai/griptape-tools"}
-        }), BaseArtifact)
-
     def test_get_content(self, scraper):
         assert isinstance(scraper.get_content({
             "values": {"url": "https://github.com/griptape-ai/griptape-tools"}

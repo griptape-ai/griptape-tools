@@ -21,7 +21,7 @@ class FileManager(BaseTool):
             ): []
         })
     })
-    def load(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
+    def load_from_disk(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
         list_artifact = ListArtifact()
 
         for path in params["values"]["paths"]:
@@ -56,7 +56,7 @@ class FileManager(BaseTool):
         }),
         "pass_artifacts": True
     })
-    def save(self, params: dict) -> Union[ErrorArtifact, InfoArtifact]:
+    def save_to_disk(self, params: dict) -> Union[ErrorArtifact, InfoArtifact]:
         new_paths = params["values"]["paths"]
         artifacts = self.artifacts
 
