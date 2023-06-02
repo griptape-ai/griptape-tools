@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "griptape-tools"
-version = "0.12.1"
+version = "0.12.2"
 description = "Tools for the griptape framework."
 authors = ["Griptape <hello@griptape.ai>"]
 license = "Apache 2.0"
