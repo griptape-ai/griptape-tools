@@ -7,6 +7,8 @@
 
 This repo is a collection of official Griptape tools for the [Griptape Framework](https://github.com/griptape-ai/griptape).
 
+If you are considering contributing a new tool, please make a pull request to [griptape-labs](https://github.com/griptape-ai/griptape-labs) first.
+
 ## Documentation
 
 Please refer to [Griptape Docs](https://griptape.readthedocs.io) for:
