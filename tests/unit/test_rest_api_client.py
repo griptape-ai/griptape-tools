@@ -5,9 +5,9 @@ from griptape.artifacts import BaseArtifact
 class TestRestApi:
     @pytest.fixture
     def client(self):
-        from griptape.tools import RestApi
+        from griptape.tools import RestApiClient
 
-        return RestApi(base_url="http://www.griptape.ai")
+        return RestApiClient(base_url="http://www.griptape.ai")
 
     def test_put(self, client):
         assert isinstance(

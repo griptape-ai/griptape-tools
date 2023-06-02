@@ -9,7 +9,7 @@ from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 
 
 @define
-class RestApi(BaseTool):
+class RestApiClient(BaseTool):
     base_url: str = field(kw_only=True)
     path: str = field(default="", kw_only=True)
     description: Optional[str] = field(default=None, kw_only=True)
