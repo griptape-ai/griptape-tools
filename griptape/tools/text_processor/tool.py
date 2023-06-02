@@ -2,7 +2,7 @@ from typing import Union, Optional
 import schema
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
 from griptape.drivers import OpenAiPromptDriver
-from griptape.engines import QueryEngine
+from griptape.engines import VectorQueryEngine
 from griptape.summarizers import PromptDriverSummarizer
 from schema import Schema, Literal
 from griptape.core import BaseTool
@@ -12,7 +12,7 @@ from attr import define, field
 
 @define
 class TextProcessor(BaseTool):
-    query_engine: Optional[QueryEngine] = field(default=None, kw_only=True)
+    query_engine: Optional[VectorQueryEngine] = field(default=None, kw_only=True)
 
     @activity(config={
         "description": "Can be used to generate summaries of text content from memory and/or optional text_input",
@@ -77,7 +77,7 @@ class TextProcessor(BaseTool):
         if len(artifacts) == 0:
             return ErrorArtifact("no text supplied")
         else:
-            query_engine = self.query_engine if self.query_engine else QueryEngine()
+            query_engine = self.query_engine if self.query_engine else VectorQueryEngine()
 
             query_engine.insert(artifacts)
 
