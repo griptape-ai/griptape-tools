@@ -1,6 +1,6 @@
 import pytest
 from griptape.artifacts import TextArtifact
-from griptape.engines import QueryEngine
+from griptape.engines import VectorQueryEngine
 
 
 class TestTextProcessor:
@@ -15,7 +15,7 @@ class TestTextProcessor:
     def processor(self):
         from griptape.tools import TextProcessor
 
-        return TextProcessor(query_engine=QueryEngine())
+        return TextProcessor(query_engine=VectorQueryEngine())
 
     def test_summarize(self, processor):
         artifact = TextArtifact("foobar")
