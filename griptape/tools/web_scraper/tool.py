@@ -67,11 +67,14 @@ class WebScraper(BaseTool):
         if page is None:
             return ErrorArtifact("error: can't access URL")
         else:
-            return json.loads(
-                trafilatura.extract(
+            content = trafilatura.extract(
                     page,
                     include_links=self.include_links,
                     output_format="json",
                     config=config
                 )
-            )
+
+            if content:
+                return json.loads(content)
+            else:
+                return ErrorArtifact("error: can't load web page content")
