@@ -332,13 +332,13 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "cohere"
-version = "4.6.1"
+version = "4.7.0"
 description = ""
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "cohere-4.6.1-py3-none-any.whl", hash = "sha256:bee44741e91b22f49a36c9c4f014e2a26eb752251fb860176a0462c6a1ae4e79"},
-    {file = "cohere-4.6.1.tar.gz", hash = "sha256:69f0cf0a6202f89de04358028e68b33aa7f8e11ea64fb4f5a28904632d2aa672"},
+    {file = "cohere-4.7.0-py3-none-any.whl", hash = "sha256:ed15621bd271b941110a572cbf6187a4db78cc8d7d9d35a881bffcaeeea21d7c"},
+    {file = "cohere-4.7.0.tar.gz", hash = "sha256:46c674545ad36133a555c6db7f25bdc299e05ec4f77dee707b661a57eb06aea6"},
 ]
 
 [package.dependencies]
@@ -698,13 +698,13 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape"
-version = "0.10.0"
+version = "0.10.1"
 description = "Modular Python framework for LLM workflows, tools, memory, and data."
 optional = false
 python-versions = ">=3.9,<3.12"
 files = [
-    {file = "griptape-0.10.0-py3-none-any.whl", hash = "sha256:72861ef05ac96273fc44392727478df07fda846ef66fa663633db9c81a022cfd"},
-    {file = "griptape-0.10.0.tar.gz", hash = "sha256:3e7a81518a97ee4dca3973282dfd9e537d6a26474c7d8b85b8e7ee67389ab3db"},
+    {file = "griptape-0.10.1-py3-none-any.whl", hash = "sha256:f500111eb939ca2b64dab4f36bf46e15e07d3dc32424dfe29bef5ce7abf280b6"},
+    {file = "griptape-0.10.1.tar.gz", hash = "sha256:4aea084d80d7096e54ffe8be4df518779c79e23dd172281b87d89f9e4df21726"},
 ]
 
 [package.dependencies]
@@ -886,13 +886,13 @@ lxml = ">=4.4.2"
 
 [[package]]
 name = "langchain"
-version = "0.0.188"
+version = "0.0.189"
 description = "Building applications with LLMs through composability"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchain-0.0.188-py3-none-any.whl", hash = "sha256:cae3e14afb81e38e3abb69cdbb95aa161c0e7717542971e995993dff0b3fe415"},
-    {file = "langchain-0.0.188.tar.gz", hash = "sha256:58ef924d7bd7a3c06b3667384730e7c5fa6d02585558ae20ff85d5a6a1ee887b"},
+    {file = "langchain-0.0.189-py3-none-any.whl", hash = "sha256:11f9b6981000d8981a5447fe5b5b751bc90b97e7cab9b58e2f2c45bc7632fd5e"},
+    {file = "langchain-0.0.189.tar.gz", hash = "sha256:63dcf73ebe23a787ba0865a3df51a16d5a2e973d6a175b6a9f6340dd1a3ad002"},
 ]
 
 [package.dependencies]
@@ -936,13 +936,13 @@ data = ["language-data (>=1.1,<2.0)"]
 
 [[package]]
 name = "llama-index"
-version = "0.6.16.post1"
+version = "0.6.17"
 description = "Interface between LLMs and your data"
 optional = false
 python-versions = "*"
 files = [
-    {file = "llama_index-0.6.16.post1-py3-none-any.whl", hash = "sha256:2a0e5b0e9691283479300d7f720ab625efef8e8d6c6eeae7f4595b50250f27be"},
-    {file = "llama_index-0.6.16.post1.tar.gz", hash = "sha256:a81f9a4d2a9f938753a8d12c17cb0192f2cbb1b47c40c37ec0c5c62d487fab69"},
+    {file = "llama_index-0.6.17-py3-none-any.whl", hash = "sha256:06bff09ba240cde963e3f28f4120fd87a19f3752f284c898f8a29b004d8047e2"},
+    {file = "llama_index-0.6.17.tar.gz", hash = "sha256:153eab043c24d5716eda7eca6b3faf7e2a5da3f61693d3a5ae3b54d4f4bd016e"},
 ]
 
 [package.dependencies]
@@ -2566,4 +2566,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "4f7875e0b198805a08e8a9d8855274c192301d4da51bac5a0f5d4435405c776b"
+content-hash = "3a8bfd96f2b25fe206e10e1fc942984ef036111a6a10fee314a3f1167ca02d32"
