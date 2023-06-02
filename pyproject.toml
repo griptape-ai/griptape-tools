@@ -13,7 +13,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-griptape = { git = "https://github.com/griptape-ai/griptape.git", branch = "main" }
+griptape = ">=0.10"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
