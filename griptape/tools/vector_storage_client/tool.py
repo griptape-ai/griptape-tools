@@ -1,5 +1,5 @@
 from typing import Optional
-from griptape.engines import VectorQueryEngine
+from griptape.engines import BaseQueryEngine
 from schema import Schema, Literal
 from attr import define, field
 from griptape.artifacts import BaseArtifact, ErrorArtifact
@@ -12,7 +12,7 @@ class VectorStorageClient(BaseTool):
     DEFAULT_QUERY_RESULT_COUNT = 5
 
     description: str = field(kw_only=True)
-    query_engine: VectorQueryEngine = field(kw_only=True)
+    query_engine: BaseQueryEngine = field(kw_only=True)
     top_n: int = field(default=5, kw_only=True)
     namespace: Optional[str] = field(default=None, kw_only=True)
 
