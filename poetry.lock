@@ -698,23 +698,25 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape"
-version = "0.10.1"
+version = "0.10.2"
 description = "Modular Python framework for LLM workflows, tools, memory, and data."
 optional = false
 python-versions = ">=3.9,<3.12"
-files = []
-develop = false
+files = [
+    {file = "griptape-0.10.2-py3-none-any.whl", hash = "sha256:664172edf1fad56e7c6fc2739e0f8026eb882dd3436897fb82002d51c6cdadd7"},
+    {file = "griptape-0.10.2.tar.gz", hash = "sha256:175538255fa154f82325c91451a87c556825a1072c53bdcf015aff1682b02fee"},
+]
 
 [package.dependencies]
 attrs = ">=22"
-boto3 = "^1.26.123"
+boto3 = ">=1.26.123,<2.0.0"
 cohere = ">=4"
 fastapi = ">=0.80"
 graphlib = "*"
 huggingface-hub = ">=0.13"
 jinja2 = ">=3.1"
 jsonschema = ">=4"
-llama_index = "~0.6.0"
+llama_index = ">=0.6.0,<0.7.0"
 marshmallow = ">=3"
 marshmallow-enum = ">=1.5"
 numpy = ">=1"
@@ -726,20 +728,14 @@ python-dotenv = ">=0.21"
 pyyaml = ">=6"
 rich = ">=13"
 schema = ">=0.7"
-scipy = ">= 1.10"
+scipy = ">=1.10"
 stopit = "*"
 stringcase = ">=1"
 tenacity = ">=8.0"
 tiktoken = ">=0.3"
-trafilatura = ">= 1.6"
+trafilatura = ">=1.6"
 transformers = ">=4"
-uvicorn = ">= 0.20"
-
-[package.source]
-type = "git"
-url = "https://github.com/griptape-ai/griptape.git"
-reference = "main"
-resolved_reference = "47d41656bc745d7d74512a0dffedb86037f032c9"
+uvicorn = ">=0.20"
 
 [[package]]
 name = "h11"
@@ -2570,4 +2566,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "6ad33e38d480406494bb550809c28fe0257f7e1b10a9f1391c2bf4e0b464b0a6"
+content-hash = "3f7c8a2810224f31c68f9797dbd19f0a17bf660a8b171b87bdd2f55abe986c3f"
