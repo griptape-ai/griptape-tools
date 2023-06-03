@@ -8,7 +8,7 @@ from griptape.core.decorators import activity
 
 
 @define
-class VectorStorageClient(BaseTool):
+class VectorClient(BaseTool):
     DEFAULT_QUERY_RESULT_COUNT = 5
 
     description: str = field(kw_only=True)

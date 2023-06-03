@@ -5,7 +5,7 @@ from griptape.engines import VectorQueryEngine
 
 class TestTextProcessor:
     @pytest.fixture(autouse=True)
-    def mock_openai_embedding_create(self, mocker):
+    def mock_summarize_text(self, mocker):
         mocker.patch(
             "griptape.summarizers.PromptDriverSummarizer.summarize_text",
             return_value="foobar summary"

@@ -7,7 +7,7 @@ from .aws_cli.tool import AwsCli
 from .rest_api_client.tool import RestApiClient
 from .file_manager.tool import FileManager
 from .text_processor.tool import TextProcessor
-from .vector_storage_client.tool import VectorStorageClient
+from .vector_client.tool import VectorClient
 
 __all__ = [
     "Calculator",
@@ -19,5 +19,5 @@ __all__ = [
     "RestApiClient",
     "FileManager",
     "TextProcessor",
-    "VectorStorageClient"
+    "VectorClient"
 ]
