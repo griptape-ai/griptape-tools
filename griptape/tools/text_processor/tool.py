@@ -12,6 +12,7 @@ from attr import define, field
 
 @define
 class TextProcessor(BaseTool):
+    namespace: Optional[str] = field(default=None, kw_only=True)
     query_engine: Optional[VectorQueryEngine] = field(default=None, kw_only=True)
 
     @activity(config={
@@ -55,7 +56,7 @@ class TextProcessor(BaseTool):
         "schema": Schema({
             Literal(
                 "query",
-                description="A search query to run on text"
+                description="A natural language search query"
             ): str,
             schema.Optional(
                 Literal(
@@ -79,6 +80,6 @@ class TextProcessor(BaseTool):
         else:
             query_engine = self.query_engine if self.query_engine else VectorQueryEngine()
 
-            query_engine.insert(artifacts)
+            [query_engine.vector_driver.upsert_text_artifact(a, namespace=self.namespace) for a in artifacts]
 
             return query_engine.query(query)
