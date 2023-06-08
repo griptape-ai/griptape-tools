@@ -8,7 +8,7 @@ from griptape.core.decorators import activity
 
 
 @define
-class VectorClient(BaseTool):
+class KnowledgeBaseClient(BaseTool):
     DEFAULT_QUERY_RESULT_COUNT = 5
 
     description: str = field(kw_only=True)
@@ -24,12 +24,11 @@ class VectorClient(BaseTool):
 
     @activity(config={
         "description":
-            "Can be used to search a vector database. "
-            "Database description: {{ description }}",
+            "Can be used to search a knowledge base with the following description: {{ description }}",
         "schema": Schema({
             Literal(
                 "query",
-                description="Vector database natural language query"
+                description="Natural language search query"
             ): str
         })
     })
@@ -43,4 +42,4 @@ class VectorClient(BaseTool):
                 namespace=self.namespace
             )
         except Exception as e:
-            return ErrorArtifact(f"error querying database: {e}")
+            return ErrorArtifact(f"error querying knowledge base: {e}")
