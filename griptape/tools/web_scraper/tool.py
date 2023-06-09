@@ -14,7 +14,7 @@ class WebScraper(BaseTool):
     include_links: bool = field(default=True, kw_only=True)
 
     @activity(config={
-        "description": "Can be used to get all text content of a web page",
+        "description": "Can be used to browse a web page and load its content",
         "schema": Schema({
             Literal(
                 "url",
@@ -32,7 +32,7 @@ class WebScraper(BaseTool):
             return TextArtifact(page.get("text"))
 
     @activity(config={
-        "description": "Can be used to get web page author",
+        "description": "Can be used to load a web page author",
         "schema": Schema({
             Literal(
                 "url",
