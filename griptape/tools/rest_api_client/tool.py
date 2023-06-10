@@ -246,8 +246,8 @@ class RestApiClient(BaseTool):
         except exceptions.RequestException as err:
             return ErrorArtifact(str(err))
 
-    def _build_url(self, base_url, path=None, path_params=None, query_params=None):
-        url = base_url.strip('/')
+    def _build_url(self, base_url, path=None, path_params=None):
+        url = base_url.strip("/")
 
         if path:
             url = f"{url}/{path.strip('/')}"
