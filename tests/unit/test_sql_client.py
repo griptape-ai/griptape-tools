@@ -26,19 +26,14 @@ class TestSqlClient:
         with sqlite3.connect(":memory:"):
             client = SqlClient(
                 sql_loader=SqlLoader(sql_driver=driver),
+                tables=[(None, "test_table")],
                 engine_name="sqlite"
             )
             result = client.execute_query({"values": {"sql_query": "SELECT * from test_table;"}})
+            description = client.activity_description(client.execute_query)
 
             assert len(result.value) == 1
             assert result.value[0].value == "1,Alice,25,New York"
-
-    def test_get_schema(self, driver):
-        with sqlite3.connect(":memory:"):
-            client = SqlClient(
-                sql_loader=SqlLoader(sql_driver=driver),
-                engine_name="sqlite"
-            )
-            result = client.get_schema({"values": {"table_name": "test_table"}})
-
-            assert result.value == "[('id', INTEGER()), ('name', TEXT()), ('age', INTEGER()), ('city', TEXT())]"
+            assert "Can be used to execute SQL SELECT queries (sqlite) in the following tables:" in description
+            assert "test_table (schema: [('id', INTEGER()), ('name', TEXT()), ('age', INTEGER()), ('city', TEXT())])" in description
+            
