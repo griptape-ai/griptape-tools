@@ -59,21 +59,20 @@ class RestApiClient(BaseTool):
                 {% if response_body_schema %}The response body must follow this JSON schema: {{response_body_schema}}{% endif %}.
                 """
             ),
-            "schema": Schema({
-                Literal(
-                    "body",
-                    description="The request body."
-                ): dict,
-            }),
+            "schema": Schema(
+                {
+                    Literal("body", description="The request body."): dict,
+                }
+            ),
         }
     )
     def put(self, params: dict) -> BaseArtifact:
         from requests import put, exceptions
-        
+
         values = params["values"]
-        base_url = self.value("base_url")
-        path = self.value("path")
-        body = values.get("body")
+        base_url = self.base_url
+        path = self.path
+        body = values["body"]
         url = self._build_url(base_url, path=path)
 
         try:
@@ -94,26 +93,24 @@ class RestApiClient(BaseTool):
                 {% if response_body_schema %}The response body must follow this JSON schema: {{response_body_schema}}{% endif %}.
                 """
             ),
-            "schema": Schema({
-                Literal(
-                    "pathParams",
-                    description="The request path parameters."
-                ): list,
-                Literal(
-                    "body",
-                    description="The request body."
-                ): dict,
-            }),
+            "schema": Schema(
+                {
+                    Literal(
+                        "path_params", description="The request path parameters."
+                    ): list,
+                    Literal("body", description="The request body."): dict,
+                }
+            ),
         }
     )
     def patch(self, params: dict) -> BaseArtifact:
         from requests import patch, exceptions
-        
-        input_values = params["values"]
-        base_url = self.value("base_url")
-        path = self.value("path")
-        body = input_values.get("body")
-        path_params = input_values.get("pathParams")
+
+        values = params["values"]
+        base_url = self.base_url
+        path = self.path
+        body = values["body"]
+        path_params = values["path_params"]
         url = self._build_url(base_url, path=path, path_params=path_params)
 
         try:
@@ -132,19 +129,21 @@ class RestApiClient(BaseTool):
                 {% if response_body_schema %}The response body must follow this JSON schema: {{response_body_schema}}{% endif %}.
                 """
             ),
-            "schema": Schema({
-                Literal("body", description="The request body."): dict,
-            }),
+            "schema": Schema(
+                {
+                    Literal("body", description="The request body."): dict,
+                }
+            ),
         }
     )
     def post(self, params: dict) -> BaseArtifact:
         from requests import post, exceptions
-        
-        input_values = params["values"]
-        base_url = self.value("base_url")
-        path = self.value("path")
+
+        values = params["values"]
+        base_url = self.base_url
+        path = self.path
         url = self._build_url(base_url, path=path)
-        body = input_values["body"]
+        body = values["body"]
 
         try:
             response = post(url, data=body, timeout=30)
@@ -164,35 +163,37 @@ class RestApiClient(BaseTool):
                 """
             ),
             "schema": schema.Optional(
-                Schema({
-                    schema.Optional(
-                        Literal(
-                            "queryParams",
-                            description="The request query parameters.",
-                        )
-                    ): dict,
-                    schema.Optional(
-                        Literal(
-                            "pathParams",
-                            description="The request path parameters."
-                        )
-                    ): list,
-                })
+                Schema(
+                    {
+                        schema.Optional(
+                            Literal(
+                                "query_params",
+                                description="The request query parameters.",
+                            )
+                        ): dict,
+                        schema.Optional(
+                            Literal(
+                                "path_params",
+                                description="The request path parameters.",
+                            )
+                        ): list,
+                    }
+                )
             ),
         }
     )
     def get(self, params: dict) -> BaseArtifact:
         from requests import get, exceptions
-        
-        input_values = params["values"]
-        base_url = self.value("base_url")
-        path = self.value("path")
+
+        values = params["values"]
+        base_url = self.base_url
+        path = self.path
 
         query_params = {}
         path_params = []
-        if input_values:
-            query_params = input_values.get("queryParams", {})
-            path_params = input_values.get("pathParams", [])
+        if values:
+            query_params = values.get("query_params", {})
+            path_params = values.get("path_params", [])
         url = self._build_url(base_url, path=path, path_params=path_params)
 
         try:
@@ -211,30 +212,32 @@ class RestApiClient(BaseTool):
                 {% if request_query_parameters %}The request query parameters must follow this JSON schema: {{request_path_params_schema}}{% endif %}.
                 """
             ),
-            "schema": Schema({
-                schema.Optional(
-                    Literal(
-                        "queryParams",
-                        description="The request query parameters.",
-                    )
-                ): dict,
-                schema.Optional(
-                    Literal(
-                        "pathParams", description="The request path parameters."
-                    )
-                ): list,
-            }),
+            "schema": Schema(
+                {
+                    schema.Optional(
+                        Literal(
+                            "query_params",
+                            description="The request query parameters.",
+                        )
+                    ): dict,
+                    schema.Optional(
+                        Literal(
+                            "path_params", description="The request path parameters."
+                        )
+                    ): list,
+                }
+            ),
         }
     )
     def delete(self, params: dict = None) -> BaseArtifact:
         from requests import delete, exceptions
-        
-        input_values = params["values"]
-        base_url = self.value("base_url")
-        path = self.value("path")
 
-        query_params = input_values.get("queryParams", {})
-        path_params = input_values.get("pathParams", [])
+        values = params["values"]
+        base_url = self.base_url
+        path = self.path
+
+        query_params = values.get("query_params", {})
+        path_params = values.get("path_params", [])
         url = self._build_url(base_url, path=path, path_params=path_params)
 
         try:
