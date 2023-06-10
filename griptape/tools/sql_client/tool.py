@@ -9,7 +9,7 @@ from schema import Schema
 
 @define
 class SqlClient(BaseTool):
-    loader: SqlLoader = field(kw_only=True)
+    sql_loader: SqlLoader = field(kw_only=True)
     engine_name: Optional[str] = field(default=None, kw_only=True)
 
     @property
@@ -27,7 +27,7 @@ class SqlClient(BaseTool):
     def execute_query(self, params: dict) -> ListArtifact:
         query = params["values"]["sql_query"]
 
-        return ListArtifact.from_list(self.loader.load(query))
+        return ListArtifact.from_list(self.sql_loader.load(query))
 
     @activity(config={
         "description": "Can be used to get a SQL table schema",
@@ -37,7 +37,7 @@ class SqlClient(BaseTool):
     })
     def get_schema(self, params: dict) -> Union[TextArtifact, ErrorArtifact]:
         table_name = params["values"]["table_name"]
-        schema = self.loader.sql_driver.get_schema(table_name)
+        schema = self.sql_loader.sql_driver.get_schema(table_name)
 
         if schema:
             return TextArtifact(schema)

@@ -25,7 +25,7 @@ class TestSqlClient:
     def test_execute_query(self, driver):
         with sqlite3.connect(":memory:"):
             client = SqlClient(
-                loader=SqlLoader(sql_driver=driver),
+                sql_loader=SqlLoader(sql_driver=driver),
                 engine_name="sqlite"
             )
             result = client.execute_query({"values": {"sql_query": "SELECT * from test_table;"}})
@@ -36,7 +36,7 @@ class TestSqlClient:
     def test_get_schema(self, driver):
         with sqlite3.connect(":memory:"):
             client = SqlClient(
-                loader=SqlLoader(sql_driver=driver),
+                sql_loader=SqlLoader(sql_driver=driver),
                 engine_name="sqlite"
             )
             result = client.get_schema({"values": {"table_name": "test_table"}})
