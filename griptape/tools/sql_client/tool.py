@@ -21,7 +21,7 @@ class SqlClient(BaseTool):
         return {
             "engine": self.engine_name,
             "table_schemas": [
-                f"{self.table_name(t)} (schema: {self.sql_loader.sql_driver.get_table_schema(self.table_name(t))})"
+                f"{self.table_name(t)} (schema: {self.sql_loader.sql_driver.get_table_schema(t[1], schema=t[0])})"
                 for t in self.tables
             ]
         }
