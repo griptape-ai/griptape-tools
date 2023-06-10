@@ -11,25 +11,30 @@ from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 @define
 class RestApiClient(BaseTool):
     base_url: str = field(
-        factory=str, metadata={"env": "BASE_URL"}
+        factory=str,
     )
     path: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "URL_PATH"}
+        default=None,
+        kw_only=True,
     )
     description: str = field(
-        factory=str, metadata={"env": "DESCRIPTION"}
+        factory=str,
     )
     request_path_params_schema: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_PATH_PARAMS_SCHEMA"}
+        default=None,
+        kw_only=True,
     )
     request_query_params_schema: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_QUERY_PARAMS_SCHEMA"}
+        default=None,
+        kw_only=True,
     )
     request_body_schema: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "REQUEST_BODY_SCHEMA"}
+        default=None,
+        kw_only=True,
     )
     response_body_schema: Optional[str] = field(
-        default=None, kw_only=True, metadata={"env": "RESPONSE_BODY_SCHEMA"}
+        default=None,
+        kw_only=True,
     )
 
     @property
