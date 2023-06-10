@@ -1,5 +1,5 @@
 import pytest
-from griptape.drivers import SqlalchemySqlDriver
+from griptape.drivers import SqlDriver
 from griptape.loaders import SqlLoader
 from griptape.tools import SqlClient
 import sqlite3
@@ -8,7 +8,7 @@ import sqlite3
 class TestSqlClient:
     @pytest.fixture
     def driver(self):
-        new_driver = SqlalchemySqlDriver(
+        new_driver = SqlDriver(
             engine_url="sqlite:///:memory:"
         )
 
@@ -26,14 +26,23 @@ class TestSqlClient:
         with sqlite3.connect(":memory:"):
             client = SqlClient(
                 sql_loader=SqlLoader(sql_driver=driver),
-                tables=[(None, "test_table")],
+                table_name="test_table",
                 engine_name="sqlite"
             )
             result = client.execute_query({"values": {"sql_query": "SELECT * from test_table;"}})
-            description = client.activity_description(client.execute_query)
 
             assert len(result.value) == 1
             assert result.value[0].value == "1,Alice,25,New York"
-            assert "Can be used to execute SQL SELECT queries (sqlite) in the following tables:" in description
-            assert "test_table (schema: [('id', INTEGER()), ('name', TEXT()), ('age', INTEGER()), ('city', TEXT())])" in description
-            
+
+    def test_execute_query_description(self, driver):
+        client = SqlClient(
+            sql_loader=SqlLoader(sql_driver=driver),
+            table_name="test_table",
+            table_description="foobar",
+            engine_name="sqlite"
+        )
+        description = client.activity_description(client.execute_query)
+
+        assert "Can be used to execute sqlite SQL SELECT queries in table test_table" in description
+        assert "test_table schema: [('id', INTEGER()), ('name', TEXT()), ('age', INTEGER()), ('city', TEXT())]" in description
+        assert "test_table description: foobar" in description

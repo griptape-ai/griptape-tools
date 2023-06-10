@@ -10,26 +10,30 @@ from schema import Schema
 @define
 class SqlClient(BaseTool):
     sql_loader: SqlLoader = field(kw_only=True)
-    tables: list[tuple[Optional[str], str]] = field(kw_only=True) # (schema, table name)
+    schema_name: Optional[str] = field(default=None, kw_only=True)
+    table_name: str = field(kw_only=True)
+    table_description: Optional[str] = field(default=None, kw_only=True)
     engine_name: Optional[str] = field(default=None, kw_only=True)
 
-    def table_name(self, table_tuple: tuple[Optional[str], str]) -> str:
-        return f"{table_tuple[0]}.{table_tuple[1]}" if table_tuple[0] else table_tuple[1]
+    @property
+    def full_table_name(self) -> str:
+        return f"{self.schema_name}.{self.table_name}" if self.schema_name else self.table_name
 
     @property
     def schema_template_args(self) -> dict:
         return {
             "engine": self.engine_name,
-            "table_schemas": [
-                f"{self.table_name(t)} (schema: {self.sql_loader.sql_driver.get_table_schema(t[1], schema=t[0])})"
-                for t in self.tables
-            ]
+            "table_name": self.full_table_name,
+            "table_description": self.table_description,
+            "table_schema": self.sql_loader.sql_driver.get_table_schema(self.table_name, schema=self.schema_name)
         }
 
     @activity(config={
         "description":
-            "Can be used to execute SQL SELECT queries{% if engine %} ({{ engine }}){% endif %} "
-            "in the following tables: {{ table_schemas|join(', ') }}",
+            "Can be used to execute{% if engine %} {{ engine }}{% endif %} SQL SELECT queries "
+            "in table {{ table_name }}.\n"
+            "{{ table_name }} schema: {{ table_schema }}{% if table_description %}\n"
+            "{{ table_name }} description: {{ table_description }}{% endif %}",
         "schema": Schema({
             "sql_query": str
         })
