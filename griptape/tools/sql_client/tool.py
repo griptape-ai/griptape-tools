@@ -12,7 +12,6 @@ class SqlClient(BaseTool):
     sql_loader: SqlLoader = field(kw_only=True)
     tables: list[tuple[Optional[str], str]] = field(kw_only=True) # (schema, table name)
     engine_name: Optional[str] = field(default=None, kw_only=True)
-    description: Optional[str] = field(default=None, kw_only=True)
 
     def table_name(self, table_tuple: tuple[Optional[str], str]) -> str:
         return f"{table_tuple[0]}.{table_tuple[1]}" if table_tuple[0] else table_tuple[1]
