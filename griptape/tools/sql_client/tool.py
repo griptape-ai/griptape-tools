@@ -1,14 +1,15 @@
-from typing import Optional
+from typing import Optional, Union
 from attr import define, field
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
+from griptape.artifacts import ListArtifact, TextArtifact, ErrorArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
-from schema import Schema, Literal
+from griptape.loaders import SqlLoader
+from schema import Schema
 
 
 @define
 class SqlClient(BaseTool):
-    engine_url: str = field(default=None, kw_only=True)
+    loader: SqlLoader = field(kw_only=True)
     engine_name: Optional[str] = field(default=None, kw_only=True)
 
     @property
@@ -18,28 +19,27 @@ class SqlClient(BaseTool):
         }
 
     @activity(config={
-        "description": "Can be used to execute SQL queries{% if engine %} in {{ engine }}{% endif %}",
+        "description": "Can be used to execute SQL SELECT queries{% if engine %} in {{ engine }}{% endif %}",
         "schema": Schema({
-            Literal(
-                "query",
-                description="SQL query to execute. For example, SELECT, CREATE, INSERT, DROP, DELETE, etc."
-            ): str
+            "sql_query": str
         })
     })
-    def query(self, params: dict) -> BaseArtifact:
-        from sqlalchemy import create_engine, text
+    def execute_query(self, params: dict) -> ListArtifact:
+        query = params["values"]["sql_query"]
 
-        query = params["values"]["query"]
-        engine = create_engine(self.engine_url)
+        return ListArtifact.from_list(self.loader.load(query))
 
-        try:
-            with engine.connect() as con:
-                results = con.execute(text(query))
+    @activity(config={
+        "description": "Can be used to get a SQL table schema",
+        "schema": Schema({
+            "table_name": str
+        })
+    })
+    def get_schema(self, params: dict) -> Union[TextArtifact, ErrorArtifact]:
+        table_name = params["values"]["table_name"]
+        schema = self.loader.sql_driver.get_schema(table_name)
 
-                if results.returns_rows:
-                    return TextArtifact(str([row for row in results]))
-                else:
-                    return TextArtifact("query successfully executed")
-
-        except Exception as e:
-            return ErrorArtifact(f"error executing SQL: {e}")
+        if schema:
+            return TextArtifact(schema)
+        else:
+            return ErrorArtifact(f"schema for {table_name} not found")
