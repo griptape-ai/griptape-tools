@@ -31,7 +31,8 @@ class SqlClient(BaseTool):
     @activity(config={
         "description":
             "Can be used to execute{% if engine %} {{ engine }}{% endif %} SQL SELECT queries "
-            "in table {{ table_name }}.\n"
+            "in table {{ table_name }}. You can use wildcards in LIKE statements to get better row matches. "
+            "You can use JOINs if more tables are available in other tools.\n"
             "{{ table_name }} schema: {{ table_schema }}{% if table_description %}\n"
             "{{ table_name }} description: {{ table_description }}{% endif %}",
         "schema": Schema({
