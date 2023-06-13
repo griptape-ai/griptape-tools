@@ -1,5 +1,6 @@
 from textwrap import dedent
 from typing import Optional
+from urllib.parse import urljoin
 import schema
 from schema import Schema, Literal
 from attr import define, field
@@ -246,8 +247,8 @@ class RestApiClient(BaseTool):
         url = base_url.strip("/")
 
         if path:
-            url = f"{url}/{path.strip('/')}"
+            url = urljoin(url, path.strip("/"))
         if path_params:
-            url = f"{url}/{str.join('/', path_params)}"
+            url = urljoin(url, str.join("/", path_params))
 
         return url
