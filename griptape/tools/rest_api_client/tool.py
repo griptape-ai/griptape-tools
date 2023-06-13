@@ -10,16 +10,12 @@ from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 
 @define
 class RestApiClient(BaseTool):
-    base_url: str = field(
-        factory=str,
-    )
+    base_url: str = field(kw_only=True)
     path: Optional[str] = field(
         default=None,
         kw_only=True,
     )
-    description: str = field(
-        factory=str,
-    )
+    description: str = field(kw_only=True)
     request_path_params_schema: Optional[str] = field(
         default=None,
         kw_only=True,
