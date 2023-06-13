@@ -44,24 +44,16 @@ class TextMemoryExtractor(BaseTool):
             "artifact_namespace": str,
             Literal(
                 "query",
-                description="A natural language search query"
-            ): str,
-            schema.Optional(
-                Literal(
-                    "context",
-                    description="Any relevant information that could be useful in generating better search results: "
-                                "the original search request, the original SQL query, hints from before, etc."
-                )
+                description="A natural language search query in the form of a question with enough "
+                            "contextual information for a human to answer the question"
             ): str
         })
     })
     def search(self, params: dict) -> BaseArtifact:
         artifact_namespace = params["values"]["artifact_namespace"]
         query = params["values"]["query"]
-        context = params["values"].get("context", None)
 
         return self.tool_memory.query_engine.query(
             query,
-            namespace=artifact_namespace,
-            context=context
+            namespace=artifact_namespace
         )
