@@ -6,7 +6,7 @@ from .email_client.tool import EmailClient
 from .aws_cli.tool import AwsCli
 from .rest_api_client.tool import RestApiClient
 from .file_manager.tool import FileManager
-from .memory_extractor.tool import MemoryExtractor
+from .text_memory_extractor.tool import TextMemoryExtractor
 from .knowledge_base_client.tool import KnowledgeBaseClient
 
 __all__ = [
@@ -18,6 +18,6 @@ __all__ = [
     "AwsCli",
     "RestApiClient",
     "FileManager",
-    "MemoryExtractor",
+    "TextMemoryExtractor",
     "KnowledgeBaseClient"
 ]

@@ -1,8 +1,9 @@
 import pytest
 from griptape.artifacts import TextArtifact
+from griptape.memory.tool import TextToolMemory
 
 
-class TestMemoryExtractor:
+class TestTextMemoryExtractor:
     @pytest.fixture(autouse=True)
     def mock_summarize_text(self, mocker):
         mocker.patch(
@@ -12,9 +13,11 @@ class TestMemoryExtractor:
 
     @pytest.fixture
     def processor(self):
-        from griptape.tools import MemoryExtractor
+        from griptape.tools import TextMemoryExtractor
 
-        return MemoryExtractor()
+        return TextMemoryExtractor(
+            tool_memory=TextToolMemory()
+        )
 
     def test_summarize(self, processor):
         artifact = TextArtifact("foobar")

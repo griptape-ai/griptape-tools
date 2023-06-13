@@ -2,16 +2,18 @@ from typing import Union
 import schema
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
 from griptape.drivers import OpenAiPromptDriver
-from griptape.engines import VectorQueryEngine
+from griptape.memory.tool import TextToolMemory
 from griptape.summarizers import PromptDriverSummarizer
 from schema import Schema, Literal
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
-from attr import define
+from attr import define, field
 
 
 @define
-class MemoryExtractor(BaseTool):
+class TextMemoryExtractor(BaseTool):
+    tool_memory: TextToolMemory = field(kw_only=True)
+
     @activity(config={
         "description": "Can be used to generate summaries of memory artifacts",
         "load_artifacts": True
@@ -39,6 +41,7 @@ class MemoryExtractor(BaseTool):
     @activity(config={
         "description": "Can be used to search memory artifacts",
         "schema": Schema({
+            "artifact_namespace": str,
             Literal(
                 "query",
                 description="A natural language search query"
@@ -50,19 +53,15 @@ class MemoryExtractor(BaseTool):
                                 "the original search request, the original SQL query, hints from before, etc."
                 )
             ): str
-        }),
-        "load_artifacts": True
+        })
     })
     def search(self, params: dict) -> BaseArtifact:
+        artifact_namespace = params["values"]["artifact_namespace"]
         query = params["values"]["query"]
         context = params["values"].get("context", None)
-        artifacts = [a for a in self.artifacts if isinstance(a, TextArtifact)]
 
-        if len(artifacts) == 0:
-            return ErrorArtifact("no artifacts found")
-        else:
-            query_engine = VectorQueryEngine()
-
-            [query_engine.vector_driver.upsert_text_artifact(a) for a in artifacts]
-
-            return query_engine.query(query, context)
+        return self.tool_memory.query_engine.query(
+            query,
+            namespace=artifact_namespace,
+            context=context
+        )
