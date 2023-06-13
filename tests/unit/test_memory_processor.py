@@ -1,9 +1,8 @@
 import pytest
 from griptape.artifacts import TextArtifact
-from griptape.engines import VectorQueryEngine
 
 
-class TestTextProcessor:
+class TestMemoryProcessor:
     @pytest.fixture(autouse=True)
     def mock_summarize_text(self, mocker):
         mocker.patch(
@@ -13,18 +12,18 @@ class TestTextProcessor:
 
     @pytest.fixture
     def processor(self):
-        from griptape.tools import TextProcessor
+        from griptape.tools import MemoryProcessor
 
-        return TextProcessor(query_engine=VectorQueryEngine())
+        return MemoryProcessor()
 
     def test_summarize(self, processor):
         artifact = TextArtifact("foobar")
 
         assert processor.summarize(
-            {"artifacts": {"values": [artifact.to_dict()]}}
+            {"artifacts": {"values": [artifact]}}
         ).value[0].value == "foobar summary"
 
     def test_query(self, processor):
         assert processor.search(
             {"values": {"query": "foobar"}}
-        ).value == "no text supplied"
+        ).value == "no artifacts found"

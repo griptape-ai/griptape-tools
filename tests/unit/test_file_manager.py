@@ -18,6 +18,6 @@ class TestFileManager:
         with tempfile.TemporaryDirectory() as temp_dir:
             path = os.path.join(temp_dir, "foobar.txt")
             artifact = BlobArtifact(b"foobar", name="test.txt")
-            result = FileManager().save_to_disk({"values": {"paths": [path]}, "artifacts": {"values": [artifact.to_dict()]}})
+            result = FileManager().save_to_disk({"values": {"paths": [path]}, "artifacts": {"values": [artifact]}})
 
             assert result.value == "saved successfully"

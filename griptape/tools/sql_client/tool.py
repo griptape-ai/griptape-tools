@@ -1,6 +1,6 @@
-from typing import Optional
+from typing import Optional, Union
 from attr import define, field
-from griptape.artifacts import ListArtifact
+from griptape.artifacts import ListArtifact, InfoArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.loaders import SqlLoader
@@ -31,7 +31,11 @@ class SqlClient(BaseTool):
     @activity(config={
         "description":
             "Can be used to execute{% if engine %} {{ engine }}{% endif %} SQL SELECT queries "
-            "in table {{ table_name }}. You can use wildcards in LIKE statements to get better row matches. "
+            "in table {{ table_name }}. "
+            "Make sure the `SELECT` statement contains enough columns to get an answer without knowing "
+            "the original question. "
+            "Be creative when you use `WHERE` statements: you can use wildcards, `LOWER()`, and other functions "
+            "to get better results. "
             "You can use JOINs if more tables are available in other tools.\n"
             "{{ table_name }} schema: {{ table_schema }}{% if table_description %}\n"
             "{{ table_name }} description: {{ table_description }}{% endif %}",
@@ -39,7 +43,14 @@ class SqlClient(BaseTool):
             "sql_query": str
         })
     })
-    def execute_query(self, params: dict) -> ListArtifact:
+    def execute_query(self, params: dict) -> Union[ListArtifact, InfoArtifact]:
         query = params["values"]["sql_query"]
+        rows = self.sql_loader.load(query)
 
-        return ListArtifact.from_list(self.sql_loader.load(query))
+        if len(rows) > 0:
+            for row in rows:
+                row.meta["original_query"] = query
+                
+            return ListArtifact.from_list(rows)
+        else:
+            return InfoArtifact("No results found")

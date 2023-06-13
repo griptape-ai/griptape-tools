@@ -54,7 +54,7 @@ class FileManager(BaseTool):
                             "For example, ['foo/bar/file.txt']"
             ): []
         }),
-        "pass_artifacts": True
+        "load_artifacts": True
     })
     def save_to_disk(self, params: dict) -> Union[ErrorArtifact, InfoArtifact]:
         new_paths = params["values"]["paths"]

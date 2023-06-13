@@ -11,31 +11,16 @@ from attr import define, field
 
 
 @define
-class TextProcessor(BaseTool):
-    namespace: Optional[str] = field(default=None, kw_only=True)
-    query_engine: Optional[VectorQueryEngine] = field(default=None, kw_only=True)
-
+class MemoryProcessor(BaseTool):
     @activity(config={
-        "description": "Can be used to generate summaries of text content from memory and/or optional text_input",
-        "schema": Schema({
-            schema.Optional(
-                Literal(
-                    "text_input",
-                    description="Optional text input in addition to memory artifacts"
-                )
-            ): str
-        }),
-        "pass_artifacts": True
+        "description": "Can be used to generate summaries of memory artifacts",
+        "load_artifacts": True
     })
     def summarize(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
-        text = params.get("values", {}).get("text_input", None)
         artifacts = [a for a in self.artifacts if isinstance(a, TextArtifact)]
-
-        if text:
-            artifacts.append(TextArtifact(text))
             
         if len(artifacts) == 0:
-            return ErrorArtifact("no text supplied")
+            return ErrorArtifact("no artifacts found")
         else:
             list_artifact = ListArtifact()
 
@@ -52,7 +37,7 @@ class TextProcessor(BaseTool):
             return list_artifact
 
     @activity(config={
-        "description": "Can be used to search text content from memory and/or optional text_input",
+        "description": "Can be used to search memory artifacts",
         "schema": Schema({
             Literal(
                 "query",
@@ -60,26 +45,24 @@ class TextProcessor(BaseTool):
             ): str,
             schema.Optional(
                 Literal(
-                    "text_input",
-                    description="Optional text input in addition to memory artifacts"
+                    "context",
+                    description="Any relevant information that could be useful in generating better search results: "
+                                "the original search request, the original SQL query, hints from before, etc."
                 )
             ): str
         }),
-        "pass_artifacts": True
+        "load_artifacts": True
     })
     def search(self, params: dict) -> BaseArtifact:
-        text = params["values"].get("text_input", None)
         query = params["values"]["query"]
+        context = params["values"].get("context", None)
         artifacts = [a for a in self.artifacts if isinstance(a, TextArtifact)]
 
-        if text:
-            artifacts.append(TextArtifact(text))
-
         if len(artifacts) == 0:
-            return ErrorArtifact("no text supplied")
+            return ErrorArtifact("no artifacts found")
         else:
-            query_engine = self.query_engine if self.query_engine else VectorQueryEngine()
+            query_engine = VectorQueryEngine()
 
-            [query_engine.vector_driver.upsert_text_artifact(a, namespace=self.namespace) for a in artifacts]
+            [query_engine.vector_driver.upsert_text_artifact(a) for a in artifacts]
 
-            return query_engine.query(query)
+            return query_engine.query(query, context)
