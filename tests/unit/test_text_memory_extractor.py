@@ -5,10 +5,15 @@ from griptape.memory.tool import TextToolMemory
 
 class TestTextMemoryExtractor:
     @pytest.fixture(autouse=True)
-    def mock_summarize_text(self, mocker):
+    def mock_griptape(self, mocker):
         mocker.patch(
             "griptape.summarizers.PromptDriverSummarizer.summarize_text",
             return_value="foobar summary"
+        )
+
+        mocker.patch(
+            "griptape.engines.VectorQueryEngine.query",
+            return_value=TextArtifact("foobar")
         )
 
     @pytest.fixture
@@ -28,5 +33,5 @@ class TestTextMemoryExtractor:
 
     def test_query(self, processor):
         assert processor.search(
-            {"values": {"query": "foobar"}}
-        ).value == "no artifacts found"
+            {"values": {"query": "foobar", "artifact_namespace": "foo"}}
+        ).value == "foobar"
