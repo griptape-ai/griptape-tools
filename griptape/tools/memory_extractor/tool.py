@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union
 import schema
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
 from griptape.drivers import OpenAiPromptDriver
@@ -7,11 +7,11 @@ from griptape.summarizers import PromptDriverSummarizer
 from schema import Schema, Literal
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
-from attr import define, field
+from attr import define
 
 
 @define
-class MemoryProcessor(BaseTool):
+class MemoryExtractor(BaseTool):
     @activity(config={
         "description": "Can be used to generate summaries of memory artifacts",
         "load_artifacts": True
