@@ -721,7 +721,7 @@ description = "Modular Python framework for LLM workflows, tools, memory, and da
 optional = false
 python-versions = "^3.9"
 files = []
-develop = true
+develop = false
 
 [package.dependencies]
 anthropic = "^0.2.10"
@@ -756,8 +756,10 @@ transformers = ">=4"
 uvicorn = ">= 0.20"
 
 [package.source]
-type = "directory"
-url = "../griptape"
+type = "git"
+url = "https://github.com/griptape-ai/griptape.git"
+reference = "main"
+resolved_reference = "61ff77e2a7837198aefa11f62203c98007ab69fe"
 
 [[package]]
 name = "h11"
@@ -2713,4 +2715,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "2e649a55734e60fa260619c578b951356c09aa570e6967243469c83a7fdbd5a4"
+content-hash = "286b66b61d7ad91fb9e82db03139d7ec07c2e06972be13368872d9d6eca0dbba"
