@@ -4,24 +4,25 @@ from attr import define, field
 from griptape.artifacts import ErrorArtifact, BlobArtifact, ListArtifact, InfoArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
+from griptape.memory.tool import TextToolMemory
 from schema import Schema, Literal
 
 
 @define
 class FileManager(BaseTool):
+    tool_memory: TextToolMemory = field(kw_only=True)
     dir: str = field(default=os.getcwd(), kw_only=True)
 
     @activity(config={
-        "description": "Can be used to load files",
+        "description": "Can be used to load files from disk",
         "schema": Schema({
             Literal(
                 "paths",
-                description="Paths to files to be loaded in the POSIX format. "
-                            "For example, ['foo/bar/file.txt']"
+                description="Paths to files to be loaded in the POSIX format. For example, ['foo/bar/file.txt']"
             ): []
         })
     })
-    def load_from_disk(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
+    def load_files_from_disk(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
         list_artifact = ListArtifact()
 
         for path in params["values"]["paths"]:
@@ -46,37 +47,33 @@ class FileManager(BaseTool):
         return list_artifact
 
     @activity(config={
-        "description": "Can be used to save files",
+        "description": "Can be used to save an artifact namespace to disk",
         "schema": Schema({
+            "artifact_namespace": str,
             Literal(
-                "paths",
-                description="Destination paths in the POSIX format for each artifact to be stored in a file. "
-                            "For example, ['foo/bar/file.txt']"
-            ): []
-        }),
-        "load_artifacts": True
+                "path",
+                description="Destination path on disk in the POSIX format. For example, ['foo/bar/file.txt']"
+            ): str
+        })
     })
-    def save_to_disk(self, params: dict) -> Union[ErrorArtifact, InfoArtifact]:
-        new_paths = params["values"]["paths"]
-        artifacts = self.artifacts
+    def save_file_to_disk(self, params: dict) -> Union[ErrorArtifact, InfoArtifact]:
+        new_path = params["values"]["path"]
+        artifact_namespace = params["values"]["artifact_namespace"]
+        artifacts = self.tool_memory.load_namespace_artifacts(artifact_namespace)
 
         if len(artifacts) == 0:
-            return ErrorArtifact("files not found")
-        elif len(new_paths) == 0:
-            return ErrorArtifact("no paths provided")
+            return ErrorArtifact("no artifacts found")
         else:
-            for i, new_path in enumerate(new_paths):
-                try:
-                    artifact = artifacts[0] if len(artifacts) == 1 else artifacts[i]
-                    full_path = os.path.join(self.dir, new_path)
+            try:
+                full_path = os.path.join(self.dir, new_path)
 
-                    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                os.makedirs(os.path.dirname(full_path), exist_ok=True)
 
-                    with open(full_path, "wb") as file:
-                        value = artifact.value
+                with open(full_path, "wb") as file:
+                    value = "\n".join([a.value for a in artifacts])
 
-                        file.write(value.encode() if isinstance(value, str) else value)
-                except Exception as e:
-                    return ErrorArtifact(f"error writing file to disk: {e}")
+                    file.write(value.encode() if isinstance(value, str) else value)
 
-            return InfoArtifact(f"saved successfully")
+                    return InfoArtifact(f"saved successfully")
+            except Exception as e:
+                return ErrorArtifact(f"error writing file to disk: {e}")

@@ -1,14 +1,19 @@
 import os.path
 import tempfile
-from griptape.artifacts import BlobArtifact, ListArtifact
+from griptape.artifacts import BlobArtifact, ListArtifact, TextArtifact
+from griptape.drivers import MemoryVectorDriver
+from griptape.engines import VectorQueryEngine
+from griptape.memory.tool import TextToolMemory
+from tests.mocks.mock_embedding_driver import MockEmbeddingDriver
 from griptape.tools import FileManager
 
 
 class TestFileManager:
     def test_load_from_disk(self):
         result = FileManager(
+            tool_memory=TextToolMemory(),
             dir=os.path.abspath(os.path.dirname(__file__))
-        ).load_from_disk({"values": {"paths": ["resources/bitcoin.pdf"]}})
+        ).load_files_from_disk({"values": {"paths": ["resources/bitcoin.pdf"]}})
 
         assert isinstance(result, ListArtifact)
         assert len(result.value) == 1
@@ -16,8 +21,17 @@ class TestFileManager:
 
     def test_save_to_disk(self):
         with tempfile.TemporaryDirectory() as temp_dir:
+            memory = TextToolMemory(
+                query_engine=VectorQueryEngine(
+                    vector_driver=MemoryVectorDriver(
+                        embedding_driver=MockEmbeddingDriver())))
+            artifact = TextArtifact("foobar")
             path = os.path.join(temp_dir, "foobar.txt")
-            artifact = BlobArtifact(b"foobar", name="test.txt")
-            result = FileManager().save_to_disk({"values": {"paths": [path]}, "artifacts": {"values": [artifact]}})
+
+            memory.query_engine.vector_driver.upsert_text_artifact(artifact, namespace="foobar")
+
+            result = FileManager(
+                tool_memory=memory
+            ).save_file_to_disk({"values": {"path": path, "artifact_namespace": "foobar"}})
 
             assert result.value == "saved successfully"

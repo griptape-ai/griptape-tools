@@ -21,14 +21,14 @@ class TextMemoryExtractor(BaseTool):
     })
     def summarize(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
         artifact_namespace = params["values"]["artifact_namespace"]
-        artifacts = self.tool_memory.query_engine.vector_driver.load_entries(artifact_namespace)
+        artifacts = self.tool_memory.load_namespace_artifacts(artifact_namespace)
             
         if len(artifacts) == 0:
             return ErrorArtifact("no artifacts found")
         else:
             list_artifact = ListArtifact()
 
-            for artifact in self.artifacts:
+            for artifact in artifacts:
                 try:
                     summary = PromptDriverSummarizer(
                         driver=OpenAiPromptDriver()
