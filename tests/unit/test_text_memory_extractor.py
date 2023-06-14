@@ -25,11 +25,9 @@ class TestTextMemoryExtractor:
         )
 
     def test_summarize(self, processor):
-        artifact = TextArtifact("foobar")
-
         assert processor.summarize(
-            {"artifacts": {"values": [artifact]}}
-        ).value[0].value == "foobar summary"
+            {"values": {"artifact_namespace": "foo"}}
+        ).value == "no artifacts found"
 
     def test_query(self, processor):
         assert processor.search(

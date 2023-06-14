@@ -1,5 +1,4 @@
 from typing import Union
-import schema
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
 from griptape.drivers import OpenAiPromptDriver
 from griptape.memory.tool import TextToolMemory
@@ -16,10 +15,13 @@ class TextMemoryExtractor(BaseTool):
 
     @activity(config={
         "description": "Can be used to generate summaries of memory artifacts",
-        "load_artifacts": True
+        "schema": Schema({
+            "artifact_namespace": str
+        })
     })
     def summarize(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
-        artifacts = [a for a in self.artifacts if isinstance(a, TextArtifact)]
+        artifact_namespace = params["values"]["artifact_namespace"]
+        artifacts = self.tool_memory.query_engine.vector_driver.load_entries(artifact_namespace)
             
         if len(artifacts) == 0:
             return ErrorArtifact("no artifacts found")
