@@ -759,7 +759,7 @@ uvicorn = ">= 0.20"
 type = "git"
 url = "https://github.com/griptape-ai/griptape.git"
 reference = "main"
-resolved_reference = "95532d2b01353427d45dc8f257732c53df0b9e14"
+resolved_reference = "c520eb0a6a256d6f1a2d1371a864ba7665dd86cd"
 
 [[package]]
 name = "h11"
