@@ -1,7 +1,6 @@
 from typing import Union
-
 from attr import define, field
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
+from griptape.artifacts import TextArtifact, ErrorArtifact
 from schema import Schema, Literal
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
@@ -24,14 +23,14 @@ class WebSearch(BaseTool):
             ): str
         })
     })
-    def search(self, props: dict) -> Union[ListArtifact, ErrorArtifact]:
+    def search(self, props: dict) -> Union[list[TextArtifact], ErrorArtifact]:
         query = props["values"]["query"]
 
         try:
-            return ListArtifact([
+            return [
                 TextArtifact(str(result))
                 for result in self._search_google(query)
-            ])
+            ]
         except Exception as e:
             return ErrorArtifact(f"error searching Google: {e}")
 

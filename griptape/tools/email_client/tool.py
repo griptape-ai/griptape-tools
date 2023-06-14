@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 from typing import Optional
 import schema
 from attr import define, field
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact, InfoArtifact
+from griptape.artifacts import BaseArtifact, ErrorArtifact, InfoArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.loaders import TextLoader
@@ -90,16 +90,16 @@ class EmailClient(BaseTool):
 
             result, data = con.search(None, key, f'"{search_criteria}"')
             retrieve_list = data[0].split()
-            list_artifact = ListArtifact()
+            artifact_list = []
 
             for num in retrieve_list[0:min(int(max_retrieve_count), int(retrieve_count))]:
                 typ, data = con.fetch(num, "(RFC822)")
 
-                list_artifact.value.extend(TextLoader().text_to_artifacts(str(data)))
+                artifact_list.extend(TextLoader().text_to_artifacts(str(data)))
 
             con.close()
 
-            return list_artifact
+            return artifact_list
         except Exception as e:
             logging.error(e)
 

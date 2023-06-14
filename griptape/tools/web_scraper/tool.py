@@ -3,7 +3,7 @@ import logging
 import json
 from typing import Union
 from attr import define, field
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
+from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 from griptape.loaders import TextLoader
 from schema import Schema, Literal
 from griptape.core import BaseTool
@@ -23,14 +23,14 @@ class WebScraper(BaseTool):
             ): str
         })
     })
-    def get_content(self, params: dict) -> BaseArtifact:
+    def get_content(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
         url = params["values"]["url"]
         page = self._load_page(url)
 
         if isinstance(page, ErrorArtifact):
             return page
         else:
-            return ListArtifact.from_list(TextLoader().text_to_artifacts(page.get("text")))
+            return TextLoader().text_to_artifacts(page.get("text"))
 
     @activity(config={
         "description": "Can be used to load a web page author",

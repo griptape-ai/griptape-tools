@@ -37,7 +37,7 @@ class TestTextMemoryExtractor:
 
         assert processor.summarize(
             {"values": {"artifact_namespace": "foobar"}}
-        ).value[0].value == "foobar summary"
+        )[0].value == "foobar summary"
 
     def test_query(self, processor):
         assert processor.search(

@@ -1,5 +1,5 @@
 from typing import Union
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, ListArtifact
+from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 from griptape.drivers import OpenAiPromptDriver
 from griptape.memory.tool import TextToolMemory
 from griptape.summarizers import PromptDriverSummarizer
@@ -19,14 +19,14 @@ class TextMemoryExtractor(BaseTool):
             "artifact_namespace": str
         })
     })
-    def summarize(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
+    def summarize(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
         artifact_namespace = params["values"]["artifact_namespace"]
         artifacts = self.tool_memory.load_namespace_artifacts(artifact_namespace)
             
         if len(artifacts) == 0:
             return ErrorArtifact("no artifacts found")
         else:
-            list_artifact = ListArtifact()
+            artifact_list = []
 
             for artifact in artifacts:
                 try:
@@ -34,11 +34,11 @@ class TextMemoryExtractor(BaseTool):
                         driver=OpenAiPromptDriver()
                     ).summarize_text(artifact.value)
 
-                    list_artifact.value.append(TextArtifact(summary))
+                    artifact_list.append(TextArtifact(summary))
                 except Exception as e:
                     return ErrorArtifact(f"error summarizing text: {e}")
 
-            return list_artifact
+            return artifact_list
 
     @activity(config={
         "description": "Can be used to search memory artifacts",

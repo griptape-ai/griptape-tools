@@ -1,7 +1,7 @@
 import os
 from typing import Union
 from attr import define, field
-from griptape.artifacts import ErrorArtifact, BlobArtifact, ListArtifact, InfoArtifact
+from griptape.artifacts import ErrorArtifact, BlobArtifact, InfoArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.memory.tool import TextToolMemory
@@ -22,8 +22,8 @@ class FileManager(BaseTool):
             ): []
         })
     })
-    def load_files_from_disk(self, params: dict) -> Union[ErrorArtifact, ListArtifact]:
-        list_artifact = ListArtifact()
+    def load_files_from_disk(self, params: dict) -> Union[ErrorArtifact, list[BlobArtifact]]:
+        artifact_list = []
 
         for path in params["values"]["paths"]:
             file_name = os.path.basename(path)
@@ -32,7 +32,7 @@ class FileManager(BaseTool):
 
             try:
                 with open(full_path, "rb") as file:
-                    list_artifact.value.append(
+                    artifact_list.append(
                         BlobArtifact(
                             file.read(),
                             name=file_name,
@@ -44,7 +44,7 @@ class FileManager(BaseTool):
             except Exception as e:
                 return ErrorArtifact(f"error loading file: {e}")
 
-        return list_artifact
+        return artifact_list
 
     @activity(config={
         "description": "Can be used to save an artifact namespace to disk",
@@ -70,7 +70,7 @@ class FileManager(BaseTool):
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
 
                 with open(full_path, "wb") as file:
-                    value = "\n".join([a.value for a in artifacts])
+                    value = "\n".join([a.to_text() for a in artifacts])
 
                     file.write(value.encode() if isinstance(value, str) else value)
 
