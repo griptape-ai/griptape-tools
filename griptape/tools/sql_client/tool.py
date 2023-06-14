@@ -1,6 +1,6 @@
 from typing import Optional, Union
 from attr import define, field
-from griptape.artifacts import InfoArtifact, TextArtifact
+from griptape.artifacts import InfoArtifact, TextArtifact, CsvRowArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.loaders import SqlLoader
@@ -43,7 +43,7 @@ class SqlClient(BaseTool):
             "sql_query": str
         })
     })
-    def execute_query(self, params: dict) -> Union[list[TextArtifact], InfoArtifact]:
+    def execute_query(self, params: dict) -> Union[list[CsvRowArtifact], InfoArtifact]:
         query = params["values"]["sql_query"]
         rows = self.sql_loader.load(query)
 
