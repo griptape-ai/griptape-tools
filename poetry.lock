@@ -352,13 +352,13 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "cohere"
-version = "4.9.1"
+version = "4.11.0"
 description = ""
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "cohere-4.9.1-py3-none-any.whl", hash = "sha256:6bd1dce1f8d55907ae9f63b3dc47f67eff60e45b4d110754804d26e6bfff1e82"},
-    {file = "cohere-4.9.1.tar.gz", hash = "sha256:43a387ad0fda43d69527d513d9a0bbc1433a20cfa973791304a7e24bb69b2072"},
+    {file = "cohere-4.11.0-py3-none-any.whl", hash = "sha256:821b225404053af664412f865f468344ecea168a5c65d253d321463218a8e5b3"},
+    {file = "cohere-4.11.0.tar.gz", hash = "sha256:ce136c2df0f2aa4d8bd90ac5d4b00355d80751d5c6d7f33f84ecd3e8b8b65a7c"},
 ]
 
 [package.dependencies]
@@ -759,7 +759,7 @@ uvicorn = ">= 0.20"
 type = "git"
 url = "https://github.com/griptape-ai/griptape.git"
 reference = "main"
-resolved_reference = "61ff77e2a7837198aefa11f62203c98007ab69fe"
+resolved_reference = "95532d2b01353427d45dc8f257732c53df0b9e14"
 
 [[package]]
 name = "h11"
@@ -973,13 +973,13 @@ lxml = ">=4.4.2"
 
 [[package]]
 name = "langchain"
-version = "0.0.199"
+version = "0.0.200"
 description = "Building applications with LLMs through composability"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchain-0.0.199-py3-none-any.whl", hash = "sha256:a7502802a09a3cddb36e9a8ecfb2010d386ad32569424b4fef32af700c19d80f"},
-    {file = "langchain-0.0.199.tar.gz", hash = "sha256:9758f890173513c840d7fd8f5c79ab765e6547ce65168eb41e23052db51d0b45"},
+    {file = "langchain-0.0.200-py3-none-any.whl", hash = "sha256:f1567c52991e375ab1e41354587c54a931cf84e8e1a6427b380320825ec9390e"},
+    {file = "langchain-0.0.200.tar.gz", hash = "sha256:31c535deb45049d17aea3370de4ac5e21452ffb8b5e1a73a7ec477600b9e3b74"},
 ]
 
 [package.dependencies]
@@ -1010,13 +1010,13 @@ text-helpers = ["chardet (>=5.1.0,<6.0.0)"]
 
 [[package]]
 name = "langchainplus-sdk"
-version = "0.0.9"
+version = "0.0.10"
 description = "Client library to connect to the LangChainPlus LLM Tracing and Evaluation Platform."
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchainplus_sdk-0.0.9-py3-none-any.whl", hash = "sha256:4fe1a60f28c93ae0e145dcd53e4dc5293374ed0a8518abcc51e201081809bf0b"},
-    {file = "langchainplus_sdk-0.0.9.tar.gz", hash = "sha256:bbfdc54c64df5ca4334068ab2d7b89d3a894f313b1285939b4c4532fea62eeb7"},
+    {file = "langchainplus_sdk-0.0.10-py3-none-any.whl", hash = "sha256:6ea4013a92a4c33a61d22deb49620577c592a79ee44038b2c751032a71cbc7b6"},
+    {file = "langchainplus_sdk-0.0.10.tar.gz", hash = "sha256:4f810b38df74a99d01e5723e653da02f05df3ee922971cccabc365d00c33dbf6"},
 ]
 
 [package.dependencies]

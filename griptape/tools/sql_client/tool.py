@@ -1,6 +1,6 @@
 from typing import Optional, Union
 from attr import define, field
-from griptape.artifacts import InfoArtifact, TextArtifact, CsvRowArtifact
+from griptape.artifacts import InfoArtifact, CsvRowArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.loaders import SqlLoader
