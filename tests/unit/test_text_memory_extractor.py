@@ -24,14 +24,14 @@ class TestTextMemoryExtractor:
         from griptape.tools import TextMemoryExtractor
 
         return TextMemoryExtractor(
-            tool_memory=TextToolMemory(
+            input_memory=TextToolMemory(
                 query_engine=VectorQueryEngine(
                     vector_driver=MemoryVectorDriver(
                         embedding_driver=MockEmbeddingDriver())))
         )
 
     def test_summarize(self, processor):
-        processor.tool_memory.query_engine.vector_driver.upsert_text_artifact(
+        processor.input_memory.query_engine.vector_driver.upsert_text_artifact(
             TextArtifact("foobar"), namespace="foobar"
         )
 

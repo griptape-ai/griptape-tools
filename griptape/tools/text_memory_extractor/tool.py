@@ -11,7 +11,7 @@ from attr import define, field
 
 @define
 class TextMemoryExtractor(BaseTool):
-    tool_memory: TextToolMemory = field(kw_only=True)
+    input_memory: TextToolMemory = field(kw_only=True)
 
     @activity(config={
         "description": "Can be used to generate summaries of memory artifacts",
@@ -21,7 +21,7 @@ class TextMemoryExtractor(BaseTool):
     })
     def summarize(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
         artifact_namespace = params["values"]["artifact_namespace"]
-        artifacts = self.tool_memory.load_namespace_artifacts(artifact_namespace)
+        artifacts = self.input_memory.load_namespace_artifacts(artifact_namespace)
             
         if len(artifacts) == 0:
             return ErrorArtifact("no artifacts found")
@@ -55,7 +55,7 @@ class TextMemoryExtractor(BaseTool):
         artifact_namespace = params["values"]["artifact_namespace"]
         query = params["values"]["query"]
 
-        return self.tool_memory.query_engine.query(
+        return self.input_memory.query_engine.query(
             query,
             namespace=artifact_namespace
         )

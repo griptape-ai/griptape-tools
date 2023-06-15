@@ -205,17 +205,17 @@ files = [
 
 [[package]]
 name = "boto3"
-version = "1.26.153"
+version = "1.26.154"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.26.153-py3-none-any.whl", hash = "sha256:ec3a4aef45d16d9362191aa245a31059df009cd73668d0c3b15126cfeb5d3fd7"},
-    {file = "boto3-1.26.153.tar.gz", hash = "sha256:92de7eec15adda76abff0580b1e8ca70646470fba4c807934062456d0c5c9171"},
+    {file = "boto3-1.26.154-py3-none-any.whl", hash = "sha256:ee2b3733f40f935da78bf76bc8e82af6e90841406e04605e3b2d765b50cad05e"},
+    {file = "boto3-1.26.154.tar.gz", hash = "sha256:cf1067d101be538f399b685bbe6beb4bfed01095da8497d0c7fa8b8788a65c6b"},
 ]
 
 [package.dependencies]
-botocore = ">=1.29.153,<1.30.0"
+botocore = ">=1.29.154,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -224,13 +224,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.153"
+version = "1.29.154"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.29.153-py3-none-any.whl", hash = "sha256:d6d3294fde297ae76fadb4bafad93ef958f145bb9a502bf7b1e57ff6f8dc4039"},
-    {file = "botocore-1.29.153.tar.gz", hash = "sha256:d59b8e87138581a339b9f84a9e90bc4c1a152cf8ca2adbaad7792a4c4125bffa"},
+    {file = "botocore-1.29.154-py3-none-any.whl", hash = "sha256:b9853f72a3c93f1aa8c9a1636911cdbec3662bca2e04e4ee00437c4f8c9fa2d4"},
+    {file = "botocore-1.29.154.tar.gz", hash = "sha256:a9c7da497ac5f7d4f3e932b4442e7c32cc2936f3a4658165f1528336fc429c3d"},
 ]
 
 [package.dependencies]
@@ -352,13 +352,13 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "cohere"
-version = "4.11.0"
+version = "4.11.2"
 description = ""
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "cohere-4.11.0-py3-none-any.whl", hash = "sha256:821b225404053af664412f865f468344ecea168a5c65d253d321463218a8e5b3"},
-    {file = "cohere-4.11.0.tar.gz", hash = "sha256:ce136c2df0f2aa4d8bd90ac5d4b00355d80751d5c6d7f33f84ecd3e8b8b65a7c"},
+    {file = "cohere-4.11.2-py3-none-any.whl", hash = "sha256:c5032f4a2aafbcfdf1cacd5b49121c8cc4804fbd121d4a7ac0dfea499398ea28"},
+    {file = "cohere-4.11.2.tar.gz", hash = "sha256:4d3e663a306e6fcb87c41cded2195257ebc6992d361a70417f6616f045c4ec47"},
 ]
 
 [package.dependencies]
@@ -759,7 +759,7 @@ uvicorn = ">= 0.20"
 type = "git"
 url = "https://github.com/griptape-ai/griptape.git"
 reference = "main"
-resolved_reference = "50f66a852e6e95961465110c5bc55c722a8454d1"
+resolved_reference = "bc2956acc51b43bcd3a4df2e4f1d91bebb0a9c15"
 
 [[package]]
 name = "h11"
@@ -973,13 +973,13 @@ lxml = ">=4.4.2"
 
 [[package]]
 name = "langchain"
-version = "0.0.200"
+version = "0.0.201"
 description = "Building applications with LLMs through composability"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchain-0.0.200-py3-none-any.whl", hash = "sha256:f1567c52991e375ab1e41354587c54a931cf84e8e1a6427b380320825ec9390e"},
-    {file = "langchain-0.0.200.tar.gz", hash = "sha256:31c535deb45049d17aea3370de4ac5e21452ffb8b5e1a73a7ec477600b9e3b74"},
+    {file = "langchain-0.0.201-py3-none-any.whl", hash = "sha256:2cc55b49dd20ad254d78223aaf9943ba21be7313fbc13e63d0cc29a7026b2992"},
+    {file = "langchain-0.0.201.tar.gz", hash = "sha256:706d9697a1a9c75799b161ae2b85f5205ae64700b844f5713a7e18926e47397d"},
 ]
 
 [package.dependencies]
@@ -2417,19 +2417,19 @@ telegram = ["requests"]
 
 [[package]]
 name = "trafilatura"
-version = "1.6.0"
+version = "1.6.1"
 description = "Python package and command-line tool designed to gather text on the Web. It includes discovery, extraction and text processing components. Its main applications are web crawling, downloads, scraping, and extraction of main texts, metadata and comments."
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "trafilatura-1.6.0-py3-none-any.whl", hash = "sha256:d037ee3ec46adbac293a924d8db5af1846591c965923952a72b28c0116b0dc61"},
-    {file = "trafilatura-1.6.0.tar.gz", hash = "sha256:64d1ed299b1ca3be34cf3c488b296578d1ee130c748bea62b21a92346bdba38c"},
+    {file = "trafilatura-1.6.1-py3-none-any.whl", hash = "sha256:fe94ed68fb50ec80ae698095010e1a0a7827bee0542ecd33c2cb55ca3e985aa7"},
+    {file = "trafilatura-1.6.1.tar.gz", hash = "sha256:a7792b037d624d04ab05fcce556cfe08b771dfc8c1db1494c750879530c9a30c"},
 ]
 
 [package.dependencies]
 certifi = "*"
 charset-normalizer = {version = ">=3.1.0", markers = "python_version >= \"3.7\""}
-courlan = ">=0.9.2"
+courlan = ">=0.9.3"
 htmldate = ">=1.4.3"
 justext = ">=3.0.0"
 lxml = ">=4.9.2"

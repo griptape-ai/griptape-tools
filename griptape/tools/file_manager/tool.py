@@ -10,7 +10,7 @@ from schema import Schema, Literal
 
 @define
 class FileManager(BaseTool):
-    tool_memory: TextToolMemory = field(kw_only=True)
+    input_memory: TextToolMemory = field(kw_only=True)
     dir: str = field(default=os.getcwd(), kw_only=True)
 
     @activity(config={
@@ -59,7 +59,7 @@ class FileManager(BaseTool):
     def save_file_to_disk(self, params: dict) -> Union[ErrorArtifact, InfoArtifact]:
         new_path = params["values"]["path"]
         artifact_namespace = params["values"]["artifact_namespace"]
-        artifacts = self.tool_memory.load_namespace_artifacts(artifact_namespace)
+        artifacts = self.input_memory.load_namespace_artifacts(artifact_namespace)
 
         if len(artifacts) == 0:
             return ErrorArtifact("no artifacts found")

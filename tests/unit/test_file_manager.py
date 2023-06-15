@@ -11,7 +11,7 @@ from griptape.tools import FileManager
 class TestFileManager:
     def test_load_from_disk(self):
         result = FileManager(
-            tool_memory=TextToolMemory(),
+            input_memory=TextToolMemory(),
             dir=os.path.abspath(os.path.dirname(__file__))
         ).load_files_from_disk({"values": {"paths": ["resources/bitcoin.pdf"]}})
 
@@ -31,7 +31,7 @@ class TestFileManager:
             memory.query_engine.vector_driver.upsert_text_artifact(artifact, namespace="foobar")
 
             result = FileManager(
-                tool_memory=memory
+                input_memory=memory
             ).save_file_to_disk({"values": {"path": path, "artifact_namespace": "foobar"}})
 
             assert result.value == "saved successfully"
