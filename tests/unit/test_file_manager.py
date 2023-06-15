@@ -9,7 +9,7 @@ from griptape.tools import FileManager
 
 
 class TestFileManager:
-    def test_load_from_disk(self):
+    def test_load_files_from_disk(self):
         result = FileManager(
             input_memory=TextToolMemory(),
             dir=os.path.abspath(os.path.dirname(__file__))
@@ -19,7 +19,7 @@ class TestFileManager:
         assert len(result) == 1
         assert isinstance(result[0], BlobArtifact)
 
-    def test_save_to_disk(self):
+    def test_save_file_to_disk(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             memory = TextToolMemory(
                 query_engine=VectorQueryEngine(
