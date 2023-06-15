@@ -716,24 +716,26 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape"
-version = "0.10.2"
+version = "0.11.0"
 description = "Modular Python framework for LLM workflows, tools, memory, and data."
 optional = false
-python-versions = "^3.9"
-files = []
-develop = false
+python-versions = ">=3.9,<4.0"
+files = [
+    {file = "griptape-0.11.0-py3-none-any.whl", hash = "sha256:2dfded52f0536b6b309eaed4e79c00a8858fc02835e41823644be16b110eaa02"},
+    {file = "griptape-0.11.0.tar.gz", hash = "sha256:484a5a1057ce6c74130c07402f789904697da99c837689c70fb59cc58da6431f"},
+]
 
 [package.dependencies]
-anthropic = "^0.2.10"
+anthropic = ">=0.2.10,<0.3.0"
 attrs = ">=22"
-boto3 = "^1.26.123"
+boto3 = ">=1.26.123,<2.0.0"
 cohere = ">=4"
 fastapi = ">=0.80"
 graphlib = "*"
 huggingface-hub = ">=0.13"
 jinja2 = ">=3.1"
 jsonschema = ">=4"
-llama_index = "~0.6.0"
+llama_index = ">=0.6.0,<0.7.0"
 marshmallow = ">=3"
 marshmallow-enum = ">=1.5"
 numpy = ">=1"
@@ -745,21 +747,15 @@ python-dotenv = ">=0.21"
 pyyaml = ">=6"
 rich = ">=13"
 schema = ">=0.7"
-sqlalchemy = "~=1.0"
+sqlalchemy = ">=1.0,<2.0"
 sqlalchemy-redshift = "*"
 stopit = "*"
 stringcase = ">=1"
 tenacity = ">=8.0"
 tiktoken = ">=0.3"
-trafilatura = ">= 1.6"
+trafilatura = ">=1.6"
 transformers = ">=4"
-uvicorn = ">= 0.20"
-
-[package.source]
-type = "git"
-url = "https://github.com/griptape-ai/griptape.git"
-reference = "main"
-resolved_reference = "bc2956acc51b43bcd3a4df2e4f1d91bebb0a9c15"
+uvicorn = ">=0.20"
 
 [[package]]
 name = "h11"
@@ -2715,4 +2711,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "286b66b61d7ad91fb9e82db03139d7ec07c2e06972be13368872d9d6eca0dbba"
+content-hash = "728461cef3e468e4f85821eca027a5b173aca17e31796d32e99500d724202d3e"
