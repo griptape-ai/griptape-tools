@@ -716,13 +716,13 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape"
-version = "0.11.2"
+version = "0.11.3"
 description = "Modular Python framework for LLM workflows, tools, memory, and data."
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "griptape-0.11.2-py3-none-any.whl", hash = "sha256:c3973f5aca04a545ee22136955ebe9efa7503481ebce2a7efe2a349066ba4184"},
-    {file = "griptape-0.11.2.tar.gz", hash = "sha256:73514900bb3b4cf9f40a7d8e30231777f375de50d9a9e870ef52177155fdd014"},
+    {file = "griptape-0.11.3-py3-none-any.whl", hash = "sha256:fe2348ae183ff9a1cf01123c1d7623403005026f212644ebbf3ca9815ecb07bd"},
+    {file = "griptape-0.11.3.tar.gz", hash = "sha256:e5f08f8b9258cafb53b18ae7ac5669d340ee4e4add9f46c423cef97d6c332c7b"},
 ]
 
 [package.dependencies]
@@ -2708,4 +2708,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "b6c0f402f3903383016087855ac24992a451de200989ca2cc36a4a192366a78f"
+content-hash = "f6a6cf693e52ea499bf091e92bf27d4e52d9451a4cafd646c2e4f49bf3f07db3"
