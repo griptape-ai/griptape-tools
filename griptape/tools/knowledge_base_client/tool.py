@@ -28,7 +28,8 @@ class KnowledgeBaseClient(BaseTool):
         "schema": Schema({
             Literal(
                 "query",
-                description="Natural language search query"
+                description="A natural language search query in the form of a question with enough "
+                            "contextual information for another person to understand what the query is about"
             ): str
         })
     })
