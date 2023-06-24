@@ -2,7 +2,7 @@ from datetime import datetime
 from griptape.artifacts import BaseArtifact, ErrorArtifact, TextArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
-from schema import Schema, Literal
+from schema import Schema
 
 
 class DateTime(BaseTool):
