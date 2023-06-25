@@ -48,9 +48,6 @@ class SqlClient(BaseTool):
         rows = self.sql_loader.load(query)
 
         if len(rows) > 0:
-            for row in rows:
-                row.meta["original_query"] = query
-                
             return rows
         else:
             return InfoArtifact("No results found")

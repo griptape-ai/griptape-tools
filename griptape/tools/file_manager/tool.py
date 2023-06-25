@@ -59,7 +59,7 @@ class FileManager(BaseTool):
     def save_file_to_disk(self, params: dict) -> Union[ErrorArtifact, InfoArtifact]:
         new_path = params["values"]["path"]
         artifact_namespace = params["values"]["artifact_namespace"]
-        artifacts = self.input_memory.load_namespace_artifacts(artifact_namespace)
+        artifacts = self.input_memory.load_artifacts(artifact_namespace)
 
         if len(artifacts) == 0:
             return ErrorArtifact("no artifacts found")
