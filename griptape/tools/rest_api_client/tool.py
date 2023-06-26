@@ -68,7 +68,7 @@ class RestApiClient(BaseTool):
         config={
             "description": dedent(
                 """
-                This tool can be used to make a post request to the rest api url: "{{base_url}}/{{path}}".
+                This tool can be used to make a patch request to the rest api url: "{{base_url}}/{{path}}".
                 This rest api does the following: "{{description}}".
                 The request path parameters must follow this JSON schema: {{request_path_params_schema}}.
                 The request body must follow this JSON schema: {{request_body_schema}}.
@@ -107,7 +107,7 @@ class RestApiClient(BaseTool):
         config={
             "description": dedent(
                 """
-                This tool can be used to make a patch request to the rest api url: "{{base_url}}/{{path}}".
+                This tool can be used to make a post request to the rest api url: "{{base_url}}/{{path}}".
                 This rest api does the following: "{{description}}".
                 The request body must follow this JSON schema: {{request_body_schema}}.
                 The response body must follow this JSON schema: {{response_body_schema}}.
@@ -186,7 +186,7 @@ class RestApiClient(BaseTool):
         config={
             "description": dedent(
                 """
-                This tool can be used to make a get request to the rest api url: "{{base_url}}/{{path}}".
+                This tool can be used to make a delete request to the rest api url: "{{base_url}}/{{path}}".
                 This rest api does the following: "{{description}}".
                 The request path parameters must follow this JSON schema: {{request_path_params_schema}}.
                 The request query parameters must follow this JSON schema: {{request_path_params_schema}}.
