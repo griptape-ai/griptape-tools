@@ -7,6 +7,7 @@ from .aws_cli.tool import AwsCli
 from .rest_api_client.tool import RestApiClient
 from .file_manager.tool import FileManager
 from .knowledge_base_client.tool import KnowledgeBaseClient
+from .date_time.tool import DateTime
 
 __all__ = [
     "Calculator",
@@ -17,5 +18,6 @@ __all__ = [
     "AwsCli",
     "RestApiClient",
     "FileManager",
-    "KnowledgeBaseClient"
+    "KnowledgeBaseClient",
+    "DateTime"
 ]
