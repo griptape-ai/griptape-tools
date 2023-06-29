@@ -1,5 +1,6 @@
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 from schema import Schema, Literal
+from typing import Optional, Union
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape import utils
@@ -24,3 +25,14 @@ class AwsS3(BaseAwsClient):
             return TextArtifact(str(sts.get_caller_identity()))
         except Exception as e:
             return ErrorArtifact(f"error getting current aws caller identity: {e}")
+
+    @activity(config={
+        "description": "Lists all aws s3 buckets."
+    })
+    def list_s3_buckets(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
+        try:
+            session = self.session
+            s3 = session.client('s3')
+            return s3.list_buckets()
+        except Exception as e:
+            return ErrorArtifact(f"error listing s3 buckets: {e}")
