@@ -5,7 +5,6 @@ from griptape.core.decorators import activity
 from griptape import utils
 from attr import define, field
 
-
 @define
 class AwsCli(BaseTool):
     aws_access_key_id: str = field(kw_only=True)
