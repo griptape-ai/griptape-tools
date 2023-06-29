@@ -6,7 +6,6 @@ from griptape.core.decorators import activity
 from griptape import utils
 from attr import define, field
 import json
-import string
 import boto3
 
 class BaseAwsClient(BaseTool):
@@ -27,8 +26,6 @@ class AwsS3(BaseAwsClient):
         except Exception as e:
             return ErrorArtifact(f"error getting current aws caller identity: {e}")
 
-    # WARNING:root:Activity result is not an artifact or a list; converting result to InfoArtifact
-    # this is using some google library underneath... returning an iterator
     @activity(config={
         "description": "Lists all aws s3 buckets."
     })
@@ -39,7 +36,7 @@ class AwsS3(BaseAwsClient):
             buckets = s3.list_buckets()
             data = [{"{#BUCKET_NAME}": bucket["Name"]} for bucket in buckets['Buckets']]
             data = {"data": data}
-            return TextArtifact(json.dumps(data).translate(None, string.whitespace))
+            return TextArtifact(json.dumps(data))
         except Exception as e:
             return ErrorArtifact(f"error listing s3 buckets: {e}")
 
