@@ -26,6 +26,8 @@ class AwsS3(BaseAwsClient):
         except Exception as e:
             return ErrorArtifact(f"error getting current aws caller identity: {e}")
 
+    # WARNING:root:Activity result is not an artifact or a list; converting result to InfoArtifact
+    # this is using some google library underneath... returning an iterator
     @activity(config={
         "description": "Lists all aws s3 buckets."
     })
