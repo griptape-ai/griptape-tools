@@ -6,6 +6,7 @@ from griptape.core.decorators import activity
 from griptape import utils
 from attr import define, field
 import json
+import string
 import boto3
 
 class BaseAwsClient(BaseTool):
@@ -31,10 +32,23 @@ class AwsS3(BaseAwsClient):
     @activity(config={
         "description": "Lists all aws s3 buckets."
     })
-    def list_s3_buckets(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
+    def list_s3_buckets(self, params: dict) -> BaseArtifact:
         try:
             session = self.session
             s3 = session.client('s3')
-            return s3.list_buckets()
+            buckets = s3.list_buckets()
+            data = [{"{#BUCKET_NAME}": bucket["Name"]} for bucket in buckets['Buckets']]
+            data = {"data": data}
+            return TextArtifact(json.dumps(data).translate(None, string.whitespace))
         except Exception as e:
             return ErrorArtifact(f"error listing s3 buckets: {e}")
+
+@define
+class AwsPricing(BaseAwsClient):
+    session: boto3.session = field(kw_only=True)
+
+    @activity(config={
+        "description": "Returns the account and IAM principal of the AWS credentials being used."
+    })
+    def get_product_pricing(self, params: dict) -> BaseArtifact:
+        return TextArtifact("not yet implemented")
