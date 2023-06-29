@@ -205,17 +205,17 @@ files = [
 
 [[package]]
 name = "boto3"
-version = "1.26.160"
+version = "1.26.164"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.26.160-py3-none-any.whl", hash = "sha256:d12643d6c18caa79b385a0c4251698391da7a6f5ffa0879b4c10c5d64e5c8b31"},
-    {file = "boto3-1.26.160.tar.gz", hash = "sha256:5218869eddeeb70efead1dd01037c3553dc7b268de3b80a0c3a2baeec2b97fc9"},
+    {file = "boto3-1.26.164-py3-none-any.whl", hash = "sha256:1ff5d0705bfd851d4d9d15460b38d7a9775b8116f68812a4e0f81e3321026813"},
+    {file = "boto3-1.26.164.tar.gz", hash = "sha256:17c58a9e1ba4e9aea1267d6bafc87057687458c3a4f1ef297f67b84dcb463233"},
 ]
 
 [package.dependencies]
-botocore = ">=1.29.160,<1.30.0"
+botocore = ">=1.29.164,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -224,13 +224,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.160"
+version = "1.29.164"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.29.160-py3-none-any.whl", hash = "sha256:15d38dae978aba829daaf8d1b02ba2f2b73d4c1e4edc75234163d65a1328c1b5"},
-    {file = "botocore-1.29.160.tar.gz", hash = "sha256:dacf41787978c0d550321d334e0001a488145200f8a6c9bd893fb8e281b25cf7"},
+    {file = "botocore-1.29.164-py3-none-any.whl", hash = "sha256:e1aeccde63839fc263126ccb5de98fcaf02fc6099fb18bb829085199774e2cec"},
+    {file = "botocore-1.29.164.tar.gz", hash = "sha256:6d23d9448953390b621a9e34169ff1d78ddd7e10921a2dcaa738f84ca2172a36"},
 ]
 
 [package.dependencies]
@@ -697,17 +697,19 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape"
-version = "0.11.4"
+version = "0.12.0"
 description = "Modular Python framework for LLM workflows, tools, memory, and data."
 optional = false
-python-versions = "^3.9"
-files = []
-develop = false
+python-versions = ">=3.9,<4.0"
+files = [
+    {file = "griptape-0.12.0-py3-none-any.whl", hash = "sha256:30518e6d520ebe3a68c6cc2f50c5fe014e62cc2594079250a78630760d294920"},
+    {file = "griptape-0.12.0.tar.gz", hash = "sha256:363c00c07603b6a9ff827c847d3ccfee2d4cf92275dcd6397e17a35c6b94fb20"},
+]
 
 [package.dependencies]
-anthropic = "^0.2.10"
+anthropic = ">=0.2.10,<0.3.0"
 attrs = ">=22"
-boto3 = "^1.26.123"
+boto3 = ">=1.26.123,<2.0.0"
 cohere = ">=4"
 fastapi = ">=0.80"
 graphlib = "*"
@@ -725,21 +727,14 @@ python-dotenv = ">=0.21"
 pyyaml = ">=6"
 rich = ">=13"
 schema = ">=0.7"
-sqlalchemy = "~=1.0"
+sqlalchemy = ">=1.0,<2.0"
 sqlalchemy-redshift = "*"
 stopit = "*"
-stringcase = ">=1"
 tenacity = ">=8.0"
 tiktoken = ">=0.3"
-trafilatura = ">= 1.6"
+trafilatura = ">=1.6"
 transformers = ">=4"
-uvicorn = ">= 0.20"
-
-[package.source]
-type = "git"
-url = "https://github.com/griptape-ai/griptape.git"
-reference = "main"
-resolved_reference = "d68d9e3f79d76753d6fb2f58227dd6bc9653273a"
+uvicorn = ">=0.20"
 
 [[package]]
 name = "h11"
@@ -2021,16 +2016,6 @@ files = [
 ]
 
 [[package]]
-name = "stringcase"
-version = "1.2.0"
-description = "String case converter."
-optional = false
-python-versions = "*"
-files = [
-    {file = "stringcase-1.2.0.tar.gz", hash = "sha256:48a06980661908efe8d9d34eab2b6c13aefa2163b3ced26972902e3bdfd87008"},
-]
-
-[[package]]
 name = "tenacity"
 version = "8.2.2"
 description = "Retry code until it succeeds"
@@ -2280,13 +2265,13 @@ vision = ["Pillow"]
 
 [[package]]
 name = "typing-extensions"
-version = "4.6.3"
+version = "4.7.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "typing_extensions-4.6.3-py3-none-any.whl", hash = "sha256:88a4153d8505aabbb4e13aacb7c486c2b4a33ca3b3f807914a9b4c844c471c26"},
-    {file = "typing_extensions-4.6.3.tar.gz", hash = "sha256:d91d5919357fe7f681a9f2b5b4cb2a5f1ef0a1e9f59c4d8ff0d3491e05c0ffd5"},
+    {file = "typing_extensions-4.7.0-py3-none-any.whl", hash = "sha256:5d8c9dac95c27d20df12fb1d97b9793ab8b2af8a3a525e68c80e21060c161771"},
+    {file = "typing_extensions-4.7.0.tar.gz", hash = "sha256:935ccf31549830cda708b42289d44b6f74084d616a00be651601a4f968e77c82"},
 ]
 
 [[package]]
@@ -2470,4 +2455,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "286b66b61d7ad91fb9e82db03139d7ec07c2e06972be13368872d9d6eca0dbba"
+content-hash = "9235862ceafef35185da84cbff04dc3fdabffe7b082906c990c2f3535deb7d49"
