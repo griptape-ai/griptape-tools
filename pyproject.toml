@@ -13,6 +13,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
+boto3 = "^1.26.123"
 
 griptape = { git = "https://github.com/griptape-ai/griptape.git", branch = "main" }
 

@@ -1,5 +1,5 @@
 version: "v1"
-name: AWS CLI
-description: Tool for accessing AWS CLI v2 commands.
+name: AWS Pricing Client
+description: Tool for the AWS Pricing boto3 API.
 contact_email: hello@griptape.ai
 legal_info_url: https://www.griptape.ai/legal
