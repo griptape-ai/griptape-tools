@@ -4,7 +4,7 @@ from griptape.drivers import LocalVectorStoreDriver
 from griptape.engines import VectorQueryEngine
 from griptape.memory.tool import TextToolMemory
 from tests.mocks.mock_embedding_driver import MockEmbeddingDriver
-from tools import TextMemoryBrowser
+from griptape.tools import TextMemoryBrowser
 
 
 class TestTextMemoryBrowser:
