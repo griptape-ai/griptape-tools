@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 from griptape.engines import VectorQueryEngine, BaseSummaryEngine, PromptSummaryEngine
 from schema import Schema, Literal
 from attr import define, field, Factory

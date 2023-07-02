@@ -1,7 +1,6 @@
 from __future__ import annotations
 import logging
 import json
-from typing import Union
 from attr import define, field
 from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
 from griptape.loaders import TextLoader
@@ -23,7 +22,7 @@ class WebScraper(BaseTool):
             ): str
         })
     })
-    def get_content(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
+    def get_content(self, params: dict) -> list[TextArtifact] | ErrorArtifact:
         url = params["values"]["url"]
         page = self._load_page(url)
 
@@ -50,7 +49,7 @@ class WebScraper(BaseTool):
         else:
             return TextArtifact(page.get("author"))
 
-    def _load_page(self, url: str) -> Union[dict, ErrorArtifact]:
+    def _load_page(self, url: str) -> dict | ErrorArtifact:
         import trafilatura
         from trafilatura.settings import use_config
 
