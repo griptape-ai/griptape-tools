@@ -7,3 +7,8 @@ class TestAwsIamClient:
         assert "error listing s3 users" in AwsIamClient(
             session=boto3.Session()
         ).list_users({}).value
+
+    def test_list_mfa_devices(self):
+        assert "error listing mfa devices" in AwsIamClient(
+            session=boto3.Session()
+        ).list_mfa_devices({}).value

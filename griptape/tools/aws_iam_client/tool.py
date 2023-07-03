@@ -15,6 +15,16 @@ class AwsIamClient(BaseAwsClient):
     )
 
     @activity(config={
+        "description":"Can be used to list AWS MFA Devices"
+    })
+    def list_mfa_devices(self, params: dict) -> list[TextArtifact] | ErrorArtifact:
+        try:
+            devices = self.iam_client.list_mfa_devices()
+            return [TextArtifact(str(d)) for d in devices["MFADevices"]]
+        except Exception as e:
+            return ErrorArtifact(f"error listing mfa devices")
+
+    @activity(config={
         "description":"Can be used to list AWS IAM users."
     })
     def list_users(self, params: dict) -> list[TextArtifact] | ErrorArtifact:
