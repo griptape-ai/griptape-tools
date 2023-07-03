@@ -9,7 +9,14 @@ from .knowledge_base_client.tool import KnowledgeBaseClient
 from .date_time.tool import DateTime
 from .text_memory_browser.tool import TextMemoryBrowser
 
+# AWS Tools
+from .base_aws_client import BaseAwsClient
+from .aws_s3_client.tool import AwsS3Client
+
 __all__ = [
+    # AWS
+    "BaseAwsClient",
+    "AwsS3Client",
     "Calculator",
     "WebSearch",
     "WebScraper",
