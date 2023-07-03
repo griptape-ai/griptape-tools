@@ -5,7 +5,7 @@ import boto3
 class TestAwsS3Client:
     def test_get_bucket_acl(self):
         value = {
-            "Bucket": "bucket_test"
+            "bucket_name": "bucket_test"
         }
         assert "error getting bucket acl" in AwsS3Client(
             session=boto3.Session()
@@ -13,7 +13,7 @@ class TestAwsS3Client:
 
     def test_get_bucket_policy(self):
         value = {
-            "Bucket": "bucket_test"
+            "bucket_name": "bucket_test"
         }
         assert "error getting bucket policy" in AwsS3Client(
             session=boto3.Session()
@@ -21,8 +21,8 @@ class TestAwsS3Client:
 
     def test_get_object_acl(self):
         value = {
-            "Bucket": "bucket_test",
-            "Key": "key_test"
+            "bucket_name": "bucket_test",
+            "object_key": "key_test"
         }
         assert "error getting object acl" in AwsS3Client(
             session=boto3.Session()
@@ -35,7 +35,7 @@ class TestAwsS3Client:
 
     def test_list_objects(self):
         value = {
-            "Bucket": "bucket_test"
+            "bucket_name": "bucket_test"
         }
         assert "error listing objects in bucket" in AwsS3Client(
             session=boto3.Session()
