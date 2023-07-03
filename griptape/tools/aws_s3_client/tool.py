@@ -55,11 +55,11 @@ class AwsS3Client(BaseAwsClient):
         "schema": Schema({
             Literal(
                 "bucket_name",
-                description="The bucket name that contains the object for which to get the ACL information."
+                description="Name of the AWS S3 bucket for which to get an ACL."
             ): str,
             Literal(
                 "object_key",
-                description="The key of the object for which to get the ACL information."
+                description="Key of the object for which to get the ACL information."
             ): str
         })
     })
