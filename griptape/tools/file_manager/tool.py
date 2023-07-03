@@ -1,5 +1,5 @@
+from __future__ import annotations
 import os
-from typing import Union
 from attr import define, field
 from griptape.artifacts import ErrorArtifact, BlobArtifact, InfoArtifact
 from griptape.core import BaseTool
@@ -22,7 +22,7 @@ class FileManager(BaseTool):
             ): []
         })
     })
-    def load_files_from_disk(self, params: dict) -> Union[ErrorArtifact, list[BlobArtifact]]:
+    def load_files_from_disk(self, params: dict) -> list[BlobArtifact] | ErrorArtifact:
         artifact_list = []
 
         for path in params["values"]["paths"]:
@@ -56,7 +56,7 @@ class FileManager(BaseTool):
             ): str
         })
     })
-    def save_file_to_disk(self, params: dict) -> Union[ErrorArtifact, InfoArtifact]:
+    def save_file_to_disk(self, params: dict) -> ErrorArtifact | InfoArtifact:
         new_path = params["values"]["path"]
         artifact_namespace = params["values"]["artifact_namespace"]
         artifacts = self.input_memory.load_artifacts(artifact_namespace)

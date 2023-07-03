@@ -1,4 +1,4 @@
-from typing import Union
+from __future__ import annotations
 from attr import define, field
 from griptape.artifacts import TextArtifact, ErrorArtifact
 from schema import Schema, Literal
@@ -23,7 +23,7 @@ class WebSearch(BaseTool):
             ): str
         })
     })
-    def search(self, props: dict) -> Union[list[TextArtifact], ErrorArtifact]:
+    def search(self, props: dict) -> list[TextArtifact] | ErrorArtifact:
         query = props["values"]["query"]
 
         try:

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import imaplib
 import logging
 import smtplib
@@ -5,7 +6,7 @@ from email.mime.text import MIMEText
 from typing import Optional
 import schema
 from attr import define, field
-from griptape.artifacts import BaseArtifact, ErrorArtifact, InfoArtifact
+from griptape.artifacts import ErrorArtifact, InfoArtifact, TextArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.loaders import TextLoader
@@ -58,7 +59,7 @@ class EmailClient(BaseTool):
             ): int
         })
     })
-    def retrieve(self, params: dict) -> BaseArtifact:
+    def retrieve(self, params: dict) -> list[TextArtifact] | ErrorArtifact:
         values = params["values"]
         imap_url = self.imap_url
 
@@ -122,7 +123,7 @@ class EmailClient(BaseTool):
             ): str
         })
     })
-    def send(self, params: dict) -> BaseArtifact:
+    def send(self, params: dict) -> InfoArtifact | ErrorArtifact:
         input_values = params["values"]
         server: Optional[smtplib.SMTP] = None
 
@@ -164,5 +165,5 @@ class EmailClient(BaseTool):
         finally:
             try:
                 server.quit()
-            except:
-                pass
+            except Exception as e:
+                logging.error(e)

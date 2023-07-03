@@ -7,6 +7,7 @@ from .rest_api_client.tool import RestApiClient
 from .file_manager.tool import FileManager
 from .knowledge_base_client.tool import KnowledgeBaseClient
 from .date_time.tool import DateTime
+from .text_memory_browser.tool import TextMemoryBrowser
 
 # AWS Tools
 from .base_aws_client import BaseAwsClient
@@ -26,5 +27,6 @@ __all__ = [
     "RestApiClient",
     "FileManager",
     "KnowledgeBaseClient",
-    "DateTime"
+    "DateTime",
+    "TextMemoryBrowser"
 ]
