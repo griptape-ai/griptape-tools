@@ -28,26 +28,26 @@ class TestTextMemoryBrowser:
     @pytest.fixture
     def tool(self):
         return TextMemoryBrowser(
-            text_memory=TextToolMemory(
+            input_memory=[TextToolMemory(
                 query_engine=VectorQueryEngine(
                     vector_store_driver=LocalVectorStoreDriver(
                         embedding_driver=MockEmbeddingDriver()
                     )
                 )
-            )
+            )]
         )
 
     def test_summarize(self, tool):
         assert tool.summarize(
-            {"values": {"artifact_namespace": "foo"}}
+            {"values": {"memory_id": tool.input_memory[0].id, "artifact_namespace": "foo"}}
         ).value == "foobar summary"
 
     def test_query(self, tool):
         assert tool.search(
-            {"values": {"query": "foobar", "artifact_namespace": "foo"}}
+            {"values": {"query": "foobar", "memory_id": tool.input_memory[0].id, "artifact_namespace": "foo"}}
         ).value == "foobar"
 
     def test_extract(self, tool):
         assert tool.extract(
-            {"values": {"column_names": "foo", "artifact_namespace": "foo"}}
+            {"values": {"column_names": "foo", "memory_id": tool.input_memory[0].id, "artifact_namespace": "foo"}}
         )[0].value == {"foo": "bar"}

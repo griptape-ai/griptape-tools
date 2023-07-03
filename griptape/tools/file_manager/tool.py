@@ -4,13 +4,11 @@ from attr import define, field
 from griptape.artifacts import ErrorArtifact, BlobArtifact, InfoArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
-from griptape.memory.tool import TextToolMemory
 from schema import Schema, Literal
 
 
 @define
 class FileManager(BaseTool):
-    input_memory: TextToolMemory = field(kw_only=True)
     dir: str = field(default=os.getcwd(), kw_only=True)
 
     @activity(config={
@@ -49,6 +47,7 @@ class FileManager(BaseTool):
     @activity(config={
         "description": "Can be used to save an artifact namespace to disk",
         "schema": Schema({
+            "memory_id": str,
             "artifact_namespace": str,
             Literal(
                 "path",
@@ -57,23 +56,28 @@ class FileManager(BaseTool):
         })
     })
     def save_file_to_disk(self, params: dict) -> ErrorArtifact | InfoArtifact:
-        new_path = params["values"]["path"]
         artifact_namespace = params["values"]["artifact_namespace"]
-        artifacts = self.input_memory.load_artifacts(artifact_namespace)
+        new_path = params["values"]["path"]
+        memory = self.find_input_memory(params["values"]["memory_id"])
 
-        if len(artifacts) == 0:
-            return ErrorArtifact("no artifacts found")
+        if memory:
+            artifacts = memory.load_artifacts(artifact_namespace)
+
+            if len(artifacts) == 0:
+                return ErrorArtifact("no artifacts found")
+            else:
+                try:
+                    full_path = os.path.join(self.dir, new_path)
+
+                    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+
+                    with open(full_path, "wb") as file:
+                        value = "\n".join([a.to_text() for a in artifacts])
+
+                        file.write(value.encode() if isinstance(value, str) else value)
+
+                        return InfoArtifact(f"saved successfully")
+                except Exception as e:
+                    return ErrorArtifact(f"error writing file to disk: {e}")
         else:
-            try:
-                full_path = os.path.join(self.dir, new_path)
-
-                os.makedirs(os.path.dirname(full_path), exist_ok=True)
-
-                with open(full_path, "wb") as file:
-                    value = "\n".join([a.to_text() for a in artifacts])
-
-                    file.write(value.encode() if isinstance(value, str) else value)
-
-                    return InfoArtifact(f"saved successfully")
-            except Exception as e:
-                return ErrorArtifact(f"error writing file to disk: {e}")
+            return ErrorArtifact("memory not found")
