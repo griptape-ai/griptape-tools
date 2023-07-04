@@ -27,7 +27,7 @@ class AwsIamClient(BaseAwsClient):
             ): str
         })
     })
-    def get_user_policy(self, params: dict) -> [TextArtifact] | ErrorArtifact:
+    def get_user_policy(self, params: dict) -> TextArtifact | ErrorArtifact:
         try:
             policy = self.iam_client.get_user_policy(
                 UserName=params["values"]["user_name"],
