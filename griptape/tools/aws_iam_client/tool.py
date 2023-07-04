@@ -15,7 +15,7 @@ class AwsIamClient(BaseAwsClient):
     )
 
     @activity(config={
-        "description": "Can be use to get a policy for an IAM user.",
+        "description": "Can be use to get a policy for an AWS IAM user.",
         "schema": Schema({
             Literal(
                 "user_name",
