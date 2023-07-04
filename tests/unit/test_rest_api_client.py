@@ -56,3 +56,24 @@ class TestRestApi:
             client.patch({"values": {"path_params": ["1"], "body": {}}}),
             BaseArtifact,
         )
+
+    def test_build_url(self, client):
+        url = client._build_url('https://foo.bar')
+
+        assert url == 'https://foo.bar'
+
+        url = client._build_url('https://foo.bar', path="/foo")
+
+        assert url == 'https://foo.bar/foo'
+
+        url = client._build_url('https://foo.bar', path_params=[1, "fizz"])
+
+        assert url == 'https://foo.bar/1/fizz'
+
+        url = client._build_url('https://foo.bar', path="foo/", path_params=["fizz", "buzz", 1, 2, 3])
+
+        assert url == 'https://foo.bar/foo/fizz/buzz/1/2/3'
+
+        url = client._build_url('https://foo.bar', path_params=["fizz", "buzz", 1, 2, 3])
+
+        assert url == 'https://foo.bar/fizz/buzz/1/2/3'
