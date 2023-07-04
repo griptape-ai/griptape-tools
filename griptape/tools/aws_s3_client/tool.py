@@ -8,7 +8,6 @@ from griptape.tools import BaseAwsClient
 
 @define
 class AwsS3Client(BaseAwsClient):
-    session: boto3.session = field(kw_only=True)
     s3_client: boto3.client = field(
         default=Factory(lambda self: self.session.client("s3"), takes_self=True),
         kw_only=True
