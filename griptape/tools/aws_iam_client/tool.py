@@ -9,7 +9,6 @@ from griptape.tools import BaseAwsClient
 
 @define
 class AwsIamClient(BaseAwsClient):
-    session: boto3.session = field(kw_only=True)
     iam_client: boto3.client = field(
         default=Factory(lambda self: self.session.client("iam"), takes_self=True),
         kw_only=True
