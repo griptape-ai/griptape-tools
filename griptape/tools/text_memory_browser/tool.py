@@ -1,6 +1,7 @@
 from __future__ import annotations
+from typing import Optional
 from attr import define, field, Factory
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
+from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, InfoArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.engines import CsvExtractionEngine, BaseSummaryEngine, PromptSummaryEngine
@@ -10,6 +11,7 @@ from schema import Schema, Literal
 
 @define
 class TextMemoryBrowser(BaseTool):
+    input_memory: list[TextToolMemory] = field(factory=list, kw_only=True) # override parent
     summary_engine: BaseSummaryEngine = field(
         kw_only=True,
         default=Factory(lambda: PromptSummaryEngine())
@@ -19,6 +21,26 @@ class TextMemoryBrowser(BaseTool):
         default=Factory(lambda: CsvExtractionEngine())
     )
     top_n: int = field(default=5, kw_only=True)
+
+    @activity(config={
+        "description": "Can be used to insert text into a memory artifact namespace",
+        "schema": Schema({
+            "memory_id": str,
+            "artifact_namespace": str,
+            "text": str
+        })
+    })
+    def insert(self, params: dict):
+        memory = self.find_input_memory(params["values"]["memory_id"])
+        artifact_namespace = params["values"]["artifact_namespace"]
+        text = params["values"]["text"]
+
+        if memory:
+            memory.query_engine.upsert_text_artifact(TextArtifact(text), artifact_namespace)
+
+            return InfoArtifact("text was successfully inserted")
+        else:
+            return ErrorArtifact("memory not found")
 
     @activity(config={
         "description": "Can be used to extract and format content from memory artifacts into CSV output",
@@ -36,7 +58,7 @@ class TextMemoryBrowser(BaseTool):
         artifact_namespace = params["values"]["artifact_namespace"]
         column_names = params["values"]["column_names"]
 
-        if memory and isinstance(memory, TextToolMemory):
+        if memory:
             return self.csv_extraction_engine.extract(
                 memory.load_artifacts(artifact_namespace),
                 column_names
@@ -55,7 +77,7 @@ class TextMemoryBrowser(BaseTool):
         memory = self.find_input_memory(params["values"]["memory_id"])
         artifact_namespace = params["values"]["artifact_namespace"]
 
-        if memory and isinstance(memory, TextToolMemory):
+        if memory:
             return self.summary_engine.summarize_artifacts(
                 memory.load_artifacts(artifact_namespace),
             )
@@ -79,7 +101,7 @@ class TextMemoryBrowser(BaseTool):
         artifact_namespace = params["values"]["artifact_namespace"]
         query = params["values"]["query"]
 
-        if memory and isinstance(memory, TextToolMemory):
+        if memory:
             return memory.query_engine.query(
                 query,
                 top_n=self.top_n,
@@ -88,3 +110,6 @@ class TextMemoryBrowser(BaseTool):
             )
         else:
             return ErrorArtifact("memory not found")
+
+    def find_input_memory(self, memory_id: str) -> Optional[TextToolMemory]:
+        return next((m for m in self.input_memory if isinstance(m, TextToolMemory) and m.id == memory_id), None)

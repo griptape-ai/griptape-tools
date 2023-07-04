@@ -1,5 +1,5 @@
 import pytest
-from griptape.artifacts import TextArtifact, CsvRowArtifact
+from griptape.artifacts import TextArtifact, CsvRowArtifact, BaseArtifact
 from griptape.drivers import LocalVectorStoreDriver
 from griptape.engines import VectorQueryEngine
 from griptape.memory.tool import TextToolMemory
@@ -36,6 +36,15 @@ class TestTextMemoryBrowser:
                 )
             )]
         )
+
+    def test_insert(self, tool):
+        tool.insert(
+            {"values": {"memory_id": tool.input_memory[0].id, "artifact_namespace": "foo", "text": "foobar"}}
+        )
+
+        assert BaseArtifact.from_json(
+            tool.input_memory[0].query_engine.vector_store_driver.load_entries("foo")[0].meta["artifact"]
+        ).value == "foobar"
 
     def test_summarize(self, tool):
         assert tool.summarize(
