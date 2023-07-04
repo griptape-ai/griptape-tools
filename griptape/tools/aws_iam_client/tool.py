@@ -48,7 +48,7 @@ class AwsIamClient(BaseAwsClient):
             return ErrorArtifact(f"error listing mfa devices: {e}")
 
     @activity(config={
-        "description": "Cna be used to list policies for a given IAM user.",
+        "description": "Can be used to list policies for a given IAM user.",
         "schema": Schema({
             Literal(
                 "user_name",
