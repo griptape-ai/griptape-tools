@@ -9,7 +9,6 @@ from attr import define, field
 from griptape.artifacts import ErrorArtifact, InfoArtifact, TextArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
-from griptape.loaders import TextLoader
 from schema import Schema, Literal
 
 
@@ -33,8 +32,7 @@ class EmailClient(BaseTool):
     imap_user: Optional[str] = field(default=None, kw_only=True)
     imap_password: Optional[str] = field(default=None, kw_only=True)
 
-    # be careful of allowing too many records to be returned as it could impact token usage
-    email_max_retrieve_count: int = field(default=10, kw_only=True)
+    email_max_retrieve_count: Optional[int] = field(default=None, kw_only=True)
 
     @activity(config={
         "description": "Can be used to retrieve emails",
@@ -43,64 +41,65 @@ class EmailClient(BaseTool):
                 "label",
                 description="Label to retrieve emails from such as 'INBOX' or 'SENT'"
             ): str,
-            Literal(
-                "key",
-                description="Key for filtering such as 'FROM' or 'SUBJECT'"
-            ): str,
-            Literal(
-                "search_criteria",
-                description="Search criteria to filter emails"
+            schema.Optional(
+                Literal(
+                    "key",
+                    description="Optional key for filtering such as 'FROM' or 'SUBJECT'"
+                )
             ): str,
             schema.Optional(
                 Literal(
-                    "retrieve_count",
-                    description="Optional param to override the default max retrieve count"
+                    "search_criteria",
+                    description="Optional search criteria to filter emails by key"
+                )
+            ): str,
+            schema.Optional(
+                Literal(
+                    "max_count",
+                    description="Optional max email count"
                 )
             ): int
         })
     })
     def retrieve(self, params: dict) -> list[TextArtifact] | ErrorArtifact:
         values = params["values"]
-        imap_url = self.imap_url
-
-        # email username can be overridden by setting the imap user explicitly
-        imap_user = self.imap_user
-        if imap_user is None:
-            imap_user = self.username
-
-        # email password can be overridden by setting the imap password explicitly
-        imap_password = self.imap_password
-        if imap_password is None:
-            imap_password = self.password
-
-        max_retrieve_count = self.email_max_retrieve_count
-
-        label = values["label"]
-        key = values["key"]
-        search_criteria = values["search_criteria"]
-
-        if "retrieve_count" in values:
-            retrieve_count = int(values["retrieve_count"])
-        else:
-            retrieve_count = max_retrieve_count
+        imap_user = self.imap_user if self.imap_user else self.username
+        imap_password = self.imap_password if self.imap_password else self.password
+        max_count = int(values["max_count"]) if values.get("max_count") else self.email_max_retrieve_count
+        artifacts = []
 
         try:
-            con = imaplib.IMAP4_SSL(imap_url)
+            import mailparser
+
+            con = imaplib.IMAP4_SSL(self.imap_url)
+
             con.login(imap_user, imap_password)
-            con.select(label)
 
-            result, data = con.search(None, key, f'"{search_criteria}"')
-            retrieve_list = data[0].split()
-            artifact_list = []
+            if values.get("key") and values.get("search_criteria"):
+                messages = con.search(None, values["key"], f'"{values["search_criteria"]}"')[1]
 
-            for num in retrieve_list[0:min(int(max_retrieve_count), int(retrieve_count))]:
-                typ, data = con.fetch(num, "(RFC822)")
+                messages_list = messages[0].split(" ")
 
-                artifact_list.extend(TextLoader().text_to_artifacts(str(data)))
+                for i in messages_list[:max_count] if max_count else messages_list:
+                    message = con.fetch(str(i), "(RFC822)")[1]
+
+                    artifacts.append(TextArtifact(str(message)))
+            else:
+                messages_count = int(con.select(values["label"])[1][0])
+                top_n = min(0, messages_count - max_count) if max_count else 0
+
+                for i in range(messages_count, top_n, -1):
+                    result, data = con.fetch(str(i), "(RFC822)")
+                    message = mailparser.parse_from_bytes(data[0][1])
+
+                    artifacts.append(
+                        TextArtifact("\n".join(message.text_plain))
+                    )
 
             con.close()
+            con.logout()
 
-            return artifact_list
+            return artifacts
         except Exception as e:
             logging.error(e)
 
