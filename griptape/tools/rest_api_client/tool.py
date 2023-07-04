@@ -245,11 +245,13 @@ class RestApiClient(BaseTool):
             return ErrorArtifact(str(err))
 
     def _build_url(self, base_url, path=None, path_params=None):
-        url = base_url.strip("/")
-
+        base = base_url.strip("/")
+        url = ""
         if path:
-            url = urljoin(url, path.strip("/"))
+            url += path.strip("/")
         if path_params:
-            url = urljoin(url, str.join("/", path_params))
+            url += f'/{str.join("/", map(str, path_params))}'
 
-        return url
+        full_url = urljoin(base, url)
+
+        return full_url
