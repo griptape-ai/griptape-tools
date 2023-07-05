@@ -76,14 +76,17 @@ class EmailClient(BaseTool):
             con.login(imap_user, imap_password)
 
             if values.get("key") and values.get("search_criteria"):
-                messages = con.search(None, values["key"], f'"{values["search_criteria"]}"')[1]
+                con.select(values["label"])
 
-                messages_list = messages[0].split(" ")
+                messages = con.search(None, values["key"], f'"{values["search_criteria"]}"')[1][0].decode().split(" ")
 
-                for i in messages_list[:max_count] if max_count else messages_list:
-                    message = con.fetch(str(i), "(RFC822)")[1]
+                for i in messages[:max_count] if max_count else messages:
+                    result, data = con.fetch(str(i), "(RFC822)")
+                    message = mailparser.parse_from_bytes(data[0][1])
 
-                    artifacts.append(TextArtifact(str(message)))
+                    artifacts.append(
+                        TextArtifact("\n".join(message.text_plain))
+                    )
             else:
                 messages_count = int(con.select(values["label"])[1][0])
                 top_n = min(0, messages_count - max_count) if max_count else 0
