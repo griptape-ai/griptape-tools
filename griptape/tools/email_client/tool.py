@@ -75,29 +75,28 @@ class EmailClient(BaseTool):
 
             con.login(imap_user, imap_password)
 
+            con.select(values["label"], readonly=True)
+
             if values.get("key") and values.get("search_criteria"):
-                con.select(values["label"])
-
-                messages = con.search(None, values["key"], f'"{values["search_criteria"]}"')[1][0].decode().split(" ")
-
-                for i in messages[:max_count] if max_count else messages:
-                    result, data = con.fetch(str(i), "(RFC822)")
-                    message = mailparser.parse_from_bytes(data[0][1])
-
-                    artifacts.append(
-                        TextArtifact("\n".join(message.text_plain))
-                    )
+                messages_count = len(
+                    con.search(
+                        None, values["key"], f'"{values["search_criteria"]}"'
+                        )[1][0].decode().split(" ")
+                )
             else:
-                messages_count = int(con.select(values["label"])[1][0])
-                top_n = min(0, messages_count - max_count) if max_count else 0
+                messages_count = int(
+                    con.select(values["label"], readonly=True)[1][0]
+                )
 
-                for i in range(messages_count, top_n, -1):
-                    result, data = con.fetch(str(i), "(RFC822)")
-                    message = mailparser.parse_from_bytes(data[0][1])
+            top_n = max(0, messages_count - max_count) if max_count else 0
 
-                    artifacts.append(
-                        TextArtifact("\n".join(message.text_plain))
-                    )
+            for i in range(messages_count, top_n, -1):
+                result, data = con.fetch(str(i), "(RFC822)")
+                message = mailparser.parse_from_bytes(data[0][1])
+
+                artifacts.append(
+                    TextArtifact("\n".join(message.text_plain))
+                )
 
             con.close()
             con.logout()
