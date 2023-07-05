@@ -14,11 +14,18 @@ from .base_aws_client import BaseAwsClient
 from .aws_iam_client.tool import AwsIamClient
 from .aws_s3_client.tool import AwsS3Client
 
+# Google Tools
+from .base_google_client import BaseGoogleClient
+from .google_gmail.tool import GoogleGmailClient
+
 __all__ = [
     # AWS
     "BaseAwsClient",
     "AwsIamClient",
     "AwsS3Client",
+    # Google
+    "BaseGoogleClient",
+    "GoogleGmailClient",
     "Calculator",
     "WebSearch",
     "WebScraper",
