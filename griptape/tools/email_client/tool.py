@@ -75,33 +75,34 @@ class EmailClient(BaseTool):
 
             con.login(imap_user, imap_password)
 
-            con.select(values["label"], readonly=True)
+            mailbox = con.select(values["label"], readonly=True)
 
-            if values.get("key") and values.get("search_criteria"):
-                messages_count = len(
-                    con.search(
-                        None, values["key"], f'"{values["search_criteria"]}"'
-                        )[1][0].decode().split(" ")
-                )
+            if mailbox[0] == "OK":
+                if values.get("key") and values.get("search_criteria"):
+                    messages_count = len(
+                        con.search(
+                            None, values["key"], f'"{values["search_criteria"]}"'
+                            )[1][0].decode().split(" ")
+                    )
+                else:
+                    messages_count = int(mailbox[1][0])
+
+                top_n = max(0, messages_count - max_count) if max_count else 0
+
+                for i in range(messages_count, top_n, -1):
+                    result, data = con.fetch(str(i), "(RFC822)")
+                    message = mailparser.parse_from_bytes(data[0][1])
+
+                    artifacts.append(
+                        TextArtifact("\n".join(message.text_plain))
+                    )
+
+                con.close()
+                con.logout()
+
+                return artifacts
             else:
-                messages_count = int(
-                    con.select(values["label"], readonly=True)[1][0]
-                )
-
-            top_n = max(0, messages_count - max_count) if max_count else 0
-
-            for i in range(messages_count, top_n, -1):
-                result, data = con.fetch(str(i), "(RFC822)")
-                message = mailparser.parse_from_bytes(data[0][1])
-
-                artifacts.append(
-                    TextArtifact("\n".join(message.text_plain))
-                )
-
-            con.close()
-            con.logout()
-
-            return artifacts
+                return ErrorArtifact(mailbox[1][0].decode())
         except Exception as e:
             logging.error(e)
 
