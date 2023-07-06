@@ -45,7 +45,7 @@ class TestAwsS3Client:
         value = {
             "memory_id": "foobar",
             "bucket_name": "bucket_test",
-            "artifact_namespaces": [],
+            "artifact_namespace": "foo",
             "object_names": [],
 
         }
