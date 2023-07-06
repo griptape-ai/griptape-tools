@@ -6,8 +6,6 @@ from attr import define
 from griptape.artifacts import TextArtifact, ErrorArtifact
 from griptape.core.decorators import activity
 from griptape.tools import BaseGoogleClient
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
 
 @define
 class GoogleGmailClient(BaseGoogleClient):
@@ -38,6 +36,9 @@ class GoogleGmailClient(BaseGoogleClient):
         })
     })
     def create_draft_email(self, params: dict) -> TextArtifact | ErrorArtifact:
+        from google.oauth2 import service_account
+        from googleapiclient.discovery import build
+
         values = params["values"]
         SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
