@@ -1,5 +1,6 @@
 from __future__ import annotations
 import imaplib
+import json
 import logging
 import smtplib
 from email.mime.text import MIMEText
@@ -34,8 +35,17 @@ class EmailClient(BaseTool):
 
     email_max_retrieve_count: Optional[int] = field(default=None, kw_only=True)
 
+    mailboxes: Optional[dict[str, str]] = field(default=None, kw_only=True)
+
+    @property
+    def schema_template_args(self) -> dict:
+        return {
+            "mailboxes": json.dumps(self.mailboxes) if self.mailboxes else None
+        }
+
     @activity(config={
-        "description": "Can be used to retrieve emails",
+        "description": "Can be used to retrieve emails."
+                       "{% if mailboxes %} Some of the available mailboxes: {{ mailboxes }}{% endif %}",
         "schema": Schema({
             Literal(
                 "label",
@@ -75,7 +85,7 @@ class EmailClient(BaseTool):
 
             con.login(imap_user, imap_password)
 
-            mailbox = con.select(values["label"], readonly=True)
+            mailbox = con.select(f'"{values["label"]}"', readonly=True)
 
             if mailbox[0] == "OK":
                 if values.get("key") and values.get("search_criteria"):
