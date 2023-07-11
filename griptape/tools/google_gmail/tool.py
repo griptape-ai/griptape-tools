@@ -43,11 +43,10 @@ class GoogleGmailClient(BaseGoogleClient):
         SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
         try:
-            credentials = service_account.Credentials.from_service_account_file(
-                self.service_account_credentials_path, scopes=SCOPES
+            credentials = service_account.Credentials.from_service_account_info(
+                self.service_account_credentials, scopes=SCOPES
             )
 
-            # TODO: test if this works for same user (non service account)
             delegated_creds = credentials.with_subject(values["inbox_owner"])
             service = build('gmail', 'v1', credentials=delegated_creds)
 
@@ -68,6 +67,6 @@ class GoogleGmailClient(BaseGoogleClient):
 
         except Exception as error:
             logging.error(error)
-            return ErrorArtifact(f'Error creating draft email: {error}')
+            return ErrorArtifact(f'error creating draft email: {error}')
 
 
