@@ -7,12 +7,13 @@ from griptape.artifacts import TextArtifact, ErrorArtifact
 from griptape.core.decorators import activity
 from griptape.tools import BaseGoogleClient
 
+
 @define
 class GoogleGmailClient(BaseGoogleClient):
 
     @activity(config={
-        "description" : "Can be used to create a draft email in GMail",
-        "schema" : Schema({
+        "description": "Can be used to create a draft email in GMail",
+        "schema": Schema({
             Literal(
                 "to",
                 description="email address which to send to"
@@ -68,5 +69,3 @@ class GoogleGmailClient(BaseGoogleClient):
         except Exception as error:
             logging.error(error)
             return ErrorArtifact(f'error creating draft email: {error}')
-
-
