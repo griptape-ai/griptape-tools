@@ -16,10 +16,17 @@ from schema import Schema, Literal
 @define
 class Computer(BaseTool):
     workdir: Optional[str] = field(default=None, kw_only=True)
-    env: dict = field(factory=dict, kw_only=True)
-    dockerfile_path = field(
+    env_vars: dict = field(factory=dict, kw_only=True)
+    dockerfile_path: str = field(
         default=Factory(
             lambda self: f"{os.path.join(self.tool_dir(), 'Dockerfile')}",
+            takes_self=True,
+        ),
+        kw_only=True,
+    )
+    requirements_txt_path: str = field(
+        default=Factory(
+            lambda self: f"{os.path.join(self.tool_dir(), 'requirements.txt')}",
             takes_self=True,
         ),
         kw_only=True,
@@ -29,16 +36,24 @@ class Computer(BaseTool):
         kw_only=True,
     )
 
-    def __attrs_post_init__(self):
-        super().__attrs_post_init__()
+    @property
+    def schema_template_args(self) -> dict:
+        return {
+            "dependencies": self.dependencies()
+        }
+
+    def install_dependencies(self, env: Optional[dict[str, str]] = None) -> None:
+        super().install_dependencies(env)
 
         self.remove_existing_container(self.container_name(self))
         self.build_image(self)
 
     @activity(
         config={
-            "description": "Can be used to execute Python code in the virtual machine to solve any programmatic task, "
-            "access files, and file system. If you need to use code output use `print` statements.",
+            "description": "Can be used to execute Python code to solve any programmatic tasks and access and analyze"
+                           " files in the file system. If you need to use code output use `print` statements. "
+                           "You have access to the following external Python libraries: "
+                           "{{ dependencies }}",
             "schema": Schema(
                 {
                     Literal("code", description="Python code to execute"): str,
@@ -78,7 +93,7 @@ class Computer(BaseTool):
 
             container = self.docker_client.containers.run(
                 self.image_name(self),
-                environment=self.env,
+                environment=self.env_vars,
                 command=command,
                 name=self.container_name(self),
                 volumes=binds,
@@ -131,6 +146,7 @@ class Computer(BaseTool):
     def build_image(self, tool: BaseTool) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             shutil.copy(self.dockerfile_path, temp_dir)
+            shutil.copy(self.requirements_txt_path, temp_dir)
 
             image = self.docker_client.images.build(
                 path=temp_dir, tag=self.image_name(tool), rm=True, forcerm=True
@@ -139,3 +155,7 @@ class Computer(BaseTool):
             response = [line for line in image]
 
             logging.info(f"Built image: {response[0].short_id}")
+
+    def dependencies(self) -> list[str]:
+        with open(self.requirements_txt_path, "r") as file:
+            return [l.strip() for l in file.readlines()]
