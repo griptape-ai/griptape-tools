@@ -15,7 +15,8 @@ from schema import Schema, Literal
 
 @define
 class Computer(BaseTool):
-    workdir: Optional[str] = field(default=None, kw_only=True)
+    local_workdir: Optional[str] = field(default=None, kw_only=True)
+    container_workdir: str = field(default="/griptape", kw_only=True)
     env_vars: dict = field(factory=dict, kw_only=True)
     dockerfile_path: str = field(
         default=Factory(
@@ -35,6 +36,17 @@ class Computer(BaseTool):
         default=Factory(lambda self: self.default_docker_client(), takes_self=True),
         kw_only=True,
     )
+
+    __tempdir: Optional[tempfile.TemporaryDirectory] = field(init=False)
+
+    def __attrs_post_init__(self) -> None:
+        super().__attrs_post_init__()
+
+        if self.local_workdir:
+            self.__tempdir = None
+        else:
+            self.__tempdir = tempfile.TemporaryDirectory()
+            self.local_workdir = self.__tempdir.name
 
     @property
     def schema_template_args(self) -> dict:
@@ -71,25 +83,24 @@ class Computer(BaseTool):
 
         return self.execute_code_in_container(filename, code)
 
-    def execute_code_in_container(self, filename: str, code: str) -> BaseArtifact:
-        container_workdir = "/griptape"
-        container_file_path = os.path.join(container_workdir, filename)
+    @activity(
+        config={
+            "description": "Can be used to execute shell commands in Linux",
+            "schema": Schema(
+                {
+                    Literal("command", description="shell command to execute"): str,
+                }
+            ),
+        }
+    )
+    def execute_command(self, params: dict) -> BaseArtifact:
+        command = params["values"]["command"]
 
-        if self.workdir:
-            tempdir = None
-            local_workdir = self.workdir
-        else:
-            tempdir = tempfile.TemporaryDirectory()
-            local_workdir = tempdir.name
+        return self.execute_command_in_container(command)
 
-        local_file_path = os.path.join(local_workdir, filename)
-
+    def execute_command_in_container(self, command: str) -> BaseArtifact:
         try:
-            with open(local_file_path, "w") as f:
-                f.write(code)
-
-            command = ["python", container_file_path]
-            binds = {local_workdir: {"bind": container_workdir, "mode": "rw"}}
+            binds = {self.local_workdir: {"bind": self.container_workdir, "mode": "rw"}}
 
             container = self.docker_client.containers.run(
                 self.image_name(self),
@@ -114,6 +125,28 @@ class Computer(BaseTool):
                 return ErrorArtifact(stderr)
             else:
                 return TextArtifact(stdout)
+        except Exception as e:
+            return ErrorArtifact(f"error executing command: {e}")
+
+    def execute_code_in_container(self, filename: str, code: str) -> BaseArtifact:
+        container_file_path = os.path.join(self.container_workdir, filename)
+
+        if self.local_workdir:
+            tempdir = None
+            local_workdir = self.local_workdir
+        else:
+            tempdir = tempfile.TemporaryDirectory()
+            local_workdir = tempdir.name
+
+        local_file_path = os.path.join(local_workdir, filename)
+
+        try:
+            with open(local_file_path, "w") as f:
+                f.write(code)
+
+            return self.execute_command_in_container(
+                f"python {container_file_path}"
+            )
         except Exception as e:
             return ErrorArtifact(f"error executing code: {e}")
         finally:
@@ -159,3 +192,7 @@ class Computer(BaseTool):
     def dependencies(self) -> list[str]:
         with open(self.requirements_txt_path, "r") as file:
             return [l.strip() for l in file.readlines()]
+
+    def __del__(self) -> None:
+        if self.__tempdir:
+            self.__tempdir.cleanup()
