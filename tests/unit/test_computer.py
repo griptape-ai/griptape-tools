@@ -1,6 +1,6 @@
 import pytest
 from tests.mocks.docker.fake_api_client import make_fake_client
-from tools import Computer
+from griptape.tools import Computer
 
 
 class TestComputer:
