@@ -20,14 +20,14 @@ class Computer(BaseTool):
     env_vars: dict = field(factory=dict, kw_only=True)
     dockerfile_path: str = field(
         default=Factory(
-            lambda self: f"{os.path.join(self.tool_dir(), 'Dockerfile')}",
+            lambda self: f"{os.path.join(self.tool_dir(), 'resources/Dockerfile')}",
             takes_self=True,
         ),
         kw_only=True,
     )
     requirements_txt_path: str = field(
         default=Factory(
-            lambda self: f"{os.path.join(self.tool_dir(), 'requirements.txt')}",
+            lambda self: f"{os.path.join(self.tool_dir(), 'resources/requirements.txt')}",
             takes_self=True,
         ),
         kw_only=True,
@@ -37,16 +37,19 @@ class Computer(BaseTool):
         kw_only=True,
     )
 
-    __tempdir: Optional[tempfile.TemporaryDirectory] = field(init=False)
+    __tempdir: Optional[tempfile.TemporaryDirectory] = field(default=None, kw_only=True)
 
     def __attrs_post_init__(self) -> None:
         super().__attrs_post_init__()
 
-        if self.local_workdir:
-            self.__tempdir = None
-        else:
+        if not self.local_workdir:
             self.__tempdir = tempfile.TemporaryDirectory()
             self.local_workdir = self.__tempdir.name
+
+    @docker_client.validator
+    def validate_docker_client(self, _, docker_client: docker.DockerClient) -> None:
+        if not docker_client:
+            raise ValueError("Docker client can't be initialized: make sure the Docker daemon is running")
 
     @property
     def schema_template_args(self) -> dict:
