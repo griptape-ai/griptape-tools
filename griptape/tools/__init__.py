@@ -17,6 +17,7 @@ from .aws_s3_client.tool import AwsS3Client
 # Google Tools
 from .base_google_client import BaseGoogleClient
 from .google_gmail.tool import GoogleGmailClient
+from .google_cal.tool import GoogleCalClient
 
 __all__ = [
     # AWS
@@ -26,6 +27,7 @@ __all__ = [
     # Google
     "BaseGoogleClient",
     "GoogleGmailClient",
+    "GoogleCalClient",
     "Calculator",
     "WebSearch",
     "WebScraper",
