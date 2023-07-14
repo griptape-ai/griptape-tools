@@ -2,6 +2,8 @@ import logging
 import os
 import shutil
 import tempfile
+from pathlib import Path
+
 import stringcase
 from typing import Optional
 import docker
@@ -44,6 +46,8 @@ class Computer(BaseTool):
 
         if self.local_workdir:
             self.__tempdir = None
+
+            Path(self.local_workdir).mkdir(parents=True, exist_ok=True)
         else:
             self.__tempdir = tempfile.TemporaryDirectory()
             self.local_workdir = self.__tempdir.name
