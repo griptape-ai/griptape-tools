@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import tempfile
+from pathlib import Path
 import stringcase
 from typing import Optional
 import docker
@@ -42,7 +43,9 @@ class Computer(BaseTool):
     def __attrs_post_init__(self) -> None:
         super().__attrs_post_init__()
 
-        if not self.local_workdir:
+        if self.local_workdir:
+            Path(self.local_workdir).mkdir(parents=True, exist_ok=True)
+        else:
             self.__tempdir = tempfile.TemporaryDirectory()
             self.local_workdir = self.__tempdir.name
 
