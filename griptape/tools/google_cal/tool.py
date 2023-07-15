@@ -16,6 +16,10 @@ class GoogleCalClient(BaseGoogleClient):
             Literal(
                 "calendar_id",
                 description="id of the google calendar such as 'primary'"
+            ): str,
+            Literal(
+                "calendar_owner_email",
+                description="email of the calendar's owner"
             ): str
         })
     })
@@ -30,7 +34,7 @@ class GoogleCalClient(BaseGoogleClient):
             credentials = service_account.Credentials.from_service_account_info(
                 self.service_account_credentials, scopes=SCOPES
             )
-            delegated_credentials = credentials.with_subject('kyro@griptape.ai') 
+            delegated_credentials = credentials.with_subject(values["calendar_owner_email"])
             service = build('calendar', 'v3', credentials=delegated_credentials)
             now = datetime.datetime.utcnow().isoformat() + 'Z'
 
