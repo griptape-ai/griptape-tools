@@ -24,13 +24,14 @@ class GoogleCalClient(BaseGoogleClient):
         from googleapiclient.discovery import build
 
         values = params["values"]
-        SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+        SCOPES = ['https://www.googleapis.com/auth/calendar']
 
         try:
             credentials = service_account.Credentials.from_service_account_info(
                 self.service_account_credentials, scopes=SCOPES
             )
-            service = build('calendar', 'v3', credentials=credentials)
+            delegated_credentials = credentials.with_subject('kyro@griptape.ai') 
+            service = build('calendar', 'v3', credentials=delegated_credentials)
             now = datetime.datetime.utcnow().isoformat() + 'Z'
 
             events_result = service.events().list(
@@ -38,6 +39,7 @@ class GoogleCalClient(BaseGoogleClient):
                 maxResults=10, singleEvents=True,
                 orderBy='startTime').execute()
             events = events_result.get('items', [])
+            return [TextArtifact(str(e)) for e in events]
         except Exception as e:
             logging.error(e)
             return ErrorArtifact(f"error retrieving calendar events {e}")
@@ -47,7 +49,7 @@ class GoogleCalClient(BaseGoogleClient):
         from googleapiclient.discovery import build
 
         values = params["values"]
-        SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+        SCOPES = ['https://www.googleapis.com/auth/calendar']
 
         try:
             credentials = service_account.Credentials.from_service_account_info(
