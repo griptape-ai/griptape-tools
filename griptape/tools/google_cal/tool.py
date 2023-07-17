@@ -56,6 +56,10 @@ class GoogleCalClient(BaseGoogleClient):
         "description": "Can be used to create an event on a google calendar",
         "schema": Schema({
             Literal(
+                "calendar_owner_email",
+                description="email of the calendar's owner"
+            ): str,
+            Literal(
                 "start_datetime",
                 description="combined date-time value in string format according to RFC3399 excluding the timezone for when the meeting starts"
             ): str,
@@ -96,7 +100,8 @@ class GoogleCalClient(BaseGoogleClient):
             credentials = service_account.Credentials.from_service_account_info(
                 self.service_account_credentials, scopes=SCOPES
             )
-            service = build('calendar', 'v3', credentials=credentials)
+            delegated_credentials = credentials.with_subject(values["calendar_owner_email"])
+            service = build('calendar', 'v3', credentials=delegated_credentials)
 
             event = {
                 'summary': values['summary'],
