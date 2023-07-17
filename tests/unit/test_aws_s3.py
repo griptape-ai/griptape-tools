@@ -40,3 +40,15 @@ class TestAwsS3Client:
         assert "error listing objects in bucket" in AwsS3Client(
             session=boto3.Session()
         ).list_objects({"values": value}).value
+
+    def test_upload_objects(self):
+        value = {
+            "memory_id": "foobar",
+            "bucket_name": "bucket_test",
+            "artifact_namespace": "foo",
+            "object_names": [],
+
+        }
+        assert "memory not found" in AwsS3Client(
+            session=boto3.Session()
+        ).upload_objects({"values": value}).value

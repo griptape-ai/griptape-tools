@@ -1,8 +1,9 @@
 from __future__ import annotations
+import io
 import boto3
 from schema import Schema, Literal
 from attr import define, field, Factory
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact
+from griptape.artifacts import TextArtifact, ErrorArtifact, InfoArtifact
 from griptape.core.decorators import activity
 from griptape.tools import BaseAwsClient
 
@@ -75,7 +76,7 @@ class AwsS3Client(BaseAwsClient):
     @activity(config={
         "description": "Can be used to list all AWS S3 buckets."
     })
-    def list_s3_buckets(self, params: dict) -> list[TextArtifact] | ErrorArtifact:
+    def list_s3_buckets(self, _: dict) -> list[TextArtifact] | ErrorArtifact:
         try:
             buckets = self.s3_client.list_buckets()
             return [TextArtifact(str(b)) for b in buckets["Buckets"]]
@@ -99,3 +100,35 @@ class AwsS3Client(BaseAwsClient):
             return [TextArtifact(str(o)) for o in objects["Contents"]]
         except Exception as e:
             return ErrorArtifact(f"error listing objects in bucket: {e}")
+
+    @activity(config={
+        "description": "Can be used to upload artifacts to an AWS S3 bucket.",
+        "schema": Schema({
+            "memory_id": str,
+            "artifact_namespace": str,
+            "bucket_name": str
+        })
+    })
+    def upload_objects(self, params: dict) -> InfoArtifact | ErrorArtifact:
+        artifact_namespaces = params["values"]["artifact_namespace"]
+        bucket_name = params["values"]["bucket_name"]
+        memory = self.find_input_memory(params["values"]["memory_id"])
+
+        if memory:
+            try:
+                self.s3_client.create_bucket(
+                    Bucket=bucket_name
+                )
+
+                for artifact in memory.load_artifacts(artifact_namespaces):
+                    self.s3_client.upload_fileobj(
+                        Fileobj=io.BytesIO(artifact.to_text().encode()),
+                        Bucket=bucket_name,
+                        Key=artifact.name
+                    )
+
+                return InfoArtifact("successfully uploaded files to the bucket")
+            except Exception as e:
+                return ErrorArtifact(f"error uploading objects to the bucket: {e}")
+        else:
+            return ErrorArtifact("memory not found")

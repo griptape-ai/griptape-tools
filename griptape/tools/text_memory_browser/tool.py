@@ -11,6 +11,7 @@ from schema import Schema, Literal
 
 @define
 class TextMemoryBrowser(BaseTool):
+    denylist: Optional[list[str]] = field(default=Factory(lambda: ["extract"]), kw_only=True)
     input_memory: list[TextToolMemory] = field(factory=list, kw_only=True) # override parent
     summary_engine: BaseSummaryEngine = field(
         kw_only=True,

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "griptape-tools"
-version = "0.14.0"
+version = "0.15.1"
 description = "Tools for the Griptape framework."
 authors = ["Griptape <hello@griptape.ai>"]
 license = "Apache 2.0"
@@ -13,11 +13,19 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-griptape = { git = "https://github.com/griptape-ai/griptape.git", branch = "main" }
+
+griptape = ">= 0.13"
+docker = "^6.1.3"
+stringcase = "^1.2.0"
+boto3 = "^1.28.2"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
 pytest-mock = "*"
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^2.17.3"
+black = "^23.3.0"
 
 [build-system]
 requires = ["poetry-core"]
