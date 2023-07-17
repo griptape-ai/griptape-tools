@@ -54,7 +54,7 @@ class WebScraper(BaseTool):
         from trafilatura.settings import use_config
 
         config = use_config()
-        page = trafilatura.fetch_url(url)
+        page = trafilatura.fetch_url(url, no_ssl=True)
 
         # This disables signal, so that trafilatura can work on any thread:
         # More info: https://trafilatura.readthedocs.io/en/latest/usage-python.html#disabling-signal
