@@ -76,13 +76,17 @@ class GoogleCalClient(BaseGoogleClient):
                 description="time zone in which the end time is specified in string format according to IANA time zone data base name, such as 'Europe/Zurich'"
             ): str,
             Literal(
-                "summary",
-                description="summary of the event. also used as it's title"
+                "title",
+                description="title of the event"
             ): str,
             Literal(
                 "description",
                 description="description of the event"
             ): str,
+            Literal(
+                "attendees",
+                description="list of the email addresses of attendees using 'email' as key"
+            ): list,
             Optional(Literal(
                 "location",
                 description="location of the event"
@@ -104,7 +108,7 @@ class GoogleCalClient(BaseGoogleClient):
             service = build('calendar', 'v3', credentials=delegated_credentials)
 
             event = {
-                'summary': values['summary'],
+                'summary': values['title'],
                 'location': values.get('location'),
                 'description': values['description'],
                 'start': {
@@ -115,10 +119,7 @@ class GoogleCalClient(BaseGoogleClient):
                     'dateTime': values['end_datetime'],
                     'timeZone': values['end_time_zone']
                 },
-                'attendees': [
-                    {'email': 'vasily@griptape.ai'},
-                    {'email': 'zach@griptape.ai'}
-                ]
+                'attendees': values['attendees']
             }
             event = service.events().insert(calendarId='primary', body=event).execute()
             return InfoArtifact(event.get('htmlLink'))
