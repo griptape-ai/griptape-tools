@@ -4,7 +4,7 @@ from griptape.drivers import LocalVectorStoreDriver
 from griptape.engines import VectorQueryEngine
 from griptape.memory.tool import TextToolMemory
 from tests.mocks.mock_embedding_driver import MockEmbeddingDriver
-from griptape.tools import TextMemoryBrowser
+from griptape.tools import ToolOutputProcessor
 
 
 class TestTextMemoryBrowser:
@@ -27,7 +27,7 @@ class TestTextMemoryBrowser:
 
     @pytest.fixture
     def tool(self):
-        return TextMemoryBrowser(
+        return ToolOutputProcessor(
             input_memory=[TextToolMemory(
                 query_engine=VectorQueryEngine(
                     vector_store_driver=LocalVectorStoreDriver(

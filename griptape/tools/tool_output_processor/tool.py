@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Optional
 from attr import define, field, Factory
-from griptape.artifacts import BaseArtifact, TextArtifact, ErrorArtifact, InfoArtifact
+from griptape.artifacts import TextArtifact, ErrorArtifact, InfoArtifact, BaseArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from griptape.engines import CsvExtractionEngine, BaseSummaryEngine, PromptSummaryEngine
@@ -10,9 +10,11 @@ from schema import Schema, Literal
 
 
 @define
-class TextMemoryBrowser(BaseTool):
+class ToolOutputProcessor(BaseTool):
+    # override parent
     denylist: Optional[list[str]] = field(default=Factory(lambda: ["extract"]), kw_only=True)
-    input_memory: list[TextToolMemory] = field(factory=list, kw_only=True) # override parent
+    # override parent
+    input_memory: Optional[list[TextToolMemory]] = field(default=None, kw_only=True)
     summary_engine: BaseSummaryEngine = field(
         kw_only=True,
         default=Factory(lambda: PromptSummaryEngine())
@@ -45,6 +47,7 @@ class TextMemoryBrowser(BaseTool):
 
     @activity(config={
         "description": "Can be used to extract and format content from memory artifacts into CSV output",
+        "uses_default_memory": False,
         "schema": Schema({
             "memory_id": str,
             "artifact_namespace": str,
@@ -69,6 +72,7 @@ class TextMemoryBrowser(BaseTool):
 
     @activity(config={
         "description": "Can be used to summarize memory artifacts in a namespace",
+        "uses_default_memory": False,
         "schema": Schema({
             "memory_id": str,
             "artifact_namespace": str
@@ -87,6 +91,7 @@ class TextMemoryBrowser(BaseTool):
 
     @activity(config={
         "description": "Can be used to search and query memory artifacts in a namespace",
+        "uses_default_memory": False,
         "schema": Schema({
             "memory_id": str,
             "artifact_namespace": str,

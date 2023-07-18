@@ -16,6 +16,7 @@ class WebSearch(BaseTool):
 
     @activity(config={
         "description": "Can be used for searching the web",
+        "uses_default_memory": False,
         "schema": Schema({
             Literal(
                 "query",
