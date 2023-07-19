@@ -12,7 +12,7 @@ from schema import Schema, Literal
 @define
 class ToolOutputProcessor(BaseTool):
     # override parent
-    denylist: Optional[list[str]] = field(default=Factory(lambda: ["extract"]), kw_only=True)
+    denylist: Optional[list[str]] = field(default=Factory(lambda: ["extract_csv"]), kw_only=True)
     # override parent
     input_memory: Optional[list[TextToolMemory]] = field(default=None, kw_only=True)
     summary_engine: BaseSummaryEngine = field(
@@ -26,7 +26,7 @@ class ToolOutputProcessor(BaseTool):
     top_n: int = field(default=5, kw_only=True)
 
     @activity(config={
-        "description": "Can be used to insert text into a memory artifact namespace",
+        "description": "Can be used to insert text into a memory",
         "schema": Schema({
             "memory_id": str,
             "artifact_namespace": str,
@@ -46,7 +46,7 @@ class ToolOutputProcessor(BaseTool):
             return ErrorArtifact("memory not found")
 
     @activity(config={
-        "description": "Can be used to extract and format content from memory artifacts into CSV output",
+        "description": "Can be used to extract and format content from memory into CSV output",
         "uses_default_memory": False,
         "schema": Schema({
             "memory_id": str,
@@ -57,7 +57,7 @@ class ToolOutputProcessor(BaseTool):
             ): list[str]
         })
     })
-    def extract(self, params: dict) -> list[BaseArtifact] | BaseArtifact:
+    def extract_csv(self, params: dict) -> list[BaseArtifact] | BaseArtifact:
         memory = self.find_input_memory(params["values"]["memory_id"])
         artifact_namespace = params["values"]["artifact_namespace"]
         column_names = params["values"]["column_names"]
@@ -71,7 +71,7 @@ class ToolOutputProcessor(BaseTool):
             return ErrorArtifact("memory not found")
 
     @activity(config={
-        "description": "Can be used to summarize memory artifacts in a namespace",
+        "description": "Can be used to summarize memory content",
         "uses_default_memory": False,
         "schema": Schema({
             "memory_id": str,
@@ -90,7 +90,7 @@ class ToolOutputProcessor(BaseTool):
             return ErrorArtifact("memory not found")
 
     @activity(config={
-        "description": "Can be used to search and query memory artifacts in a namespace",
+        "description": "Can be used to search and query memory content",
         "uses_default_memory": False,
         "schema": Schema({
             "memory_id": str,

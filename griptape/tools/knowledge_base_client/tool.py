@@ -27,8 +27,9 @@ class KnowledgeBaseClient(BaseTool):
         }
 
     @activity(config={
+        "uses_default_memory": False,
         "description":
-            "Can be used to search a knowledge base with the following description: {{ description }}",
+            "Can be used to search a Knowledge Base with the following description: {{ description }}",
         "schema": Schema({
             Literal(
                 "query",
@@ -48,23 +49,3 @@ class KnowledgeBaseClient(BaseTool):
             )
         except Exception as e:
             return ErrorArtifact(f"error querying knowledge base: {e}")
-
-    @activity(config={
-        "description":
-            "Can be used to summarize a knowledge base with the following description: {{ description }}"
-    })
-    def summarize(self, _: dict) -> BaseArtifact:
-        try:
-            return self.summary_engine.summarize_artifacts(
-                self.load_artifacts(self.namespace)
-            )
-        except Exception as e:
-            return ErrorArtifact(f"error querying knowledge base: {e}")
-
-    def load_artifacts(self, namespace: str) -> list[TextArtifact]:
-        artifacts = [
-            BaseArtifact.from_json(e.meta["artifact"])
-            for e in self.query_engine.vector_store_driver.load_entries(namespace)
-        ]
-
-        return [a for a in artifacts if isinstance(a, TextArtifact)]
