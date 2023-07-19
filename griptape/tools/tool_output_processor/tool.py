@@ -12,7 +12,7 @@ from schema import Schema, Literal
 @define
 class ToolOutputProcessor(BaseTool):
     # override parent
-    denylist: Optional[list[str]] = field(default=Factory(lambda: ["extract"]), kw_only=True)
+    denylist: Optional[list[str]] = field(default=Factory(lambda: ["extract_csv"]), kw_only=True)
     # override parent
     input_memory: Optional[list[TextToolMemory]] = field(default=None, kw_only=True)
     summary_engine: BaseSummaryEngine = field(
