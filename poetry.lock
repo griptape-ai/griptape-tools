@@ -292,17 +292,17 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "boto3"
-version = "1.28.7"
+version = "1.28.8"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.28.7-py3-none-any.whl", hash = "sha256:46803b8ae114ff139f2a87fcb5d2f5a5728f6c96fe3a2b9416a8fcbe761423ae"},
-    {file = "boto3-1.28.7.tar.gz", hash = "sha256:ef6a465d3b25b89bcd00ff69675b33917166145e544735dcb9978091f5b0b752"},
+    {file = "boto3-1.28.8-py3-none-any.whl", hash = "sha256:7132ac3f3a9c28b84dcc344cfb439d37d2c5ab45f6b577358fc9aeba5d5aab63"},
+    {file = "boto3-1.28.8.tar.gz", hash = "sha256:cf88309d9b8cd9a2fb0c8049cb4b217b4e9dcb55bf670d6054b0bbe2eef25e57"},
 ]
 
 [package.dependencies]
-botocore = ">=1.31.7,<1.32.0"
+botocore = ">=1.31.8,<1.32.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -311,13 +311,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.31.7"
+version = "1.31.8"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.31.7-py3-none-any.whl", hash = "sha256:f211ef5714bec8ae24b3fe737b8689611ef4d0dbea0ab46ef8328e112dd10ada"},
-    {file = "botocore-1.31.7.tar.gz", hash = "sha256:f4473f66c153c262b8262404d737f4249366daf00fb068b495577a24b830ebcb"},
+    {file = "botocore-1.31.8-py3-none-any.whl", hash = "sha256:61ba7efaa6305c1928b9b3fbb6f780cbfbd762e19008d20c11ba52b47f20e1b0"},
+    {file = "botocore-1.31.8.tar.gz", hash = "sha256:092baa2168ae78080b0c28011527bfc11d8debd3767aa1e9a4ce8a91fd9943a2"},
 ]
 
 [package.dependencies]
@@ -928,13 +928,13 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "griptape"
-version = "0.14.3"
+version = "0.14.6"
 description = "Modular Python framework for LLM workflows, tools, memory, and data."
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "griptape-0.14.3-py3-none-any.whl", hash = "sha256:01db4972fd5bdc3cb8ddd93fc9a354e11a38d9302865a69bfe7023ca12bfd357"},
-    {file = "griptape-0.14.3.tar.gz", hash = "sha256:e96bbcd78969fff5f25f853b22e859cc50dddfea5efc9d004073751b5a2663fe"},
+    {file = "griptape-0.14.6-py3-none-any.whl", hash = "sha256:7c56f55d2b1d4f0fc18556ade60ff47eeae8be493ebf355033b513ca99b2c3aa"},
+    {file = "griptape-0.14.6.tar.gz", hash = "sha256:dfb8c3e1df27a2665bdb02476ae30474afb0fa8fef9b258f28c869d42eeef11a"},
 ]
 
 [package.dependencies]
@@ -1498,22 +1498,22 @@ urllib3 = "*"
 
 [[package]]
 name = "marshmallow"
-version = "3.19.0"
+version = "3.20.1"
 description = "A lightweight library for converting complex datatypes to and from native Python datatypes."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "marshmallow-3.19.0-py3-none-any.whl", hash = "sha256:93f0958568da045b0021ec6aeb7ac37c81bfcccbb9a0e7ed8559885070b3a19b"},
-    {file = "marshmallow-3.19.0.tar.gz", hash = "sha256:90032c0fd650ce94b6ec6dc8dfeb0e3ff50c144586462c389b81a07205bedb78"},
+    {file = "marshmallow-3.20.1-py3-none-any.whl", hash = "sha256:684939db93e80ad3561392f47be0230743131560a41c5110684c16e21ade0a5c"},
+    {file = "marshmallow-3.20.1.tar.gz", hash = "sha256:5d2371bbe42000f2b3fb5eaa065224df7d8f8597bc19a1bbfa5bfe7fba8da889"},
 ]
 
 [package.dependencies]
 packaging = ">=17.0"
 
 [package.extras]
-dev = ["flake8 (==5.0.4)", "flake8-bugbear (==22.10.25)", "mypy (==0.990)", "pre-commit (>=2.4,<3.0)", "pytest", "pytz", "simplejson", "tox"]
-docs = ["alabaster (==0.7.12)", "autodocsumm (==0.2.9)", "sphinx (==5.3.0)", "sphinx-issues (==3.0.1)", "sphinx-version-warning (==1.1.2)"]
-lint = ["flake8 (==5.0.4)", "flake8-bugbear (==22.10.25)", "mypy (==0.990)", "pre-commit (>=2.4,<3.0)"]
+dev = ["flake8 (==6.0.0)", "flake8-bugbear (==23.7.10)", "mypy (==1.4.1)", "pre-commit (>=2.4,<4.0)", "pytest", "pytz", "simplejson", "tox"]
+docs = ["alabaster (==0.7.13)", "autodocsumm (==0.2.11)", "sphinx (==7.0.1)", "sphinx-issues (==3.0.1)", "sphinx-version-warning (==1.1.2)"]
+lint = ["flake8 (==6.0.0)", "flake8-bugbear (==23.7.10)", "mypy (==1.4.1)", "pre-commit (>=2.4,<4.0)"]
 tests = ["pytest", "pytz", "simplejson"]
 
 [[package]]
@@ -3371,4 +3371,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "9ced3314fcb6626acd8cf302d020a9fc51ec94207e05e8205b0a6006f06755d4"
+content-hash = "821f98e67daee1bb06d62bbbc7592b1ee9532f4172bd027524754dd1a0fc1cd2"
