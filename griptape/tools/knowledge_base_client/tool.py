@@ -27,7 +27,6 @@ class KnowledgeBaseClient(BaseTool):
         }
 
     @activity(config={
-        "uses_default_memory": False,
         "description":
             "Can be used to search a Knowledge Base with the following description: {{ description }}",
         "schema": Schema({
