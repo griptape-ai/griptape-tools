@@ -118,4 +118,7 @@ class ToolOutputProcessor(BaseTool):
             return ErrorArtifact("memory not found")
 
     def find_input_memory(self, memory_id: str) -> Optional[TextToolMemory]:
-        return next((m for m in self.input_memory if isinstance(m, TextToolMemory) and m.id == memory_id), None)
+        if self.input_memory:
+            return next((m for m in self.input_memory if isinstance(m, TextToolMemory) and m.id == memory_id), None)
+        else:
+            return None
