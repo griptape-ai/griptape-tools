@@ -12,6 +12,7 @@ from .base_aws_client import BaseAwsClient
 from .aws_iam_client.tool import AwsIamClient
 from .aws_s3_client.tool import AwsS3Client
 from .computer.tool import Computer
+from .proxycurl_client.tool import ProxycurlClient
 
 __all__ = [
     "BaseAwsClient",
@@ -27,5 +28,6 @@ __all__ = [
     "KnowledgeBaseClient",
     "DateTime",
     "ToolOutputProcessor",
-    "Computer"
+    "Computer",
+    "ProxycurlClient"
 ]
