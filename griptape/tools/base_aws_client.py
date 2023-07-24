@@ -5,7 +5,6 @@ from griptape.artifacts import TextArtifact, ErrorArtifact, BaseArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 
-
 @define
 class BaseAwsClient(BaseTool, ABC):
     session: boto3.session = field(kw_only=True)
