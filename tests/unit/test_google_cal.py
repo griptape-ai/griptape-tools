@@ -1,4 +1,4 @@
-from griptape.tools import GoogleCalClient
+from griptape.tools import GoogleCalendarClient
 
 
 class TestGoogleCalClient:
@@ -8,7 +8,7 @@ class TestGoogleCalClient:
             "calendar_owner_email": "tony@griptape.ai",
             "max_events": 10
         }
-        assert "error retrieving calendar events" in GoogleCalClient(
+        assert "error retrieving calendar events" in GoogleCalendarClient(
             service_account_credentials={}
         ).get_upcoming_events({"values": value}).value
 
@@ -23,6 +23,6 @@ class TestGoogleCalClient:
             "description": "why wasn't this an email?",
             "location": "not rto"
         }
-        assert "error creating calendar event" in GoogleCalClient(
+        assert "error creating calendar event" in GoogleCalendarClient(
             service_account_credentials={}
         ).create_event({"values": value}).value

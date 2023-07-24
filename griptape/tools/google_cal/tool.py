@@ -1,3 +1,4 @@
+from __future__ import annotations
 import logging
 import datetime
 from schema import Schema, Literal, Optional
@@ -8,7 +9,9 @@ from griptape.tools import BaseGoogleClient
 
 
 @define
-class GoogleCalClient(BaseGoogleClient):
+class GoogleCalendarClient(BaseGoogleClient):
+    CREATE_EVENT_SCOPES = ['https://www.googleapis.com/auth/calendar']
+    GET_UPCOMING_EVENTS_SCOPES = ['https://www.googleapis.com/auth/calendar']
 
     @activity(config={
         "description": "Can be used to get upcoming events from a google calendar",
@@ -32,11 +35,10 @@ class GoogleCalClient(BaseGoogleClient):
         from googleapiclient.discovery import build
 
         values = params["values"]
-        SCOPES = ['https://www.googleapis.com/auth/calendar']
 
         try:
             credentials = service_account.Credentials.from_service_account_info(
-                self.service_account_credentials, scopes=SCOPES
+                self.service_account_credentials, scopes=self.GET_UPCOMING_EVENTS_SCOPES
             )
             delegated_credentials = credentials.with_subject(values["calendar_owner_email"])
             service = build('calendar', 'v3', credentials=delegated_credentials)
@@ -98,11 +100,10 @@ class GoogleCalClient(BaseGoogleClient):
         from googleapiclient.discovery import build
 
         values = params['values']
-        SCOPES = ['https://www.googleapis.com/auth/calendar']
 
         try:
             credentials = service_account.Credentials.from_service_account_info(
-                self.service_account_credentials, scopes=SCOPES
+                self.service_account_credentials, scopes=self.CREATE_EVENT_SCOPES
             )
             delegated_credentials = credentials.with_subject(values["calendar_owner_email"])
             service = build('calendar', 'v3', credentials=delegated_credentials)
@@ -122,7 +123,7 @@ class GoogleCalClient(BaseGoogleClient):
                 'attendees': values['attendees']
             }
             event = service.events().insert(calendarId='primary', body=event).execute()
-            return InfoArtifact(event.get('htmlLink'))
+            return InfoArtifact(f'A calendar event was successfully created. (Link:{event.get("htmlLink")})')
         except Exception as e:
             logging.error(e)
             return ErrorArtifact(f"error creating calendar event: {e}")

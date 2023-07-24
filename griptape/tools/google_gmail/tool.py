@@ -1,16 +1,17 @@
+from __future__ import annotations
 import logging
 import base64
 from email.message import EmailMessage
 from schema import Schema, Literal
 from attr import define
-from griptape.artifacts import TextArtifact, ErrorArtifact
+from griptape.artifacts import InfoArtifact, ErrorArtifact
 from griptape.core.decorators import activity
 from griptape.tools import BaseGoogleClient
 
 
 @define
 class GoogleGmailClient(BaseGoogleClient):
-
+    CREATE_DRAFT_EMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
     @activity(config={
         "description": "Can be used to create a draft email in GMail",
         "schema": Schema({
@@ -36,16 +37,15 @@ class GoogleGmailClient(BaseGoogleClient):
             ): str
         })
     })
-    def create_draft_email(self, params: dict) -> TextArtifact | ErrorArtifact:
+    def create_draft_email(self, params: dict) -> InfoArtifact | ErrorArtifact:
         from google.oauth2 import service_account
         from googleapiclient.discovery import build
 
         values = params["values"]
-        SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
         try:
             credentials = service_account.Credentials.from_service_account_info(
-                self.service_account_credentials, scopes=SCOPES
+                self.service_account_credentials, scopes=self.CREATE_DRAFT_EMAIL_SCOPES
             )
 
             delegated_creds = credentials.with_subject(values["inbox_owner"])
@@ -64,7 +64,7 @@ class GoogleGmailClient(BaseGoogleClient):
                 }
             }
             draft = service.users().drafts().create(userId='me', body=create_message).execute()
-            return TextArtifact(f'Draft Id: {draft["id"]}')
+            return InfoArtifact(f'An email draft was successfully created (ID: {draft["id"]})')
 
         except Exception as error:
             logging.error(error)
