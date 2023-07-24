@@ -56,7 +56,7 @@ class TestTextMemoryBrowser:
             {"values": {"query": "foobar", "memory_id": tool.input_memory[0].id, "artifact_namespace": "foo"}}
         ).value == "foobar"
 
-    def test_extract(self, tool):
-        assert tool.extract(
+    def test_extract_csv(self, tool):
+        assert tool.extract_csv(
             {"values": {"column_names": "foo", "memory_id": tool.input_memory[0].id, "artifact_namespace": "foo"}}
         )[0].value == {"foo": "bar"}
