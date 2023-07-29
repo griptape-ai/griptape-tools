@@ -1,11 +1,12 @@
-from typing import Union
+
 from griptape.artifacts import TextArtifact, ErrorArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 from schema import Schema, Literal
 from attr import define, field
 import requests
-
+import logging
+from typing import Union, List
 
 @define
 class ProxycurlClient(BaseTool):
@@ -16,8 +17,8 @@ class ProxycurlClient(BaseTool):
         "school": "https://nubela.co/proxycurl/api/linkedin/school",
     }
 
-    proxycurl_api_key: str = field(kw_only = True)
-    timeout = field(default = 30, kw_only = True)
+    proxycurl_api_key: str = field(kw_only=True)
+    timeout: int = field(default=10, kw_only=True)
 
 
     @activity(
@@ -32,7 +33,8 @@ class ProxycurlClient(BaseTool):
         }
     )
     def get_profile(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
-        return self._call_api("profile", params)
+        profile_id = params["values"].get("profile_id")
+        return self._call_api("profile", "in", profile_id)
 
     @activity(
         config={
@@ -46,7 +48,8 @@ class ProxycurlClient(BaseTool):
         }
     )
     def get_job(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
-        return self._call_api("job", params)
+        job_id = params["values"].get("job_id")
+        return self._call_api("job", "jobs/view", job_id)
 
     @activity(
         config={
@@ -60,7 +63,8 @@ class ProxycurlClient(BaseTool):
         }
     )
     def get_company(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
-        return self._call_api("company", params)
+        company_id = params["values"].get("company_id")
+        return self._call_api("company", "company", company_id)
 
     @activity(
         config={
@@ -74,42 +78,35 @@ class ProxycurlClient(BaseTool):
         }
     )
     def get_school(self, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
-        return self._call_api("school", params)
+        school_id = params["values"].get("school_id")
+        return self._call_api("school", "school", school_id)
 
-    def _call_api(self, endpoint_name: str, params: dict) -> Union[list[TextArtifact], ErrorArtifact]:
-        item_id = params["values"].get(f"{endpoint_name}_id")
+    def _call_api(self, endpoint_name: str, path: str, item_id: str) -> Union[
+        List[TextArtifact], ErrorArtifact]:
         headers = {"Authorization": f"Bearer {self.proxycurl_api_key}"}
-        linkedin_url = f"https://www.linkedin.com/{endpoint_name}/{item_id}"
 
-        if endpoint_name == "profile":
-            linkedin_url = f"https://www.linkedin.com/in/{item_id}"
-        elif endpoint_name == "job":
-            linkedin_url = f"https://www.linkedin.com/jobs/view/{item_id}"
+        linkedin_url = "/".join(
+            arg.strip("/") for arg in ["https://www.linkedin.com", path, item_id])
 
         params = {"url": linkedin_url}
 
         response = requests.get(
-            self.ENDPOINTS[endpoint_name], params = params, headers = headers, timeout = self.timeout
+            self.ENDPOINTS[endpoint_name], params = params, headers = headers,
+            timeout = self.timeout
         )
 
-        if response.status_code == 200 or response.status_code == 404:
-            try:
-                return [
-                    TextArtifact(str({key: value}))
-                    for key, value in response.json().items()
-                ]
-            except ValueError:
-                return ErrorArtifact("Failed to decode JSON from response")
+        if response.status_code != 200:
+            logging.error(f"Error retrieving information from LinkedIn. HTTP Status Code: {response.status_code}")
+            return ErrorArtifact("Error retrieving information from LinkedIn")
 
-        elif response.status_code == 429:
-            return ErrorArtifact('Usage rate limited. Retrying may be necessary.')
-        elif response.status_code == 400:
-            return ErrorArtifact(f'Invalid parameters provided. Refer to the Proxycurl documentation and message body for more info.\n {response.text}')
-        elif response.status_code == 401:
-            return ErrorArtifact('Invalid API Key')
-        elif response.status_code == 403:
-            return ErrorArtifact('You have run out of Proxycurl credits')
-        elif response.status_code == 500:
-            return ErrorArtifact('There is an error with the API. Please contact Proxycurl for assistance')
-        else:
-            return ErrorArtifact(f'Unknown error occurred. HTTP Status Code: {response.status_code}')
+        try:
+            data = response.json()
+            filtered_data = {key: value for key, value in data.items() if value is not None and value}
+
+            return [
+                TextArtifact(str(filtered_data))
+
+            ]
+
+        except ValueError:
+            return ErrorArtifact("Failed to decode JSON from response")
