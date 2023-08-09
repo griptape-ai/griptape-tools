@@ -16,6 +16,7 @@ from .proxycurl_client.tool import ProxycurlClient
 from .base_google_client import BaseGoogleClient
 from .google_gmail.tool import GoogleGmailClient
 from .google_cal.tool import GoogleCalendarClient
+from .openweather_client.tool import OpenWeatherClient
 
 __all__ = [
     "BaseAwsClient",
@@ -35,5 +36,6 @@ __all__ = [
     "DateTime",
     "ToolOutputProcessor",
     "Computer",
-    "ProxycurlClient"
+    "ProxycurlClient",
+    "OpenWeatherClient"
 ]
