@@ -1,10 +1,10 @@
 import pytest
 from griptape.artifacts import TextArtifact
 from griptape.engines import VectorQueryEngine
-from griptape.tools import KnowledgeBaseClient
+from griptape.tools import VectorStoreClient
 
 
-class TestKnowledgeBaseClient:
+class TestVectorStoreClient:
     @pytest.fixture(autouse=True)
     def mock_try_runt(self, mocker):
         mocker.patch(
@@ -18,7 +18,7 @@ class TestKnowledgeBaseClient:
         )
 
     def test_search(self):
-        tool = KnowledgeBaseClient(
+        tool = VectorStoreClient(
             description="Test",
             query_engine=VectorQueryEngine()
         )
