@@ -1,23 +1,19 @@
 from typing import Optional
-from griptape.engines import VectorQueryEngine, BaseSummaryEngine, PromptSummaryEngine
+from griptape.engines import VectorQueryEngine
 from schema import Schema, Literal
-from attr import define, field, Factory
-from griptape.artifacts import BaseArtifact, ErrorArtifact, TextArtifact
+from attr import define, field
+from griptape.artifacts import BaseArtifact, ErrorArtifact
 from griptape.core import BaseTool
 from griptape.core.decorators import activity
 
 
 @define
-class KnowledgeBaseClient(BaseTool):
-    DEFAULT_QUERY_RESULT_COUNT = 5
+class VectorStoreClient(BaseTool):
+    DEFAULT_TOP_N = 5
 
     description: str = field(kw_only=True)
     query_engine: VectorQueryEngine = field(kw_only=True)
-    summary_engine: BaseSummaryEngine = field(
-        kw_only=True,
-        default=Factory(lambda: PromptSummaryEngine())
-    )
-    top_n: int = field(default=5, kw_only=True)
+    top_n: int = field(default=DEFAULT_TOP_N, kw_only=True)
     namespace: Optional[str] = field(default=None, kw_only=True)
 
     @property
@@ -28,12 +24,11 @@ class KnowledgeBaseClient(BaseTool):
 
     @activity(config={
         "description":
-            "Can be used to search a Knowledge Base with the following description: {{ description }}",
+            "Can be used to search a vector database with the following description: {{ description }}",
         "schema": Schema({
             Literal(
                 "query",
-                description="A natural language search query in the form of a question with enough "
-                            "contextual information for another person to understand what the query is about"
+                description="A natural language search query to run against the vector database"
             ): str
         })
     })
@@ -47,4 +42,4 @@ class KnowledgeBaseClient(BaseTool):
                 namespace=self.namespace
             )
         except Exception as e:
-            return ErrorArtifact(f"error querying knowledge base: {e}")
+            return ErrorArtifact(f"error querying vector store: {e}")
